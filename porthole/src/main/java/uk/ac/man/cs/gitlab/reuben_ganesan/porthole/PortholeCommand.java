@@ -1,7 +1,6 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import javax.swing.SwingUtilities;
-import net.imagej.ImageJ;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -14,7 +13,7 @@ import org.scijava.ui.UIService;
 import net.imagej.ops.OpService;
 
 /* Invoked when user selects plugin from menu */
-@Plugin(type = Command.class, headless = true,menuPath = "Porthole")
+@Plugin(type = Command.class, headless = true,menuPath = "Porthole>Start")
 public class PortholeCommand implements Command{
 
 	//Ask context for access to services
