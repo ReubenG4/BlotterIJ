@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
+import org.scijava.io.IOService;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -35,6 +36,9 @@ public class PortholeCommand implements Command{
 	@Parameter
 	ThreadService thread;
 	
+	@Parameter
+	IOService io;
+	
 	private static PortholeSelectDialog dialogS = null;
 
 	public void run() {
@@ -52,6 +56,7 @@ public class PortholeCommand implements Command{
 			dialogS.setCommand(cmd);
 			dialogS.setThread(thread);
 			dialogS.setUi(ui);
+			dialogS.setIO(io);
 
 		});
 		

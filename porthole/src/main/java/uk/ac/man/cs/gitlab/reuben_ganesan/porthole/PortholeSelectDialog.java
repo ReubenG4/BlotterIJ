@@ -10,6 +10,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,6 +23,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 import org.scijava.app.StatusService;
 import org.scijava.command.CommandService;
+import org.scijava.io.IOService;
 import org.scijava.log.LogService;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
@@ -34,9 +36,11 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.UIManager;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /* Invoked by porthole command if images are to be selected */
-public class PortholeSelectDialog extends JDialog {
+public class PortholeSelectDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -44,12 +48,14 @@ public class PortholeSelectDialog extends JDialog {
 	private static final long serialVersionUID = -9139535193568501417L;
 	private OpService ops;
 	private LogService log;
+	private IOService io;
 	private StatusService status;
 	private CommandService cmd;
 	private ThreadService thread;
 	private UIService ui;
 	
 	private final JPanel contentPanel = new JPanel();
+	final JFileChooser fc = new JFileChooser();
 
 	/**
 	 * Launch the application.
@@ -71,12 +77,10 @@ public class PortholeSelectDialog extends JDialog {
 	public PortholeSelectDialog() {
 		setTitle("Select Images");
 		
-		//
 		List<Img<UnsignedShortType>> rawImages = new LinkedList<Img<UnsignedShortType>>();
 		getContentPane().setLayout(new BorderLayout());
 		DefaultListModel exampleModel = new DefaultListModel();
-		
-		
+				
 		JList scrollIMGList = new JList(new ScrlIMGModel(rawImages));	
 		scrollIMGList.setVisibleRowCount(14);
 		scrollIMGList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -90,9 +94,10 @@ public class PortholeSelectDialog extends JDialog {
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
-		scrlIMGPane.setColumnHeaderView(toolBar);
+		scrlIMGPane.setColumnHeaderView(toolBar);		
 		
 		JButton btnAdd = new JButton("+");
+		btnAdd.addActionListener(this);
 		btnAdd.setFont(new Font("Tahoma", Font.BOLD, 15));
 		toolBar.add(btnAdd);
 		
@@ -117,13 +122,14 @@ public class PortholeSelectDialog extends JDialog {
 		proceedPanel.add(btnOk);
 		
 		JButton btnCancel = new JButton("Cancel");
-		proceedPanel.add(btnCancel);
-		
-		
-		
-			
+		proceedPanel.add(btnCancel);			
 		
 	}
+	
+	public void actionPerformed(ActionEvent e) {
+		
+	}
+	
 
 	/**
 	 * Accessor and mutator methods
@@ -176,6 +182,10 @@ public class PortholeSelectDialog extends JDialog {
 
 	public void setUi(final UIService ui) {
 		this.ui = ui;
+	}
+
+	public void setIO(final IOService io) {
+		this.io = io;	
 	}
 
 
