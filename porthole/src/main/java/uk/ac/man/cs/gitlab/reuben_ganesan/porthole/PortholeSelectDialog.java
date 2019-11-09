@@ -6,13 +6,14 @@ import java.awt.Dimension;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.imagej.ops.OpService;
 import org.scijava.app.StatusService;
@@ -22,12 +23,8 @@ import org.scijava.log.LogService;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 import java.awt.FlowLayout;
-import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 import java.awt.event.ActionEvent;
 
 /* Invoked by porthole command if images are to be selected */
@@ -49,10 +46,9 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	private JPanel dataPanel = new JPanel();
 	private DefaultListModel<File> imageListModel = new DefaultListModel<File>();
 	private JList<File> imageList = new JList<File>(imageListModel);
-	final JFileChooser fc = new JFileChooser();
-
+	
 	/**
-	 * Launch the application.
+	 * Launch the dialog.
 	 */
 	public static void main(final String[] args) {
 		try {
@@ -76,14 +72,18 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 				
 		getContentPane().add(dataPanel, BorderLayout.CENTER);
 		{
-			
+			/*
+			 * imageList
+			 * list to display chosen files
+			 */
 			imageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			imageList.setLayoutOrientation(JList.VERTICAL);
 			imageList.setVisibleRowCount(-1);
 			imageList.setCellRenderer(new FileCellRenderer());
-			
+		    		
 			JScrollPane listScroller = new JScrollPane(imageList);
 			listScroller.setPreferredSize(new Dimension(380, 200));
+			
 			
 			dataPanel.add(listScroller);
 		}
@@ -92,23 +92,62 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 		{
 			JToolBar fileBar = new JToolBar("");
 			
-			//Add File Button
+			/*
+			 * addButton
+			 * calls UI to prompt user to choose a file
+			 * adds chosen file to list
+			 */
 			JButton addButton = new JButton("Add");
 			addButton.addActionListener(new ActionListener(){
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					final File currentFile = ui.chooseFile(null, "open");
-					imageListModel.addElement(currentFile);
+					imageListModel.addElement(currentFile);					
 				}
 			});
 			
 			fileBar.add(addButton);
 			
-			//Remove File Button
-			JButton removeButton = new JButton("Remove");
-			fileBar.add(removeButton);
 			
+			/*
+			 * removeButton
+			 * removes selected file from list when clicked
+			 */
+			JButton removeButton = new JButton("Remove");
+			removeButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(final ActionEvent arg0) {
+					int index = imageList.getSelectedIndex();
+					imageListModel.remove(index);
+				}
+			});
+			
+			fileBar.add(removeButton);	
+			removeButton.setEnabled(false);
+			
+			/*
+			 * ListSelectionListener
+			 * Determines if remove button should be enabled 
+			 */			
+			imageList.addListSelectionListener(new ListSelectionListener() {
+
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					
+					 if (e.getValueIsAdjusting() == false) {
+						 
+						 if (imageList.getSelectedIndex() == -1)
+							 removeButton.setEnabled(false);
+						 else
+							 removeButton.setEnabled(true);
+
+					 }
+				}    	
+		    		    	
+		    });
+						
 			fileBar.setFloatable(false);
 	        fileBar.setRollover(true);		
 	        
