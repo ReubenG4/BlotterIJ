@@ -48,7 +48,7 @@ public class PortholeCommand implements Command{
 			if (dialogS == null) {
 				dialogS = new PortholeSelectDialog();
 			}
-			dialogS.setVisible(true);
+			
 
 			dialogS.setOps(ops);
 			dialogS.setLog(log);
@@ -57,6 +57,8 @@ public class PortholeCommand implements Command{
 			dialogS.setThread(thread);
 			dialogS.setUi(ui);
 			dialogS.setIO(io);
+			
+			dialogS.setVisible(true);
 
 		});
 		
