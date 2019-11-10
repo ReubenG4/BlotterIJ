@@ -22,9 +22,15 @@ import org.scijava.io.IOService;
 import org.scijava.log.LogService;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
+import org.scijava.widget.FileWidget;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileFilter;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 /* Invoked by porthole command if images are to be selected */
@@ -102,8 +108,14 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					final File currentFile = ui.chooseFile(null, "open");
-					imageListModel.addElement(currentFile);					
+					
+				    List<File>initialValue = new LinkedList<File>();
+					final List<File>fileList = ui.chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
+					Iterator<File> fileItr = fileList.iterator();
+							
+					while (fileItr.hasNext()) {
+						imageListModel.addElement(fileItr.next());
+					}
 				}
 			});
 			
@@ -120,7 +132,7 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					int index = imageList.getSelectedIndex();
-					imageListModel.remove(index);
+					imageListModel.remove(index);	
 				}
 			});
 			

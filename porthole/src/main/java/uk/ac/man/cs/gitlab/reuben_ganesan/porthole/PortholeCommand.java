@@ -14,7 +14,7 @@ import org.scijava.ui.UIService;
 import net.imagej.ops.OpService;
 
 /* Invoked when user selects plugin from menu */
-@Plugin(type = Command.class, headless = true,menuPath = "Plugins>Porthole>Start")
+@Plugin(type = Command.class, headless = true,menuPath = "Plugins>Porthole>Load Images")
 public class PortholeCommand implements Command{
 
 	//Ask context for access to services
