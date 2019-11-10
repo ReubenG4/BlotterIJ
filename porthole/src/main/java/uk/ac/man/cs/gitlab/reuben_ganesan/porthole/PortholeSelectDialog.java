@@ -50,22 +50,10 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	
 	private JPanel buttonPanel = new JPanel();
 	private JPanel dataPanel = new JPanel();
+	private JPanel confirmPanel = new JPanel();
 	private DefaultListModel<File> imageListModel = new DefaultListModel<File>();
 	private JList<File> imageList = new JList<File>(imageListModel);
-	
-	/**
-	 * Launch the dialog.
-	 */
-	public static void main(final String[] args) {
-		try {
-			final PortholeSelectDialog dialog = new PortholeSelectDialog();
-			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		}
-		catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private List<File> toBeReturned = new LinkedList<File>();
 
 	/**
 	 * Create the dialog.
@@ -75,11 +63,20 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		buttonPanel.setLayout(new FlowLayout());
+		
+		/*
+		 * Declare JComponents
+		 */
+		JScrollPane listScroller;
+		JToolBar fileBar = new JToolBar("");
+		JButton addButton = new JButton("Add");
+		JButton removeButton = new JButton("Remove");
+		JButton confirmButton = new JButton("Confirm");
 				
 		getContentPane().add(dataPanel, BorderLayout.CENTER);
 		{
 			/*
-			 * imageList
+			 * imageList configuration
 			 * list to display chosen files
 			 */
 			imageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -87,23 +84,21 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 			imageList.setVisibleRowCount(-1);
 			imageList.setCellRenderer(new FileCellRenderer());
 		    		
-			JScrollPane listScroller = new JScrollPane(imageList);
+			listScroller = new JScrollPane(imageList);
 			listScroller.setPreferredSize(new Dimension(380, 200));
-			
-			
+					
 			dataPanel.add(listScroller);
 		}
 				
 		getContentPane().add(buttonPanel, BorderLayout.PAGE_START);
 		{
-			JToolBar fileBar = new JToolBar("");
-			
+						
 			/*
-			 * addButton
+			 * addButton configuration
 			 * calls UI to prompt user to choose a file
 			 * adds chosen file to list
 			 */
-			JButton addButton = new JButton("Add");
+			
 			addButton.addActionListener(new ActionListener(){
 
 				@Override
@@ -116,26 +111,29 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 					while (fileItr.hasNext()) {
 						imageListModel.addElement(fileItr.next());
 					}
+					
+					if(imageListModel.size() > 0)
+						confirmButton.setEnabled(true);
 				}
-			});
-			
+			});			
 			fileBar.add(addButton);
-			
-			
+						
 			/*
-			 * removeButton
+			 * removeButton configuration
 			 * removes selected file from list when clicked
 			 */
-			JButton removeButton = new JButton("Remove");
+			
 			removeButton.addActionListener(new ActionListener(){
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					int index = imageList.getSelectedIndex();
 					imageListModel.remove(index);	
+					
+					if (imageListModel.size() < 1)
+						confirmButton.setEnabled(false);
 				}
-			});
-			
+			});			
 			fileBar.add(removeButton);	
 			removeButton.setEnabled(false);
 			
@@ -165,10 +163,30 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	        
 			buttonPanel.add(fileBar);
 		}
-		
-		
-		
-		
+				
+		getContentPane().add(confirmPanel, BorderLayout.PAGE_END);
+		{
+			/*
+			 * confirmButton configuration
+			 * confirms the selection of files
+			 */
+			confirmButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(final ActionEvent arg0) {
+					
+					int lastIndex = imageListModel.getSize();
+					for(int i=0; i <lastIndex; i++) {
+						toBeReturned.add(imageListModel.get(i));
+					}
+					
+				}
+				
+			});
+			
+			confirmPanel.add(confirmButton);
+			confirmButton.setEnabled(false);
+		}
 	}
 	
 	
@@ -178,7 +196,6 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	 * Accessor and mutator methods
 	 * 
 	 */
-
 	public OpService getOps() {
 		return ops;
 	}
@@ -230,14 +247,29 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	public void setIO(final IOService io) {
 		this.io = io;	
 	}
-
+	
+	public void setFileList(List<File> fileList) {
+		toBeReturned = fileList;
+	}
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	
+	
+	public static void main(final String[] args) {
+		try {
+			final PortholeSelectDialog dialog = new PortholeSelectDialog();
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 }

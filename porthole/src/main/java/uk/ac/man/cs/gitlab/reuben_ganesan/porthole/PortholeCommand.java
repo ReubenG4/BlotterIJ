@@ -1,5 +1,9 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.SwingUtilities;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
@@ -40,6 +44,7 @@ public class PortholeCommand implements Command{
 	IOService io;
 	
 	private static PortholeSelectDialog dialogS = null;
+	private static List<File> fileList = new LinkedList<File>();
 
 	public void run() {
 		
@@ -49,17 +54,16 @@ public class PortholeCommand implements Command{
 				dialogS = new PortholeSelectDialog();
 			}
 			
-
 			dialogS.setOps(ops);
 			dialogS.setLog(log);
 			dialogS.setStatus(status);
 			dialogS.setCommand(cmd);
 			dialogS.setThread(thread);
 			dialogS.setUi(ui);
-			dialogS.setIO(io);
-			
+			dialogS.setIO(io);	
+			dialogS.setFileList(fileList);
 			dialogS.setVisible(true);
-
+			
 		});
 		
 		
