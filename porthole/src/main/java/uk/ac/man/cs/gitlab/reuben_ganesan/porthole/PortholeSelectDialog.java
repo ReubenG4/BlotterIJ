@@ -47,13 +47,14 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	private CommandService cmd;
 	private ThreadService thread;
 	private UIService ui;
+	private boolean stateFlag;
 	
 	private JPanel buttonPanel = new JPanel();
 	private JPanel dataPanel = new JPanel();
 	private JPanel confirmPanel = new JPanel();
 	private DefaultListModel<File> imageListModel = new DefaultListModel<File>();
 	private JList<File> imageList = new JList<File>(imageListModel);
-	private List<File> toBeReturned = new LinkedList<File>();
+	private List<File> fileList;
 
 	/**
 	 * Create the dialog.
@@ -177,9 +178,11 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 					
 					int lastIndex = imageListModel.getSize();
 					for(int i=0; i <lastIndex; i++) {
-						toBeReturned.add(imageListModel.get(i));
+						fileList.add(imageListModel.get(i));
 					}
 					
+					PortholeSelectDialog.this.setEnabled(false);
+				    PortholeSelectDialog.this.dispose();
 				}
 				
 			});
@@ -249,14 +252,19 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	}
 	
 	public void setFileList(List<File> fileList) {
-		toBeReturned = fileList;
+		this.fileList = fileList;
 	}
+	
+	public void setStateFlag(boolean stateFlag) {
+		this.stateFlag = stateFlag; 
+		
+	}
+
 	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 	
 	
@@ -271,6 +279,10 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 		}
 	}
 
+
+
+
+	
 
 }
 

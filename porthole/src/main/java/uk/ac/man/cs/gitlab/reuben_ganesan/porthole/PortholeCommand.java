@@ -1,6 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,10 +46,10 @@ public class PortholeCommand implements Command{
 	
 	private static PortholeSelectDialog dialogS = null;
 	private static List<File> fileList = new LinkedList<File>();
+	private static boolean stateFlag = false;
 
 	public void run() {
 		
-		//Run dialog box to select wanted images
 		SwingUtilities.invokeLater(() -> {
 			if (dialogS == null) {
 				dialogS = new PortholeSelectDialog();
@@ -60,13 +61,12 @@ public class PortholeCommand implements Command{
 			dialogS.setCommand(cmd);
 			dialogS.setThread(thread);
 			dialogS.setUi(ui);
-			dialogS.setIO(io);	
+			dialogS.setIO(io);
+			dialogS.setStateFlag(stateFlag);
 			dialogS.setFileList(fileList);
-			dialogS.setVisible(true);
-			
-		});
 		
-		
-	}
+		    dialogS.setVisible(true);
+	   });
 
+	}
 }
