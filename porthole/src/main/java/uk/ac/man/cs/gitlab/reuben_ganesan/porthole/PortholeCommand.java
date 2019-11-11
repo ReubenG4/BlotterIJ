@@ -1,7 +1,10 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,10 +48,15 @@ public class PortholeCommand implements Command{
 	IOService io;
 	
 	private static PortholeSelectDialog dialogS = null;
+	private static PortholeClassifyDialog dialogC = null;
 	private static List<File> fileList = new LinkedList<File>();
-	private static boolean stateFlag = false;
+
 
 	public void run() {
+		
+		/*
+		 * Declare and initialise dialogs
+		 */
 		
 		SwingUtilities.invokeLater(() -> {
 			if (dialogS == null) {
@@ -62,11 +70,60 @@ public class PortholeCommand implements Command{
 			dialogS.setThread(thread);
 			dialogS.setUi(ui);
 			dialogS.setIO(io);
-			dialogS.setStateFlag(stateFlag);
 			dialogS.setFileList(fileList);
+			dialogS.setTitle("Porthole");
+			
+							 	  		    
+			if (dialogC == null) {
+				dialogC = new PortholeClassifyDialog();
+			}
+			
+			dialogC.setOps(ops);
+			dialogC.setLog(log);
+			dialogC.setStatus(status);
+			dialogC.setCommand(cmd);
+			dialogC.setThread(thread);
+			dialogC.setUi(ui);
+			dialogC.setIO(io);
+			dialogC.setFileList(fileList);	
+			dialogC.setTitle("Porthole");
+			
+			/*
+			 * State machine to handle dialog flow
+			 */
+			
+			/* 1st state */
+			dialogS.addWindowListener(new WindowAdapter() {		
+				
+				//On close of selectDialog, 
+				//if nextState is true, open dialogS, else disposeAllUI
+				public void windowClosing(WindowEvent e){
+					if(dialogS.getNextState()) {
+						dialogC.setVisible(true);
+						dialogS.dispose();
+					}
+					else{
+						disposeAllUI();
+					}					
+				}
+				
+			});
+					
+			//Place UI in 1st state
+			dialogS.setVisible(true);
+		 	  		    
+	   });	
+				
 		
-		    dialogS.setVisible(true);
-	   });
-
+	}
+	
+	/*
+	 * Cleans up all Java Swing components
+	 */
+	public void disposeAllUI() {
+		dialogS.dispose();
+		dialogC.dispose();
 	}
 }
+
+

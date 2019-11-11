@@ -26,7 +26,6 @@ import org.scijava.widget.FileWidget;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Iterator;
@@ -35,7 +34,7 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 
 /* Invoked by porthole command if images are to be selected */
-public class PortholeSelectDialog extends JDialog implements ActionListener {
+public class PortholeClassifyDialog extends JDialog implements ActionListener {
 
 	/**
 	 * Declare and initialise class variables
@@ -61,7 +60,7 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	/**
 	 * Create the dialog.
 	 */
-	public PortholeSelectDialog() {	
+	public PortholeClassifyDialog() {	
 		setName("Porthole");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -108,11 +107,8 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 				public void actionPerformed(final ActionEvent arg0) {
 					
 				    List<File>initialValue = new LinkedList<File>();
-					List<File>inputList = ui.chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
-					if(inputList == null) {
-						return;
-					}
-					Iterator<File> fileItr = inputList.iterator();
+					final List<File>fileList = ui.chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
+					Iterator<File> fileItr = fileList.iterator();
 							
 					while (fileItr.hasNext()) {
 						imageListModel.addElement(fileItr.next());
@@ -186,10 +182,8 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 						fileList.add(imageListModel.get(i));
 					}
 					
-					nextState = true;
-					setVisible(false);
-					dispatchEvent(new WindowEvent(PortholeSelectDialog.this,WindowEvent.WINDOW_CLOSING));
-					    					
+					PortholeClassifyDialog.this.setEnabled(false);
+				    
 				}
 				
 			});
@@ -253,31 +247,15 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	public void setUi(final UIService ui) {
 		this.ui = ui;
 	}
-	
-	public IOService getIO() {
-		return io;
-	}
 
 	public void setIO(final IOService io) {
 		this.io = io;	
 	}
 	
-	public List<File> getFileList(){
-		return fileList;
-	}
-	
 	public void setFileList(List<File> fileList) {
 		this.fileList = fileList;
 	}
-	
-	public boolean getNextState() {
-		return nextState;
-	}
-	
-	public void setNextState(boolean input) {
-		this.nextState = input;
-	}
-	
+		
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -287,8 +265,7 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 	
 	public static void main(final String[] args) {
 		try {
-			final PortholeSelectDialog dialog = new PortholeSelectDialog();
-			//dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			final PortholeClassifyDialog dialog = new PortholeClassifyDialog();
 			dialog.setVisible(true);
 		}
 		catch (final Exception e) {
