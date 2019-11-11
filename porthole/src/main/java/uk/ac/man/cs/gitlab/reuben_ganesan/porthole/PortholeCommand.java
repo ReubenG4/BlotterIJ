@@ -86,7 +86,7 @@ public class PortholeCommand implements Command{
 			dialogC.setUi(ui);
 			dialogC.setIO(io);
 			dialogC.setFileList(fileList);	
-			dialogC.setTitle("Porthole - Choosed Wavelength Bands");
+			dialogC.setTitle("Porthole - Choose Wavelength Bands");
 			
 			/*
 			 * State machine to handle dialog flow
