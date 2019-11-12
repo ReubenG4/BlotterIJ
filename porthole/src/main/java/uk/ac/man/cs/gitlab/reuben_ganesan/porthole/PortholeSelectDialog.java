@@ -15,7 +15,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.scijava.widget.FileWidget;
 
-import net.imagej.ImgPlus;
+import io.scif.img.ImgIOException;
+import net.imglib2.img.Img;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -27,41 +28,43 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 
 /* Invoked by porthole command if images are to be selected */
-public class PortholeSelectDialog extends PortholeDialog {
+public class  PortholeSelectDialog extends PortholeDialog {
 
-	/**
+	/*
 	 * Declare and initialise class variables
-	 */	
-	private JPanel buttonPanel = new JPanel();
-	private JPanel filePanel = new JPanel();
-	private JPanel confirmPanel = new JPanel();
-	private JPanel infoPanel = new JPanel();
+	 */
+	List<File> fileList = new LinkedList<File>();
 	
-	private DefaultListModel<File> imageJListModel = new DefaultListModel<File>();
-	private JList<File> imageJList = new JList<File>(imageJListModel);
-	private List<ImgPlus> fileList = new LinkedList<ImgPlus>();
+	/*
+	 * Declare JComponents
+	 */		
+	JPanel buttonPanel = new JPanel();
+	JPanel filePanel = new JPanel();
+	JPanel confirmPanel = new JPanel();
+	JPanel infoPanel = new JPanel();
 	
-
+	
 	/**
 	 * Create the dialog.
 	 */
-	public PortholeSelectDialog() {	
+	public  PortholeSelectDialog() throws ImgIOException {	
 		setName("PortholeSelect");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
+				
 		buttonPanel.setLayout(new FlowLayout());
 		filePanel.setLayout(new FlowLayout());
 		confirmPanel.setLayout(new FlowLayout());
 		
-		/*
-		 * Declare JComponents
-		 */
 		JScrollPane listScroller;
 		JToolBar fileBar = new JToolBar("");
 		JButton addButton = new JButton("Add");
 		JButton removeButton = new JButton("Remove");
 		JButton confirmButton = new JButton("Confirm");
-				
+		
+		DefaultListModel<File> imageJListModel = new DefaultListModel<File>();
+		JList<File> imageJList = new JList<File>(imageJListModel);
+								
 		getContentPane().add(filePanel, BorderLayout.CENTER);
 		{
 			/*
@@ -104,13 +107,11 @@ public class PortholeSelectDialog extends PortholeDialog {
 					Iterator<File> fileItr = inputList.iterator();							
 					while (fileItr.hasNext()) {
 						File current = fileItr.next();
-						
-						//Find Wavelength of file from filename
-						String fileName = current.getName();
-						
-						
-						imageJListModel.addElement(current);
+						imageJListModel.addElement(current);			    
 					}
+					
+					if(imageJListModel.size() > 0)
+						confirmButton.setEnabled(true);
 					
 				}
 			});			
@@ -130,6 +131,7 @@ public class PortholeSelectDialog extends PortholeDialog {
 					
 					if (imageJListModel.size() < 1)
 						confirmButton.setEnabled(false);
+					
 				}
 			});			
 			fileBar.add(removeButton);	
@@ -172,6 +174,12 @@ public class PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
+					
+					//Iterate through ListModel, place all elements in fileList
+					for(int i=0; i<imageJListModel.getSize(); i++) {
+						fileList.add(imageJListModel.get(i));
+					}
+								
 					setNextState(true);
 					setVisible(false);
 					dispatchEvent(new WindowEvent(PortholeSelectDialog.this,WindowEvent.WINDOW_CLOSING));					    					
@@ -195,10 +203,15 @@ public class PortholeSelectDialog extends PortholeDialog {
 		}
 	}
 
+	/* Accessors and Mutators */	
+	public List<File> getFileList(){
+		return fileList;
+	}
 
 
-
-	
+	public void setFileList(List<File> fileList){
+		this.fileList = fileList;
+	}
 
 }
 

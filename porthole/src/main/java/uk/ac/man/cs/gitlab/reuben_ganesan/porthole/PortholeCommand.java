@@ -2,6 +2,10 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.SwingUtilities;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
@@ -14,6 +18,8 @@ import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
 import net.imagej.ops.OpService;
+import net.imglib2.img.Img;
+import net.imglib2.type.numeric.RealType;
 
 /* Invoked when user selects plugin from menu */
 @Plugin(type = Command.class, headless = true,menuPath = "Plugins>Porthole>Load Images")
@@ -42,8 +48,9 @@ public class PortholeCommand implements Command{
 	IOService io;
 	
 	private static PortholeSelectDialog dialogS = null;
-
-
+    private static List<File> fileList = new LinkedList<File>();
+	
+	
 	public void run() {
 		
 		/*
@@ -62,10 +69,10 @@ public class PortholeCommand implements Command{
 			dialogS.setThread(thread);
 			dialogS.setUi(ui);
 			dialogS.setIO(io);
+			dialogS.setFileList(fileList);
 			dialogS.setTitle("Porthole - Select Files");
 			
-							 	  		    
-			
+							 	  				
 			/*
 			 * State machine to handle dialog flow
 			 */
