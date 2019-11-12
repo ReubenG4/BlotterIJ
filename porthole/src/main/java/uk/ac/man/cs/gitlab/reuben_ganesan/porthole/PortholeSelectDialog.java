@@ -40,10 +40,12 @@ public class PortholeSelectDialog extends PortholeDialog {
 	 * Create the dialog.
 	 */
 	public PortholeSelectDialog() {	
-		setName("Porthole");
+		setName("PortholeSelect");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		buttonPanel.setLayout(new FlowLayout());
+		dataPanel.setLayout(new FlowLayout());
+		confirmPanel.setLayout(new FlowLayout());
 		
 		/*
 		 * Declare JComponents

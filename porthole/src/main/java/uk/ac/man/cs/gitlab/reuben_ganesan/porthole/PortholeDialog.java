@@ -27,7 +27,6 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	private ThreadService thread;
 	private UIService ui;
 	private boolean nextState = false;
-
 	private List<File> fileList;
 
 	/**
