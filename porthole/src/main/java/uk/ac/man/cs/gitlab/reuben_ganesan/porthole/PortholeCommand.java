@@ -121,8 +121,13 @@ public class PortholeCommand implements Command{
 	 * Cleans up all Java Swing components
 	 */
 	public void disposeAllUI() {
-		dialogS.dispose();
-		dialogC.dispose();
+		
+		if(dialogS != null)
+			dialogS.dispose();
+		
+		if(dialogC != null)
+			dialogC.dispose();
+	
 	}
 }
 
