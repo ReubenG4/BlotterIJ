@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-/* Classifies images into different wavelength bands */
+/* Parent Class for all Dialogs */
 public class PortholeDialog extends JDialog implements ActionListener {
 
 	/**
