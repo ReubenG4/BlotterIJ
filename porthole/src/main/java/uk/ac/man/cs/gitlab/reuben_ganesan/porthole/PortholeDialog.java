@@ -27,7 +27,6 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	private ThreadService thread;
 	private UIService ui;
 	private boolean nextState = false;
-	private List<File> fileList;
 
 	/**
 	 * Create the dialog.
@@ -95,14 +94,6 @@ public class PortholeDialog extends JDialog implements ActionListener {
 
 	public void setIO(final IOService io) {
 		this.io = io;	
-	}
-	
-	public List<File> getFileList(){
-		return fileList;
-	}
-	
-	public void setFileList(List<File> fileList) {
-		this.fileList = fileList;
 	}
 	
 	public boolean getNextState() {

@@ -15,6 +15,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.scijava.widget.FileWidget;
 
+import net.imagej.ImgPlus;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -31,10 +33,14 @@ public class PortholeSelectDialog extends PortholeDialog {
 	 * Declare and initialise class variables
 	 */	
 	private JPanel buttonPanel = new JPanel();
-	private JPanel dataPanel = new JPanel();
+	private JPanel filePanel = new JPanel();
 	private JPanel confirmPanel = new JPanel();
-	private DefaultListModel<File> imageListModel = new DefaultListModel<File>();
-	private JList<File> imageList = new JList<File>(imageListModel);
+	private JPanel infoPanel = new JPanel();
+	
+	private DefaultListModel<File> imageJListModel = new DefaultListModel<File>();
+	private JList<File> imageJList = new JList<File>(imageJListModel);
+	private List<ImgPlus> fileList = new LinkedList<ImgPlus>();
+	
 
 	/**
 	 * Create the dialog.
@@ -44,7 +50,7 @@ public class PortholeSelectDialog extends PortholeDialog {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		buttonPanel.setLayout(new FlowLayout());
-		dataPanel.setLayout(new FlowLayout());
+		filePanel.setLayout(new FlowLayout());
 		confirmPanel.setLayout(new FlowLayout());
 		
 		/*
@@ -56,21 +62,21 @@ public class PortholeSelectDialog extends PortholeDialog {
 		JButton removeButton = new JButton("Remove");
 		JButton confirmButton = new JButton("Confirm");
 				
-		getContentPane().add(dataPanel, BorderLayout.CENTER);
+		getContentPane().add(filePanel, BorderLayout.CENTER);
 		{
 			/*
 			 * imageList configuration
 			 * list to display chosen files
 			 */
-			imageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			imageList.setLayoutOrientation(JList.VERTICAL);
-			imageList.setVisibleRowCount(-1);
-			imageList.setCellRenderer(new FileCellRenderer());
+			imageJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			imageJList.setLayoutOrientation(JList.VERTICAL);
+			imageJList.setVisibleRowCount(-1);
+			imageJList.setCellRenderer(new FileCellRenderer());
 		    		
-			listScroller = new JScrollPane(imageList);
+			listScroller = new JScrollPane(imageJList);
 			listScroller.setPreferredSize(new Dimension(380, 200));
 					
-			dataPanel.add(listScroller);
+			filePanel.add(listScroller);
 		}
 				
 		getContentPane().add(buttonPanel, BorderLayout.PAGE_START);
@@ -87,19 +93,25 @@ public class PortholeSelectDialog extends PortholeDialog {
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					
+					//Retrieve value from ui chooseFiles
 				    List<File>initialValue = new LinkedList<File>();
 					List<File>inputList = getUi().chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
 					if(inputList == null) {
 						return;
 					}
-					Iterator<File> fileItr = inputList.iterator();
-							
+					
+					//Iterate through list of chosen files
+					Iterator<File> fileItr = inputList.iterator();							
 					while (fileItr.hasNext()) {
-						imageListModel.addElement(fileItr.next());
+						File current = fileItr.next();
+						
+						//Find Wavelength of file from filename
+						String fileName = current.getName();
+						
+						
+						imageJListModel.addElement(current);
 					}
 					
-					if(imageListModel.size() > 0)
-						confirmButton.setEnabled(true);
 				}
 			});			
 			fileBar.add(addButton);
@@ -113,10 +125,10 @@ public class PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					int index = imageList.getSelectedIndex();
-					imageListModel.remove(index);	
+					int index = imageJList.getSelectedIndex();
+					imageJListModel.remove(index);	
 					
-					if (imageListModel.size() < 1)
+					if (imageJListModel.size() < 1)
 						confirmButton.setEnabled(false);
 				}
 			});			
@@ -127,14 +139,14 @@ public class PortholeSelectDialog extends PortholeDialog {
 			 * ListSelectionListener
 			 * Determines if remove button should be enabled 
 			 */			
-			imageList.addListSelectionListener(new ListSelectionListener() {
+			imageJList.addListSelectionListener(new ListSelectionListener() {
 
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
 					
 					 if (e.getValueIsAdjusting() == false) {
 						 
-						 if (imageList.getSelectedIndex() == -1)
+						 if (imageJList.getSelectedIndex() == -1)
 							 removeButton.setEnabled(false);
 						 else
 							 removeButton.setEnabled(true);
@@ -160,16 +172,9 @@ public class PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					
-					int lastIndex = imageListModel.getSize();
-					for(int i=0; i <lastIndex; i++) {
-						getFileList().add(imageListModel.get(i));
-					}
-					
 					setNextState(true);
 					setVisible(false);
-					dispatchEvent(new WindowEvent(PortholeSelectDialog.this,WindowEvent.WINDOW_CLOSING));
-					    					
+					dispatchEvent(new WindowEvent(PortholeSelectDialog.this,WindowEvent.WINDOW_CLOSING));					    					
 				}
 				
 			});
