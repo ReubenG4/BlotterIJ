@@ -5,58 +5,36 @@ import java.awt.Dimension;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.imagej.ops.OpService;
-import org.scijava.app.StatusService;
-import org.scijava.command.CommandService;
-import org.scijava.io.IOService;
-import org.scijava.log.LogService;
-import org.scijava.thread.ThreadService;
-import org.scijava.ui.UIService;
 import org.scijava.widget.FileWidget;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileFilter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
 /* Invoked by porthole command if images are to be selected */
-public class PortholeSelectDialog extends JDialog implements ActionListener {
+public class PortholeSelectDialog extends PortholeDialog {
 
 	/**
 	 * Declare and initialise class variables
-	 */
-	private static final long serialVersionUID = -9139535193568501417L;
-	private OpService ops;
-	private LogService log;
-	private IOService io;
-	private StatusService status;
-	private CommandService cmd;
-	private ThreadService thread;
-	private UIService ui;
-	private boolean nextState = false;
-
-	
+	 */	
 	private JPanel buttonPanel = new JPanel();
 	private JPanel dataPanel = new JPanel();
 	private JPanel confirmPanel = new JPanel();
 	private DefaultListModel<File> imageListModel = new DefaultListModel<File>();
 	private JList<File> imageList = new JList<File>(imageListModel);
-	private List<File> fileList;
 
 	/**
 	 * Create the dialog.
@@ -108,7 +86,7 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 				public void actionPerformed(final ActionEvent arg0) {
 					
 				    List<File>initialValue = new LinkedList<File>();
-					List<File>inputList = ui.chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
+					List<File>inputList = getUi().chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
 					if(inputList == null) {
 						return;
 					}
@@ -183,10 +161,10 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 					
 					int lastIndex = imageListModel.getSize();
 					for(int i=0; i <lastIndex; i++) {
-						fileList.add(imageListModel.get(i));
+						getFileList().add(imageListModel.get(i));
 					}
 					
-					nextState = true;
+					setNextState(true);
 					setVisible(false);
 					dispatchEvent(new WindowEvent(PortholeSelectDialog.this,WindowEvent.WINDOW_CLOSING));
 					    					
@@ -198,92 +176,6 @@ public class PortholeSelectDialog extends JDialog implements ActionListener {
 			confirmButton.setEnabled(false);
 		}
 	}
-	
-	
-	
-
-	/**
-	 * Accessor and mutator methods
-	 * 
-	 */
-	public OpService getOps() {
-		return ops;
-	}
-
-	public void setOps(final OpService ops) {
-		this.ops = ops;
-	}
-
-	public LogService getLog() {
-		return log;
-	}
-
-	public void setLog(final LogService log) {
-		this.log = log;
-	}
-
-	public StatusService getStatus() {
-		return status;
-	}
-
-	public void setStatus(final StatusService status) {
-		this.status = status;
-	}
-
-	public CommandService getCommand() {
-		return cmd;
-	}
-
-	public void setCommand(final CommandService command) {
-		this.cmd = command;
-	}
-
-	public ThreadService getThread() {
-		return thread;
-	}
-
-	public void setThread(final ThreadService thread) {
-		this.thread = thread;
-	}
-
-	public UIService getUi() {
-		return ui;
-	}
-
-	public void setUi(final UIService ui) {
-		this.ui = ui;
-	}
-	
-	public IOService getIO() {
-		return io;
-	}
-
-	public void setIO(final IOService io) {
-		this.io = io;	
-	}
-	
-	public List<File> getFileList(){
-		return fileList;
-	}
-	
-	public void setFileList(List<File> fileList) {
-		this.fileList = fileList;
-	}
-	
-	public boolean getNextState() {
-		return nextState;
-	}
-	
-	public void setNextState(boolean input) {
-		this.nextState = input;
-	}
-	
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub		
-	}
-	
 	
 	public static void main(final String[] args) {
 		try {
