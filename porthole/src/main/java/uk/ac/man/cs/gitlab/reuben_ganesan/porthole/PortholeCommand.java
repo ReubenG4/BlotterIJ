@@ -98,9 +98,25 @@ public class PortholeCommand implements Command{
 				//if nextState is true, open dialogS, else disposeAllUI
 				public void windowClosing(WindowEvent e){
 					if(dialogS.getNextState()) {					
-						ui.showDialog(Integer.toString(fileList.size()));
+						//ui.showDialog(Integer.toString(fileList.size()));
 						dialogB.refreshRows();
+						dialogB.resizeColumnWidth();
 						dialogB.setVisible(true);				
+					}
+					else{
+						disposeAllUI();
+					}					
+				}
+				
+			});
+			
+			/* 2st state */
+			dialogB.addWindowListener(new WindowAdapter() {		
+				
+				//On close of bandDialog, 
+				public void windowClosing(WindowEvent e){
+					if(dialogB.getNextState()) {					
+									
 					}
 					else{
 						disposeAllUI();
@@ -124,6 +140,9 @@ public class PortholeCommand implements Command{
 		
 		if(dialogS != null)
 			dialogS.dispose();
+		
+		if(dialogB!= null)
+			dialogB.dispose();
 	
 	}
 }

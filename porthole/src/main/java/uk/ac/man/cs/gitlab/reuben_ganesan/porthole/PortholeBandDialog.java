@@ -1,6 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 public class  PortholeBandDialog extends PortholeDialog {
 	
@@ -29,8 +32,7 @@ public class  PortholeBandDialog extends PortholeDialog {
 	JTable bandTable;
 	JLabel fileName;
 	BandTableModel bandTableModel;
-   
-	
+
 	public PortholeBandDialog() {
 		setName("PortholeBand");
 		setBounds(100, 100, 450, 300);
@@ -65,18 +67,42 @@ public class  PortholeBandDialog extends PortholeDialog {
 	public List<File> getFileList() {
 		return this.fileList;
 	}
-		
+	
+	/*
+	 * Adds data from file list to rows
+	 */
 	public void refreshRows() {
 		//Iterate through list of chosen files
-		Iterator<File> fileItr = fileList.iterator();							
+		Iterator<File> fileItr = fileList.iterator();
+		FileHelper helper = new FileHelper();
+		
 		while (fileItr.hasNext()) {
 			File fileToAdd = fileItr.next();
 			Vector<Object> rowToAdd = new Vector<Object>();
 			rowToAdd.add(fileToAdd);
-			rowToAdd.add(100);
-			rowToAdd.add("N");
+			rowToAdd.add(helper.getWavelength(fileToAdd));
+			rowToAdd.add(helper.getType(fileToAdd));
 			bandTableModel.addRow(rowToAdd);
 		}
+	}
+	
+	/*
+	 * Fits columns to width of data
+	 * Source: https://stackoverflow.com/questions/17627431/auto-resizing-the-jtable-column-widths
+	 */
+	public void resizeColumnWidth() {
+	    final TableColumnModel columnModel = bandTable.getColumnModel();
+	    for (int column = 0; column < bandTable.getColumnCount(); column++) {
+	        int width = 15; // Min width
+	        for (int row = 0; row < bandTable.getRowCount(); row++) {
+	            TableCellRenderer renderer = bandTable.getCellRenderer(row, column);
+	            Component comp = bandTable.prepareRenderer(renderer, row, column);
+	            width = Math.max(comp.getPreferredSize().width +1 , width);
+	        }
+	        if(width > 300)
+	            width=300;
+	        columnModel.getColumn(column).setPreferredWidth(width);
+	    }
 	}
 	
 	
