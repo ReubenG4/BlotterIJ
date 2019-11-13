@@ -36,7 +36,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	List<File> fileList = new LinkedList<File>();
 	
 	/*
-	 * Declare JComponents
+	 * Declare JPanels
 	 */		
 	JPanel buttonPanel = new JPanel();
 	JPanel filePanel = new JPanel();
