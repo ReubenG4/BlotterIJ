@@ -18,8 +18,6 @@ import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
 import net.imagej.ops.OpService;
-import net.imglib2.img.Img;
-import net.imglib2.type.numeric.RealType;
 
 /* Invoked when user selects plugin from menu */
 @Plugin(type = Command.class, headless = true,menuPath = "Plugins>Porthole>Load Images")
@@ -48,6 +46,7 @@ public class PortholeCommand implements Command{
 	IOService io;
 	
 	private static PortholeSelectDialog dialogS = null;
+	private static PortholeBandDialog dialogB = null;
     private static List<File> fileList = new LinkedList<File>();
 	
 	
@@ -72,7 +71,22 @@ public class PortholeCommand implements Command{
 			dialogS.setFileList(fileList);
 			dialogS.setTitle("Porthole - Select Files");
 			
-							 	  				
+			if (dialogB == null) {
+				dialogB = new PortholeBandDialog();
+			}
+			
+			dialogB.setOps(ops);
+			dialogB.setLog(log);
+			dialogB.setStatus(status);
+			dialogB.setCommand(cmd);
+			dialogB.setThread(thread);
+			dialogB.setUi(ui);
+			dialogB.setIO(io);
+			dialogB.setFileList(fileList);
+			dialogB.setTitle("Porthole - Confirm Wavelengths");	
+			
+				
+			
 			/*
 			 * State machine to handle dialog flow
 			 */
@@ -83,8 +97,10 @@ public class PortholeCommand implements Command{
 				//On close of selectDialog, 
 				//if nextState is true, open dialogS, else disposeAllUI
 				public void windowClosing(WindowEvent e){
-					if(dialogS.getNextState()) {
-						dialogS.dispose();
+					if(dialogS.getNextState()) {					
+						ui.showDialog(Integer.toString(fileList.size()));
+						dialogB.refreshRows();
+						dialogB.setVisible(true);				
 					}
 					else{
 						disposeAllUI();

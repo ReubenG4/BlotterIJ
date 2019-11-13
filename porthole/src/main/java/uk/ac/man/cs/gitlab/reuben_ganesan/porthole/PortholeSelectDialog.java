@@ -16,8 +16,6 @@ import javax.swing.event.ListSelectionListener;
 import org.scijava.widget.FileWidget;
 
 import io.scif.img.ImgIOException;
-import net.imglib2.img.Img;
-
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -74,7 +72,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 			imageJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			imageJList.setLayoutOrientation(JList.VERTICAL);
 			imageJList.setVisibleRowCount(-1);
-			imageJList.setCellRenderer(new FileCellRenderer());
+			imageJList.setCellRenderer(new FileListCellRenderer());
 		    		
 			listScroller = new JScrollPane(imageJList);
 			listScroller.setPreferredSize(new Dimension(380, 200));

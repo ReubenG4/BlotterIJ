@@ -2,8 +2,6 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import javax.swing.JDialog;
 import net.imagej.ops.OpService;
-import net.imglib2.img.Img;
-
 import org.scijava.app.StatusService;
 import org.scijava.command.CommandService;
 import org.scijava.io.IOService;
@@ -11,8 +9,6 @@ import org.scijava.log.LogService;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.List;
 import java.awt.event.ActionEvent;
 
 /* Parent Class for all Dialogs */
@@ -28,7 +24,6 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	private CommandService cmd;
 	private ThreadService thread;
 	private UIService ui;
-	private List<Img<?>> imgList;
 	private boolean nextState = false;
 
 	/**
