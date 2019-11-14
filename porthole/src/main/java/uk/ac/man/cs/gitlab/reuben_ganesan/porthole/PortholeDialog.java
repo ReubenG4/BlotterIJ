@@ -8,6 +8,9 @@ import org.scijava.io.IOService;
 import org.scijava.log.LogService;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
+
+import io.scif.services.DatasetIOService;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -24,6 +27,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	private CommandService cmd;
 	private ThreadService thread;
 	private UIService ui;
+	private DatasetIOService datasetIO;
 	private boolean nextState = false;
 
 	/**
@@ -102,6 +106,14 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		this.nextState = input;
 	}
 	
+	public DatasetIOService getDatasetIO() {
+		return datasetIO;
+	}
+
+	public void setDatasetIO(DatasetIOService datasetIO) {
+		this.datasetIO = datasetIO;
+	}
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -119,6 +131,8 @@ public class PortholeDialog extends JDialog implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+
+	
 
 
 

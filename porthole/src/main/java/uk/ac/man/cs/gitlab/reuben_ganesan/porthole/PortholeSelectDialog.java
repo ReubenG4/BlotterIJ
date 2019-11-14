@@ -17,18 +17,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import org.scijava.widget.FileWidget;
+
+import net.imagej.Dataset;
 
 public class  PortholeSelectDialog extends PortholeDialog {
 	
 	/*
 	 * Declare and initialise class variables
 	 */
-	List<File> fileList = new LinkedList<File>();
+	List<Dataset> dataList = new LinkedList<Dataset>();
 	
 	/*
 	 * Declare JComponents
@@ -37,13 +38,13 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	JPanel infoPanel;
 	JPanel filePanel;	
 	JScrollPane tableScroller;
-	JTable bandTable;
+	JTable fileTable;
 	JLabel fileName;
 	JToolBar fileBar;
 	JButton addButton;
 	JButton removeButton;
 	JButton confirmButton;
-	BandTableModel bandTableModel;
+	FileTableModel fileTableModel;
 
 	public PortholeSelectDialog() {
 		setName("PortholeBand");
@@ -57,18 +58,18 @@ public class  PortholeSelectDialog extends PortholeDialog {
 		 confirmPanel = new JPanel();
 		 infoPanel = new JPanel();
 		 filePanel = new JPanel();
-		 bandTableModel = new BandTableModel();
-		 bandTable = new JTable(bandTableModel);
+		 fileTableModel = new FileTableModel();
+		 fileTable = new JTable(fileTableModel);
 				
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			
-			bandTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			bandTable.setRowSelectionAllowed(true);
-			bandTable.setColumnSelectionAllowed(false);
+			fileTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		    fileTable.setRowSelectionAllowed(true);
+		    fileTable.setColumnSelectionAllowed(false);
 			
-			bandTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
-			tableScroller = new JScrollPane(bandTable);
-			bandTable.setFillsViewportHeight(true);
+			fileTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
+			tableScroller = new JScrollPane(fileTable);
+			fileTable.setFillsViewportHeight(true);
 			infoPanel.add(tableScroller);
 		}
 		
@@ -101,19 +102,16 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					//While iterator hasNext, add it as a row to table
 					while (fileItr.hasNext()) {
 						fileToAdd = fileItr.next();
-						rowToAdd = new Vector<Object>();
 						fileHelper.setFilename(fileToAdd.getName());
-						//getUi().showDialog(fileToAdd.getName());
-						rowToAdd.add(fileToAdd);
-						rowToAdd.add(fileHelper.getWavelength());
-						rowToAdd.add(fileHelper.getType());
-						bandTableModel.addRow(rowToAdd);
+						fileTableModel.addRow(fileToAdd, 
+								fileHelper.getWavelength(), 
+								fileHelper.getType());
 					}
-					bandTableModel.fireTableDataChanged();
+					fileTableModel.fireTableDataChanged();
 					resizeColumnWidth();
 					
 					//If there's more than one row available, enable the confirm button
-					if(bandTableModel.getRowCount() > 0)
+					if(fileTableModel.getRowCount() > 0)
 						confirmButton.setEnabled(true);			
 					
 				}
@@ -131,10 +129,14 @@ public class  PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					int index = bandTable.getSelectedRow();
-					bandTableModel.removeRow(index);	
-					bandTableModel.fireTableDataChanged();
+					int index = fileTable.getSelectedRow();
+					fileTableModel.removeRow(index);	
+					fileTableModel.fireTableDataChanged();
 					resizeColumnWidth();
+					
+					//If there's less than one row available, disable the confirm button
+					if(fileTableModel.getRowCount() > 0)
+						confirmButton.setEnabled(false);
 				}
 				
 			});
@@ -157,7 +159,10 @@ public class  PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
+					//Dataset image = getDatasetIO().open(source);
 					
+					
+							
 					
 				}
 				
@@ -174,12 +179,12 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	/*
 	 * Accessors & Mutators
 	 */	
-	public void setFileList(List<File> fileList) {
-		this.fileList = fileList;
+	public void setdataList(List<Dataset> dataList) {
+		this.dataList = dataList;
 	}
 	
-	public List<File> getFileList() {
-		return this.fileList;
+	public List<Dataset> getdataList() {
+		return this.dataList;
 	}
 	
 	
@@ -188,12 +193,12 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	 * Source: https://stackoverflow.com/questions/17627431/auto-resizing-the-jtable-column-widths
 	 */
 	public void resizeColumnWidth() {
-	    final TableColumnModel columnModel = bandTable.getColumnModel();
-	    for (int column = 0; column < bandTable.getColumnCount(); column++) {
+	    final TableColumnModel columnModel = fileTable.getColumnModel();
+	    for (int column = 0; column < fileTable.getColumnCount(); column++) {
 	        int width = 15; // Min width
-	        for (int row = 0; row < bandTable.getRowCount(); row++) {
-	            TableCellRenderer renderer = bandTable.getCellRenderer(row, column);
-	            Component comp = bandTable.prepareRenderer(renderer, row, column);
+	        for (int row = 0; row < fileTable.getRowCount(); row++) {
+	            TableCellRenderer renderer = fileTable.getCellRenderer(row, column);
+	            Component comp = fileTable.prepareRenderer(renderer, row, column);
 	            width = Math.max(comp.getPreferredSize().width +1 , width);
 	        }
 	        if(width > 300)
@@ -202,45 +207,4 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	    }
 	}
 	
-	
-	class BandTableModel extends AbstractTableModel {
-        private String[] columnNames = {"Filename",
-                                        "Wavelength",
-                                        "Type"};
-        
-        private Vector<Vector<Object>> data = new Vector<Vector<Object>>(); 
-        
-        public BandTableModel() {
-        	
-        }
-        
-        public void addRow(Vector<Object> rowData) {
-        	data.add(rowData);
-        }
-        
-        public void removeRow(int row) {
-        	data.remove(row);
-        }
-        
-        public int getColumnCount() {
-            return columnNames.length;
-        }
- 
-        public int getRowCount() {
-            return data.size();
-        }
- 
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
- 
-        public Object getValueAt(int row, int col) {
-            return data.get(row).get(col);
-        }
- 
-        public Class<? extends Object> getColumnClass(int c) {
-            return getValueAt(0,c).getClass();
-        }
-        
-	}
 }
