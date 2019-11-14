@@ -16,8 +16,18 @@ public class FileHelper{
 		matcher = pattern.matcher(input);
 	}
 		
+	public String getFileName() {
+		if(matcher.matches())
+			return matcher.group(0);
+		else
+			return "Filename";
+	}
+	
 	public String getProject() {
-		return "filename";
+		if(matcher.matches())
+			return matcher.group(1);
+		else
+			return "Project";
 	}
 	
 	public int getWavelength() {
