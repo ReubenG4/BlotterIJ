@@ -46,7 +46,6 @@ public class PortholeCommand implements Command{
 	IOService io;
 	
 	private static PortholeSelectDialog dialogS = null;
-	private static PortholeBandDialog dialogB = null;
     private static List<File> fileList = new LinkedList<File>();
 	
 	
@@ -70,23 +69,7 @@ public class PortholeCommand implements Command{
 			dialogS.setIO(io);
 			dialogS.setFileList(fileList);
 			dialogS.setTitle("Porthole - Select Files");
-			
-			if (dialogB == null) {
-				dialogB = new PortholeBandDialog();
-			}
-			
-			dialogB.setOps(ops);
-			dialogB.setLog(log);
-			dialogB.setStatus(status);
-			dialogB.setCommand(cmd);
-			dialogB.setThread(thread);
-			dialogB.setUi(ui);
-			dialogB.setIO(io);
-			dialogB.setFileList(fileList);
-			dialogB.setTitle("Porthole - Confirm Wavelengths");	
-			
-				
-			
+								
 			/*
 			 * State machine to handle dialog flow
 			 */
@@ -98,10 +81,7 @@ public class PortholeCommand implements Command{
 				//if nextState is true, open dialogS, else disposeAllUI
 				public void windowClosing(WindowEvent e){
 					if(dialogS.getNextState()) {					
-						//ui.showDialog(Integer.toString(fileList.size()));
-						dialogB.refreshRows();
-						dialogB.resizeColumnWidth();
-						dialogB.setVisible(true);				
+								
 					}
 					else{
 						disposeAllUI();
@@ -110,20 +90,7 @@ public class PortholeCommand implements Command{
 				
 			});
 			
-			/* 2st state */
-			dialogB.addWindowListener(new WindowAdapter() {		
-				
-				//On close of bandDialog, 
-				public void windowClosing(WindowEvent e){
-					if(dialogB.getNextState()) {					
-									
-					}
-					else{
-						disposeAllUI();
-					}					
-				}
-				
-			});
+			
 					
 			//Place UI in 1st state
 			dialogS.setVisible(true);
@@ -140,9 +107,6 @@ public class PortholeCommand implements Command{
 		
 		if(dialogS != null)
 			dialogS.dispose();
-		
-		if(dialogB!= null)
-			dialogB.dispose();
 	
 	}
 }

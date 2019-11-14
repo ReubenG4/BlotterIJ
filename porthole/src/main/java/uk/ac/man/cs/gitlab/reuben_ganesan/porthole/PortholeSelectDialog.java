@@ -1,88 +1,79 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import org.scijava.widget.FileWidget;
-
-import io.scif.img.ImgIOException;
-import java.awt.FlowLayout;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.awt.event.ActionEvent;
+import java.util.Vector;
 
-/* Invoked by porthole command if images are to be selected */
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+
+import org.scijava.widget.FileWidget;
+
 public class  PortholeSelectDialog extends PortholeDialog {
-
+	
 	/*
 	 * Declare and initialise class variables
 	 */
 	List<File> fileList = new LinkedList<File>();
 	
 	/*
-	 * Declare JPanels
+	 * Declare JComponents
 	 */		
-	JPanel buttonPanel = new JPanel();
-	JPanel filePanel = new JPanel();
-	JPanel confirmPanel = new JPanel();
-	JPanel infoPanel = new JPanel();
-	
-	
-	/**
-	 * Create the dialog.
-	 */
-	public  PortholeSelectDialog() throws ImgIOException {	
-		setName("PortholeSelect");
-		setBounds(100, 100, 450, 300);
+	JPanel confirmPanel;
+	JPanel infoPanel;
+	JPanel filePanel;	
+	JScrollPane tableScroller;
+	JTable bandTable;
+	JLabel fileName;
+	JToolBar fileBar;
+	JButton addButton;
+	JButton removeButton;
+	JButton confirmButton;
+	BandTableModel bandTableModel;
+
+	public PortholeSelectDialog() {
+		setName("PortholeBand");
+		setBounds(100, 100, 500, 450);
 		getContentPane().setLayout(new BorderLayout());
+		
+		 fileBar = new JToolBar("");
+		 addButton = new JButton("Add");
+		 removeButton = new JButton("Remove");
+		 confirmButton = new JButton("Confirm");
+		 confirmPanel = new JPanel();
+		 infoPanel = new JPanel();
+		 filePanel = new JPanel();
+		 bandTableModel = new BandTableModel();
+		 bandTable = new JTable(bandTableModel);
 				
-		buttonPanel.setLayout(new FlowLayout());
-		filePanel.setLayout(new FlowLayout());
-		confirmPanel.setLayout(new FlowLayout());
-		
-		JScrollPane listScroller;
-		JToolBar fileBar = new JToolBar("");
-		JButton addButton = new JButton("Add");
-		JButton removeButton = new JButton("Remove");
-		JButton confirmButton = new JButton("Confirm");
-		
-		DefaultListModel<File> imageJListModel = new DefaultListModel<File>();
-		JList<File> imageJList = new JList<File>(imageJListModel);
-								
-		getContentPane().add(filePanel, BorderLayout.CENTER);
-		{
-			/*
-			 * imageList configuration
-			 * list to display chosen files
-			 */
-			imageJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			imageJList.setLayoutOrientation(JList.VERTICAL);
-			imageJList.setVisibleRowCount(-1);
-			imageJList.setCellRenderer(new FileListCellRenderer());
-		    		
-			listScroller = new JScrollPane(imageJList);
-			listScroller.setPreferredSize(new Dimension(380, 200));
-					
-			filePanel.add(listScroller);
+		getContentPane().add(infoPanel,BorderLayout.CENTER);
+		{			
+			bandTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			bandTable.setRowSelectionAllowed(true);
+			bandTable.setColumnSelectionAllowed(false);
+			
+			bandTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
+			tableScroller = new JScrollPane(bandTable);
+			bandTable.setFillsViewportHeight(true);
+			infoPanel.add(tableScroller);
 		}
-				
-		getContentPane().add(buttonPanel, BorderLayout.PAGE_START);
+		
+		getContentPane().add(filePanel, BorderLayout.PAGE_START);
 		{
-						
 			/*
 			 * addButton configuration
 			 * calls UI to prompt user to choose a file
@@ -102,117 +93,152 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					}
 					
 					//Iterate through list of chosen files
-					Iterator<File> fileItr = inputList.iterator();							
+					Iterator<File> fileItr = inputList.iterator();						
+					FileHelper helper = new FileHelper();
+					File fileToAdd;
+					Vector<Object> rowToAdd;
+									
+					//While iterator hasNext, add it as a row to table
 					while (fileItr.hasNext()) {
-						File current = fileItr.next();
-						imageJListModel.addElement(current);			    
+						fileToAdd = fileItr.next();
+						rowToAdd = new Vector<Object>();
+						rowToAdd.add(fileToAdd);
+						rowToAdd.add(helper.getWavelength(fileToAdd));
+						rowToAdd.add(helper.getType(fileToAdd));
+						bandTableModel.addRow(rowToAdd);
 					}
+					bandTableModel.fireTableDataChanged();
+					resizeColumnWidth();
 					
-					if(imageJListModel.size() > 0)
-						confirmButton.setEnabled(true);
+					//If there's more than one row available, enable the confirm button
+					if(bandTableModel.getRowCount() > 0)
+						confirmButton.setEnabled(true);			
 					
 				}
-			});			
+				
+			});
+			
 			fileBar.add(addButton);
-						
+			
 			/*
 			 * removeButton configuration
 			 * removes selected file from list when clicked
 			 */
-			
+		
 			removeButton.addActionListener(new ActionListener(){
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					int index = imageJList.getSelectedIndex();
-					imageJListModel.remove(index);	
-					
-					if (imageJListModel.size() < 1)
-						confirmButton.setEnabled(false);
-					
+					int index = bandTable.getSelectedRow();
+					bandTableModel.removeRow(index);	
+					bandTableModel.fireTableDataChanged();
+					resizeColumnWidth();
 				}
-			});			
-			fileBar.add(removeButton);	
-			removeButton.setEnabled(false);
-			
-			/*
-			 * ListSelectionListener
-			 * Determines if remove button should be enabled 
-			 */			
-			imageJList.addListSelectionListener(new ListSelectionListener() {
-
-				@Override
-				public void valueChanged(ListSelectionEvent e) {
-					
-					 if (e.getValueIsAdjusting() == false) {
-						 
-						 if (imageJList.getSelectedIndex() == -1)
-							 removeButton.setEnabled(false);
-						 else
-							 removeButton.setEnabled(true);
-
-					 }
-				}    	
-		    		    	
-		    });
-						
-			fileBar.setFloatable(false);
-	        fileBar.setRollover(true);		
-	        
-			buttonPanel.add(fileBar);
-		}
 				
-		getContentPane().add(confirmPanel, BorderLayout.PAGE_END);
+			});
+			
+			fileBar.add(removeButton);
+			filePanel.add(fileBar);
+		
+			
+		}
+		
+		getContentPane().add(confirmPanel,BorderLayout.PAGE_END);
 		{
+			
 			/*
 			 * confirmButton configuration
 			 * confirms the selection of files
 			 */
+		
 			confirmButton.addActionListener(new ActionListener(){
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					
-					//Iterate through ListModel, place all elements in fileList
-					for(int i=0; i<imageJListModel.getSize(); i++) {
-						fileList.add(imageJListModel.get(i));
-					}
-								
-					setNextState(true);
-					setVisible(false);
-					dispatchEvent(new WindowEvent(PortholeSelectDialog.this,WindowEvent.WINDOW_CLOSING));					    					
+					
 				}
 				
 			});
 			
 			confirmPanel.add(confirmButton);
-			confirmButton.setEnabled(false);
-		}
+			confirmButton.setEnabled(true);
+			
+		}	
+		
 	}
 	
-	public static void main(final String[] args) {
-		try {
-			final PortholeSelectDialog dialog = new PortholeSelectDialog();
-			//dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		}
-		catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/* Accessors and Mutators */	
-	public List<File> getFileList(){
-		return fileList;
-	}
-
-
-	public void setFileList(List<File> fileList){
+	
+	/*
+	 * Accessors & Mutators
+	 */	
+	public void setFileList(List<File> fileList) {
 		this.fileList = fileList;
 	}
-
+	
+	public List<File> getFileList() {
+		return this.fileList;
+	}
+	
+	
+	/*
+	 * Fits columns to width of data
+	 * Source: https://stackoverflow.com/questions/17627431/auto-resizing-the-jtable-column-widths
+	 */
+	public void resizeColumnWidth() {
+	    final TableColumnModel columnModel = bandTable.getColumnModel();
+	    for (int column = 0; column < bandTable.getColumnCount(); column++) {
+	        int width = 15; // Min width
+	        for (int row = 0; row < bandTable.getRowCount(); row++) {
+	            TableCellRenderer renderer = bandTable.getCellRenderer(row, column);
+	            Component comp = bandTable.prepareRenderer(renderer, row, column);
+	            width = Math.max(comp.getPreferredSize().width +1 , width);
+	        }
+	        if(width > 300)
+	            width=300;
+	        columnModel.getColumn(column).setPreferredWidth(width);
+	    }
+	}
+	
+	
+	class BandTableModel extends AbstractTableModel {
+        private String[] columnNames = {"Filename",
+                                        "Wavelength",
+                                        "Type"};
+        
+        private Vector<Vector<Object>> data = new Vector<Vector<Object>>(); 
+        
+        public BandTableModel() {
+        	
+        }
+        
+        public void addRow(Vector<Object> rowData) {
+        	data.add(rowData);
+        }
+        
+        public void removeRow(int row) {
+        	data.remove(row);
+        }
+        
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+ 
+        public int getRowCount() {
+            return data.size();
+        }
+ 
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+ 
+        public Object getValueAt(int row, int col) {
+            return data.get(row).get(col);
+        }
+ 
+        public Class<? extends Object> getColumnClass(int c) {
+            return getValueAt(0,c).getClass();
+        }
+        
+	}
 }
-
-
-
-
