@@ -66,8 +66,8 @@ public class  PortholeSelectDialog extends PortholeDialog {
 			fileTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		    fileTable.setRowSelectionAllowed(true);
 		    fileTable.setColumnSelectionAllowed(false);
-			
 			fileTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
+			
 			tableScroller = new JScrollPane(fileTable);
 			fileTable.setFillsViewportHeight(true);
 			infoPanel.add(tableScroller);
@@ -107,6 +107,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 								fileHelper.getWavelength(), 
 								fileHelper.getType());
 					}
+					fileTableModel.sortTable();
 					fileTableModel.fireTableDataChanged();
 					resizeColumnWidth();
 					
@@ -131,12 +132,14 @@ public class  PortholeSelectDialog extends PortholeDialog {
 				public void actionPerformed(final ActionEvent arg0) {
 					int index = fileTable.getSelectedRow();
 					fileTableModel.removeRow(index);	
+					fileTableModel.sortTable();
 					fileTableModel.fireTableDataChanged();
 					resizeColumnWidth();
 					
 					//If there's less than one row available, disable the confirm button
 					if(fileTableModel.getRowCount() > 0)
 						confirmButton.setEnabled(false);
+									
 				}
 				
 			});

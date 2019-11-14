@@ -1,6 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -18,6 +19,17 @@ class FileTableModel extends AbstractTableModel {
     	
     }
     
+    //Sorts the table in ascending order of wavelength
+    public void sortTable() {
+    	Comparator<FileWaveType> c = new Comparator<FileWaveType>() {
+    		@Override
+    		public int compare(FileWaveType o1, FileWaveType o2) {
+    			return o1.wavelength - o2.wavelength;
+    			}
+    	};
+    	
+    	data.sort(c);
+    }
     
     public void addRow(File file, int wavelength, char type) {
     	data.add(new FileWaveType(file,wavelength,type));
