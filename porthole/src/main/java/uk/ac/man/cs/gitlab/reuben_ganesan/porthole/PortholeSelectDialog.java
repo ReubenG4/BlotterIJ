@@ -141,7 +141,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					resizeColumnWidth();
 					
 					//If there's less than one row available, disable the confirm button
-					if(fileTableModel.getRowCount() > 0)
+					if(fileTableModel.getRowCount() < 1)
 						confirmButton.setEnabled(false);
 									
 				}
@@ -168,21 +168,22 @@ public class  PortholeSelectDialog extends PortholeDialog {
 				public void actionPerformed(final ActionEvent arg0) {
 					Vector<FileWaveType> data = fileTableModel.getData();
 					Iterator<FileWaveType> itr = data.iterator();
-					Dataset currentData;
-					ImageMetadata currentMeta;
+					Dataset currentData = null;
 					
 					//Try opening the first file
 					if(itr.hasNext()) {
 						try {
 							currentData = getDatasetIO().open(itr.next().file.getAbsolutePath());
-							//Further investigation into ImageMetaData of Scifio required
-							//currentMeta = new ImageMetadata();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
 					
-					
+					//If first file loads, show it
+					if(currentData != null) {
+						getUi().show(currentData);
+						
+					}
 					
 				}
 				
