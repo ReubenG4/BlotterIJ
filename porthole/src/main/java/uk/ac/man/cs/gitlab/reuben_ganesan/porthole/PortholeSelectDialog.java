@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -162,10 +163,17 @@ public class  PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					//Dataset image = getDatasetIO().open(source);
+					Vector<FileWaveType> data = fileTableModel.getData();
+					Iterator<FileWaveType> itr = data.iterator();
 					
-					
-							
+					while(itr.hasNext()) {
+						try {
+							Dataset currentData = getDatasetIO().open(itr.next().file.getAbsolutePath());
+							dataList.add(currentData);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 					
 				}
 				

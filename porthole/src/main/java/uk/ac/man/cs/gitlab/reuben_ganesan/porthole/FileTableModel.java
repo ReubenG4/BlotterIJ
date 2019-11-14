@@ -31,6 +31,10 @@ class FileTableModel extends AbstractTableModel {
     	data.sort(c);
     }
     
+    public Vector<FileWaveType> getData() {
+    	return data;
+    }
+    
     public void addRow(File file, int wavelength, char type) {
     	data.add(new FileWaveType(file,wavelength,type));
     }
