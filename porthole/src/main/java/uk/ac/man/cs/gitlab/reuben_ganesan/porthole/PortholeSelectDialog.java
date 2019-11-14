@@ -169,13 +169,14 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					Vector<FileWaveType> data = fileTableModel.getData();
 					Iterator<FileWaveType> itr = data.iterator();
 					Dataset currentData;
-					Metadata currentMeta;
+					ImageMetadata currentMeta;
 					
 					//Try opening the first file
 					if(itr.hasNext()) {
 						try {
 							currentData = getDatasetIO().open(itr.next().file.getAbsolutePath());
-							
+							//Further investigation into ImageMetaData of Scifio required
+							//currentMeta = new ImageMetadata();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
