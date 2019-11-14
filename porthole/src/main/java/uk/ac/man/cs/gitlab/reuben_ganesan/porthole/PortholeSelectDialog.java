@@ -25,6 +25,9 @@ import org.scijava.widget.FileWidget;
 
 import net.imagej.Dataset;
 
+import io.scif.ImageMetadata;
+import io.scif.Metadata;
+
 public class  PortholeSelectDialog extends PortholeDialog {
 	
 	/*
@@ -165,15 +168,20 @@ public class  PortholeSelectDialog extends PortholeDialog {
 				public void actionPerformed(final ActionEvent arg0) {
 					Vector<FileWaveType> data = fileTableModel.getData();
 					Iterator<FileWaveType> itr = data.iterator();
+					Dataset currentData;
+					Metadata currentMeta;
 					
-					while(itr.hasNext()) {
+					//Try opening the first file
+					if(itr.hasNext()) {
 						try {
-							Dataset currentData = getDatasetIO().open(itr.next().file.getAbsolutePath());
-							dataList.add(currentData);
+							currentData = getDatasetIO().open(itr.next().file.getAbsolutePath());
+							
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
+					
+					
 					
 				}
 				
