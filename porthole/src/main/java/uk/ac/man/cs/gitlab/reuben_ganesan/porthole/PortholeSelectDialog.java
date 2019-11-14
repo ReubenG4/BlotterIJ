@@ -94,7 +94,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					
 					//Iterate through list of chosen files
 					Iterator<File> fileItr = inputList.iterator();						
-					FileHelper helper = new FileHelper();
+					FileHelper fileHelper = new FileHelper();
 					File fileToAdd;
 					Vector<Object> rowToAdd;
 									
@@ -102,9 +102,11 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					while (fileItr.hasNext()) {
 						fileToAdd = fileItr.next();
 						rowToAdd = new Vector<Object>();
+						fileHelper.setFilename(fileToAdd.getName());
+						//getUi().showDialog(fileToAdd.getName());
 						rowToAdd.add(fileToAdd);
-						rowToAdd.add(helper.getWavelength(fileToAdd));
-						rowToAdd.add(helper.getType(fileToAdd));
+						rowToAdd.add(fileHelper.getWavelength());
+						rowToAdd.add(fileHelper.getType());
 						bandTableModel.addRow(rowToAdd);
 					}
 					bandTableModel.fireTableDataChanged();
@@ -162,7 +164,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 			});
 			
 			confirmPanel.add(confirmButton);
-			confirmButton.setEnabled(true);
+			confirmButton.setEnabled(false);
 			
 		}	
 		
