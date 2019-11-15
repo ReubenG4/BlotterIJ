@@ -25,15 +25,12 @@ import org.scijava.widget.FileWidget;
 
 import net.imagej.Dataset;
 
-import io.scif.ImageMetadata;
-import io.scif.Metadata;
-
 public class  PortholeSelectDialog extends PortholeDialog {
 	
 	/*
 	 * Declare and initialise class variables
 	 */
-	List<Dataset> dataList = new LinkedList<Dataset>();
+	
 	
 	/*
 	 * Declare JComponents
@@ -49,9 +46,11 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	JButton removeButton;
 	JButton confirmButton;
 	FileTableModel fileTableModel;
+	
+	
 
 	public PortholeSelectDialog() {
-		setName("PortholeBand");
+		setName("PortholeSelect");
 		setBounds(100, 100, 500, 450);
 		getContentPane().setLayout(new BorderLayout());
 		
@@ -166,25 +165,21 @@ public class  PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
+					Dataset currentSet;
 					Vector<FileWaveType> data = fileTableModel.getData();
 					Iterator<FileWaveType> itr = data.iterator();
-					Dataset currentData = null;
+					String itrPath = itr.next().file.getAbsolutePath();
 					
-					//Try opening the first file
-					if(itr.hasNext()) {
-						try {
-							currentData = getDatasetIO().open(itr.next().file.getAbsolutePath());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+					try {
+						currentSet = getDatasetIO().open(itrPath);
+						//currentSet.setAxis(, d);
+						//CalibratedAxis object needs research and testing
+						//Must allow for a single Dataset to hold multiple channels/wavelengths
+						//Must be able to assign a wavelength to each image added to dataset
+						getUi().show(currentSet);
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-					
-					//If first file loads, show it
-					if(currentData != null) {
-						getUi().show(currentData);
-						
-					}
-					
 				}
 				
 			});
@@ -200,13 +195,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	/*
 	 * Accessors & Mutators
 	 */	
-	public void setdataList(List<Dataset> dataList) {
-		this.dataList = dataList;
-	}
 	
-	public List<Dataset> getdataList() {
-		return this.dataList;
-	}
 	
 	
 	/*
