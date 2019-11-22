@@ -74,7 +74,6 @@ public class PortholeCommand implements Command{
 			dialogS.setUi(ui);
 			dialogS.setIO(io);
 			dialogS.setDatasetIO(datasetIO);
-			dialogS.setFormatService(formatService);
 			dialogS.setTitle("Porthole - Select Files");
 								
 			/*
