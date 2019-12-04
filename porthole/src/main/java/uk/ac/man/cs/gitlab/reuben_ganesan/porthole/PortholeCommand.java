@@ -69,6 +69,7 @@ public class PortholeCommand implements Command{
 				dialogS = new PortholeSelectDialog();
 			}
 			
+
 			dialogS.setOpsService(ops);
 			dialogS.setLogService(log);
 			dialogS.setStatusService(status);
@@ -78,6 +79,15 @@ public class PortholeCommand implements Command{
 			dialogS.setIOService(io);
 			dialogS.setDatasetIOService(dsIO);
 			dialogS.setDatasetService(ds);
+
+			dialogS.setOpsService(ops);
+			dialogS.setLogService(log);
+			dialogS.setStatusService(status);
+			dialogS.setCommandService(cmd);
+			dialogS.setThreadService(thread);
+			dialogS.setUIService(ui);
+			dialogS.setIOService(io);
+			dialogS.setDatasetIOService(dsIO);
 			dialogS.setTitle("Porthole - Select Files");
 								
 			/*

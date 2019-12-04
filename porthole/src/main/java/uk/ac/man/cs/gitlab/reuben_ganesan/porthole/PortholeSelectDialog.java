@@ -91,7 +91,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					
 					//Retrieve value from ui chooseFiles
 				    List<File>initialValue = new LinkedList<File>();
-					List<File>inputList = getUi().chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
+					List<File>inputList = getUIService().chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
 					if(inputList == null) {
 						return;
 					}

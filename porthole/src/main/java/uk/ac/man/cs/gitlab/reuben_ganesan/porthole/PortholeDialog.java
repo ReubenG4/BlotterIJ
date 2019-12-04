@@ -45,7 +45,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	 * Accessor and mutator methods
 	 * 
 	 */
-	public OpService getOps() {
+	public OpService getOpsService() {
 		return ops;
 	}
 
@@ -53,7 +53,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		this.ops = ops;
 	}
 
-	public LogService getLog() {
+	public LogService getLogService() {
 		return log;
 	}
 
@@ -77,7 +77,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		this.cmd = command;
 	}
 
-	public ThreadService getThread() {
+	public ThreadService getThreadService() {
 		return thread;
 	}
 
@@ -85,7 +85,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		this.thread = thread;
 	}
 
-	public UIService getUI() {
+	public UIService getUIService() {
 		return ui;
 	}
 
@@ -93,7 +93,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		this.ui = ui;
 	}
 	
-	public IOService getIO() {
+	public IOService getIOService() {
 		return io;
 	}
 
@@ -109,7 +109,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		this.nextState = input;
 	}
 	
-	public DatasetIOService getDatasetIO() {
+	public DatasetIOService getDatasetIOService() {
 		return dsIO;
 	}
 
