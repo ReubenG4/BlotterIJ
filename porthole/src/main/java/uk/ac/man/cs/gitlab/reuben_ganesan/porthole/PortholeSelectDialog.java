@@ -167,19 +167,8 @@ public class  PortholeSelectDialog extends PortholeDialog {
 				public void actionPerformed(final ActionEvent arg0) {
 					Dataset currentSet;
 					Vector<FileWaveType> data = fileTableModel.getData();
-					Iterator<FileWaveType> itr = data.iterator();
-					String itrPath = itr.next().file.getAbsolutePath();
+					Iterator<FileWaveType> itr = data.iterator();			
 					
-					try {
-						currentSet = getDatasetIO().open(itrPath);
-						//currentSet.setAxis(, d);
-						//CalibratedAxis object needs research and testing
-						//Must allow for a single Dataset to hold multiple channels/wavelengths
-						//Must be able to assign a wavelength to each image added to dataset
-						getUi().show(currentSet);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 				}
 				
 			});

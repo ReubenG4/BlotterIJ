@@ -1,6 +1,8 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import javax.swing.JDialog;
+
+import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
 import org.scijava.app.StatusService;
 import org.scijava.command.CommandService;
@@ -27,7 +29,8 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	private CommandService cmd;
 	private ThreadService thread;
 	private UIService ui;
-	private DatasetIOService datasetIO;
+	private DatasetIOService dsIO;
+	private DatasetService ds; 
 	private boolean nextState = false;
 
 	/**
@@ -46,7 +49,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		return ops;
 	}
 
-	public void setOps(final OpService ops) {
+	public void setOpsService(final OpService ops) {
 		this.ops = ops;
 	}
 
@@ -54,7 +57,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		return log;
 	}
 
-	public void setLog(final LogService log) {
+	public void setLogService(final LogService log) {
 		this.log = log;
 	}
 
@@ -62,7 +65,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		return status;
 	}
 
-	public void setStatus(final StatusService status) {
+	public void setStatusService(final StatusService status) {
 		this.status = status;
 	}
 
@@ -70,7 +73,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		return cmd;
 	}
 
-	public void setCommand(final CommandService command) {
+	public void setCommandService(final CommandService command) {
 		this.cmd = command;
 	}
 
@@ -78,15 +81,15 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		return thread;
 	}
 
-	public void setThread(final ThreadService thread) {
+	public void setThreadService(final ThreadService thread) {
 		this.thread = thread;
 	}
 
-	public UIService getUi() {
+	public UIService getUI() {
 		return ui;
 	}
 
-	public void setUi(final UIService ui) {
+	public void setUIService(final UIService ui) {
 		this.ui = ui;
 	}
 	
@@ -94,7 +97,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		return io;
 	}
 
-	public void setIO(final IOService io) {
+	public void setIOService(final IOService io) {
 		this.io = io;	
 	}
 	
@@ -107,13 +110,21 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	}
 	
 	public DatasetIOService getDatasetIO() {
-		return datasetIO;
+		return dsIO;
 	}
 
-	public void setDatasetIO(DatasetIOService datasetIO) {
-		this.datasetIO = datasetIO;
+	public void setDatasetIOService(DatasetIOService dsIO) {
+		this.dsIO = dsIO;
 	}
 	
+	
+	public DatasetService getDatasetSerivce() {
+		return ds;
+	}
+
+	public void setDatasetService(DatasetService ds) {
+		this.ds = ds;
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {

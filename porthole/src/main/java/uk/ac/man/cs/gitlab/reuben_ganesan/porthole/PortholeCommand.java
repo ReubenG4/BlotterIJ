@@ -15,6 +15,7 @@ import org.scijava.ui.UIService;
 
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
+import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
 
 /* Invoked when user selects plugin from menu */
@@ -44,8 +45,10 @@ public class PortholeCommand implements Command{
 	IOService io;
 	
 	@Parameter
-	DatasetIOService datasetIO;
+	DatasetIOService dsIO;
 	
+	@Parameter
+	DatasetService ds;
 	
     @Parameter
     FormatService formatService;
@@ -66,15 +69,15 @@ public class PortholeCommand implements Command{
 				dialogS = new PortholeSelectDialog();
 			}
 			
-			dialogS.setOps(ops);
-			dialogS.setLog(log);
-			dialogS.setStatus(status);
-			dialogS.setCommand(cmd);
-			dialogS.setThread(thread);
-			dialogS.setUi(ui);
-			dialogS.setIO(io);
-			dialogS.setDatasetIO(datasetIO);
-			dialogS.setFormatService(formatService);
+			dialogS.setOpsService(ops);
+			dialogS.setLogService(log);
+			dialogS.setStatusService(status);
+			dialogS.setCommandService(cmd);
+			dialogS.setThreadService(thread);
+			dialogS.setUIService(ui);
+			dialogS.setIOService(io);
+			dialogS.setDatasetIOService(dsIO);
+			dialogS.setDatasetService(ds);
 			dialogS.setTitle("Porthole - Select Files");
 								
 			/*
