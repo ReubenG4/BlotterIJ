@@ -165,9 +165,10 @@ public class  PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					Dataset currentSet;
 					Vector<FileWaveType> data = fileTableModel.getData();
-					Iterator<FileWaveType> itr = data.iterator();			
+					Iterator<FileWaveType> itr = data.iterator();	
+					
+					
 					
 				}
 				

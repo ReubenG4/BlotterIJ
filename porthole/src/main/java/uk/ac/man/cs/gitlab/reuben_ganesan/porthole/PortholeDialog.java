@@ -118,7 +118,7 @@ public class PortholeDialog extends JDialog implements ActionListener {
 	}
 	
 	
-	public DatasetService getDatasetSerivce() {
+	public DatasetService getDatasetService() {
 		return ds;
 	}
 
