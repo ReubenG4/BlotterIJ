@@ -24,6 +24,8 @@ import javax.swing.table.TableColumnModel;
 import org.scijava.widget.FileWidget;
 
 import net.imagej.Dataset;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 public class  PortholeSelectDialog extends PortholeDialog {
 	
@@ -165,11 +167,26 @@ public class  PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					Vector<FileWaveType> data = fileTableModel.getData();
-					Iterator<FileWaveType> itr = data.iterator();	
+					setVisible(false);
+					Vector<FileWaveType> tableData = fileTableModel.getData();
+					Iterator<FileWaveType> tableItr = tableData.iterator();
+					Vector<Dataset> datasets = new Vector<Dataset>();
+					FileWaveType currentFile;
 					
+					while(tableItr.hasNext()) {
+						currentFile = tableItr.next();
+						try {
+							datasets.add(getDatasetIOService().open(currentFile.file.getPath()));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					
+					Iterator<Dataset> dataItr = datasets.iterator();
 					
+					while(dataItr.hasNext())
+					  getUIService().show(dataItr.next());			
 				}
 				
 			});
