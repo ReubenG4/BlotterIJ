@@ -24,7 +24,7 @@ class FileTableModel extends AbstractTableModel {
     	Comparator<ImgWaveType> c = new Comparator<ImgWaveType>() {
     		@Override
     		public int compare(ImgWaveType o1, ImgWaveType o2) {
-    			return o1.wavelength - o2.wavelength;
+    			return o1.getWavelength() - o2.getWavelength();
     			}
     	};
     	
@@ -59,13 +59,13 @@ class FileTableModel extends AbstractTableModel {
     	ImgWaveType iwt = data.get(row);
     	       	
     	if(col == 0)
-    		return (Object)iwt.file;
+    		return (Object)iwt.getFile();
     	
     	if(col == 1)
-    		return (Object)iwt.wavelength;
+    		return (Object)iwt.getWavelength();
     	
     	if(col == 2)
-    		return (Object)iwt.type;
+    		return (Object)iwt.getType();
     	
     	return null;          
     }

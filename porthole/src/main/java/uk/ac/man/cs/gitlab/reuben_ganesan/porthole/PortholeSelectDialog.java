@@ -175,10 +175,9 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					setVisible(false);
 					
 					//Declare and initalise variables needed for loading of images
-					Vector<ImgWaveType> tableData = fileTableModel.getData();
-					Iterator<ImgWaveType> tableItr = tableData.iterator();
-					Vector<Img<T>> openImages = new Vector<Img<T>>();
-					ImgWaveType currentFile;
+					Vector<ImgWaveType> imgData = fileTableModel.getData();
+					Iterator<ImgWaveType> tableItr = imgData.iterator();
+					ImgWaveType currentRow;
 					Dataset currentData;
 					
 					//Declare and initialise a configured ImgOpener to open the loaded images
@@ -188,19 +187,11 @@ public class  PortholeSelectDialog extends PortholeDialog {
 							
 					
 					
-					
 					while(tableItr.hasNext()) {
-						currentFile = tableItr.next();
-						try {
-							currentData = getDatasetIOService().open(currentFile.file.getPath());								
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						//Load Img pointed to by ImgWaveType
+						currentRow = tableItr.next();
+						
 					}
-					
-					Iterator<Img<T>> imgItr = openImages.iterator();
-					
 					
 				}
 				
