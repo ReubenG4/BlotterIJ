@@ -168,6 +168,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 		
 			confirmButton.addActionListener(new ActionListener(){
 
+				@SuppressWarnings("unchecked")
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					
@@ -176,22 +177,23 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					
 					//Declare and initalise variables needed for loading of images
 					Vector<ImgWaveType> imgData = fileTableModel.getData();
-					Iterator<ImgWaveType> tableItr = imgData.iterator();
+					Iterator<ImgWaveType> imgItr = imgData.iterator();
 					ImgWaveType currentRow;
 					Dataset currentData;
 					
 					//Declare and initialise a configured ImgOpener to open the loaded images
 					ImgOpener imgOpener = new ImgOpener();
 					SCIFIOConfig config = new SCIFIOConfig();
-					config.imgOpenerSetImgModes(ImgMode.CELL);
-							
+					config.imgOpenerSetImgModes(ImgMode.CELL);		
 					
-					
-					while(tableItr.hasNext()) {
-						//Load Img pointed to by ImgWaveType
-						currentRow = tableItr.next();
-						
+					while(imgItr.hasNext()) {
+						//Load next Img
+						currentRow = imgItr.next();
+						currentRow.setImg((Img<T>)imgOpener.openImgs(currentRow.getFilePath(),config).get(0));
+						getUIService().show(currentRow.getImg());
 					}
+					
+					
 					
 				}
 				

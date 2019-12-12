@@ -3,7 +3,9 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 import java.io.File;
 import net.imglib2.img.Img;
 
-//Object holding data for each row
+/*
+ * Object acting as a wrapper for Img
+ */
 class ImgWaveType{
 	private File file;
 	private Img<?> img;
@@ -24,7 +26,7 @@ class ImgWaveType{
 		this.img = img;
 	}
 	
-	public Img<?> getImg(Img<?> img) {
+	public Img<?> getImg() {
 		return img;
 	}
 	
