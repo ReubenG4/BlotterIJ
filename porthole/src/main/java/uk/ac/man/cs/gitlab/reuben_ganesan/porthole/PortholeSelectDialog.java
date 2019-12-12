@@ -23,7 +23,11 @@ import javax.swing.table.TableColumnModel;
 
 import org.scijava.widget.FileWidget;
 
+import io.scif.config.SCIFIOConfig;
+import io.scif.config.SCIFIOConfig.ImgMode;
+import io.scif.img.ImgOpener;
 import net.imagej.Dataset;
+import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -51,7 +55,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	
 	
 
-	public PortholeSelectDialog() {
+	public < T extends RealType< T > & NativeType< T > > PortholeSelectDialog() {
 		setName("PortholeSelect");
 		setBounds(100, 100, 500, 450);
 		getContentPane().setLayout(new BorderLayout());
@@ -102,7 +106,6 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					Iterator<File> fileItr = inputList.iterator();						
 					FileHelper fileHelper = new FileHelper();
 					File fileToAdd;
-					Vector<Object> rowToAdd;
 									
 					//While iterator hasNext, add it as a row to table
 					while (fileItr.hasNext()) {
@@ -167,26 +170,38 @@ public class  PortholeSelectDialog extends PortholeDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
+					
+					//SelectDialog set to be no longer visible 
 					setVisible(false);
-					Vector<FileWaveType> tableData = fileTableModel.getData();
-					Iterator<FileWaveType> tableItr = tableData.iterator();
-					Vector<Dataset> datasets = new Vector<Dataset>();
-					FileWaveType currentFile;
+					
+					//Declare and initalise variables needed for loading of images
+					Vector<ImgWaveType> tableData = fileTableModel.getData();
+					Iterator<ImgWaveType> tableItr = tableData.iterator();
+					Vector<Img<T>> openImages = new Vector<Img<T>>();
+					ImgWaveType currentFile;
+					Dataset currentData;
+					
+					//Declare and initialise a configured ImgOpener to open the loaded images
+					ImgOpener imgOpener = new ImgOpener();
+					SCIFIOConfig config = new SCIFIOConfig();
+					config.imgOpenerSetImgModes(ImgMode.CELL);
+							
+					
+					
 					
 					while(tableItr.hasNext()) {
 						currentFile = tableItr.next();
 						try {
-							datasets.add(getDatasetIOService().open(currentFile.file.getPath()));
+							currentData = getDatasetIOService().open(currentFile.file.getPath());								
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
 					
-					Iterator<Dataset> dataItr = datasets.iterator();
+					Iterator<Img<T>> imgItr = openImages.iterator();
 					
-					while(dataItr.hasNext())
-					  getUIService().show(dataItr.next());			
+					
 				}
 				
 			});
