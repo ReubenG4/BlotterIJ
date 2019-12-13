@@ -5,6 +5,7 @@ import net.imglib2.img.Img;
 
 /*
  * Object acting as a wrapper for Img
+ *  Includes reference to file holding IMG and metadata specific to plugin
  */
 class ImgWaveType{
 	private File file;

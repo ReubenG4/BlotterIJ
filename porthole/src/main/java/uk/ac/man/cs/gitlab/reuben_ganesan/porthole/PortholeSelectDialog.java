@@ -55,7 +55,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	
 	
 
-	public < T extends RealType< T > & NativeType< T > > PortholeSelectDialog() {
+	public < T extends RealType<T> & NativeType<T> > PortholeSelectDialog() {
 		setName("PortholeSelect");
 		setBounds(100, 100, 500, 450);
 		getContentPane().setLayout(new BorderLayout());
