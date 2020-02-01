@@ -1,18 +1,11 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
-
 import javax.swing.SwingUtilities;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
-
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -108,7 +101,6 @@ public class PortholeCommand implements Command{
 						
 						while(imgItr.hasNext()) {
 							imgItr.next().initImg();
-							ui.showDialog("Successful");
 						}
 							
 					}

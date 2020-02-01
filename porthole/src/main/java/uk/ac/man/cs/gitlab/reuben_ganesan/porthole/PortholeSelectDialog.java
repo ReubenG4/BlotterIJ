@@ -119,7 +119,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					resizeColumnWidth();
 					
 					//If there's more than one row available, enable the confirm button
-					if(fileTableModel.getRowCount() > 0)
+					if(fileTableModel.getRowCount() > 2)
 						confirmButton.setEnabled(true);			
 					
 				}
@@ -144,7 +144,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 					resizeColumnWidth();
 					
 					//If there's less than one row available, disable the confirm button
-					if(fileTableModel.getRowCount() < 1)
+					if(fileTableModel.getRowCount() < 3)
 						confirmButton.setEnabled(false);
 									
 				}
