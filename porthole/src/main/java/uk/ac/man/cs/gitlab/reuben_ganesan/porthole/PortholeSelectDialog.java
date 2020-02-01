@@ -5,11 +5,10 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,11 +22,6 @@ import javax.swing.table.TableColumnModel;
 
 import org.scijava.widget.FileWidget;
 
-import io.scif.config.SCIFIOConfig;
-import io.scif.config.SCIFIOConfig.ImgMode;
-import io.scif.img.ImgOpener;
-import net.imagej.Dataset;
-import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -53,8 +47,11 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	JButton confirmButton;
 	FileTableModel fileTableModel;
 	
-	
+	/*
+	 * Declare other class variables
+	 */
 
+	
 	public < T extends RealType<T> & NativeType<T> > PortholeSelectDialog() {
 		setName("PortholeSelect");
 		setBounds(100, 100, 500, 450);
@@ -69,6 +66,8 @@ public class  PortholeSelectDialog extends PortholeDialog {
 		 filePanel = new JPanel();
 		 fileTableModel = new FileTableModel();
 		 fileTable = new JTable(fileTableModel);
+		 
+		 imgData = new ArrayList<ImgWaveType>();
 				
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			
@@ -171,30 +170,17 @@ public class  PortholeSelectDialog extends PortholeDialog {
 				@SuppressWarnings("unchecked")
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
+								
+					//Retrieve chosen images and store them in imgData
+					imgData.addAll(fileTableModel.getData());
+					fileTableModel.clear();
+					
+					//Flag for next state
+					setNextState(true);
 					
 					//SelectDialog set to be no longer visible 
 					setVisible(false);
-					
-					//Declare and initalise variables needed for loading of images
-					Vector<ImgWaveType> imgData = fileTableModel.getData();
-					Iterator<ImgWaveType> imgItr = imgData.iterator();
-					ImgWaveType currentRow;
-					Dataset currentData;
-					
-					//Declare and initialise a configured ImgOpener to open the loaded images
-					ImgOpener imgOpener = new ImgOpener();
-					SCIFIOConfig config = new SCIFIOConfig();
-					config.imgOpenerSetImgModes(ImgMode.CELL);		
-					
-					while(imgItr.hasNext()) {
-						//Load next Img
-						currentRow = imgItr.next();
-						currentRow.setImg((Img<T>)imgOpener.openImgs(currentRow.getFilePath(),config).get(0));
-						getUIService().show(currentRow.getImg());
-					}
-					
-					
-					
+									
 				}
 				
 			});

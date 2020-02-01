@@ -2,6 +2,10 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Vector;
+
 import javax.swing.SwingUtilities;
 
 import java.awt.event.ComponentAdapter;
@@ -28,7 +32,7 @@ import net.imagej.ops.OpService;
 @Plugin(type = Command.class, headless = true,menuPath = "Plugins>Porthole>Load Images")
 public class PortholeCommand implements Command{
 
-	//Ask context for access to services
+	/* Ask context for access to services */
 	@Parameter
 	OpService ops;
 
@@ -59,17 +63,17 @@ public class PortholeCommand implements Command{
     @Parameter
     FormatService formatService;
 
-    // -- Inputs and outputs to the command --
-	
+	/* Declare JDialogs */
 	private static PortholeSelectDialog dialogS = null;
 	
+	/* Declare class variables */
+	private ArrayList<ImgWaveType> imgData = new ArrayList<ImgWaveType>();
 	
 	public void run() {
 		
 		/*
 		 * Declare and initialise dialogs
 		 */
-		
 		SwingUtilities.invokeLater(() -> {
 			if (dialogS == null) {
 				dialogS = new PortholeSelectDialog();
@@ -97,8 +101,16 @@ public class PortholeCommand implements Command{
 				//On setVisible(false) of selectDialog, 
 				//if nextState is true, open dialogS, else disposeAllUI
 				public void componentHidden(ComponentEvent e){
-					if(dialogS.getNextState()) {					
+					if(dialogS.getNextState()) {
 						
+						imgData.addAll(dialogS.getImgData());
+						Iterator<ImgWaveType> imgItr = imgData.iterator();
+						
+						while(imgItr.hasNext()) {
+							imgItr.next().initImg();
+							ui.showDialog("Successful");
+						}
+							
 					}
 					else{
 						disposeAllUI();

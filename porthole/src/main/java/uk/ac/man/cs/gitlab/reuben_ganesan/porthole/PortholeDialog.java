@@ -14,6 +14,7 @@ import org.scijava.ui.UIService;
 import io.scif.services.DatasetIOService;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 /* Parent Class for all Dialogs */
@@ -31,8 +32,11 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	private UIService ui;
 	private DatasetIOService dsIO;
 	private DatasetService ds; 
+	
 	private boolean nextState = false;
-
+	protected ArrayList<ImgWaveType> imgData;
+	
+	
 	/**
 	 * Create the dialog.
 	 */
@@ -45,6 +49,31 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	 * Accessor and mutator methods
 	 * 
 	 */
+	
+	//State
+	public boolean getNextState() {
+		return nextState;
+	}
+		
+	public void setNextState(boolean input) {
+		this.nextState = input;
+	}
+		
+	//Image Data
+	public ArrayList<ImgWaveType> getImgData(){
+		return imgData;
+	}
+	
+	public void setImgData(ArrayList<ImgWaveType> input) {
+	    
+	    if(!imgData.isEmpty())
+	    	imgData.clear();
+	    
+	    imgData.addAll(input); 
+	}
+	
+	
+	//Services
 	public OpService getOpsService() {
 		return ops;
 	}
@@ -101,14 +130,6 @@ public class PortholeDialog extends JDialog implements ActionListener{
 		this.io = io;	
 	}
 	
-	public boolean getNextState() {
-		return nextState;
-	}
-	
-	public void setNextState(boolean input) {
-		this.nextState = input;
-	}
-	
 	public DatasetIOService getDatasetIOService() {
 		return dsIO;
 	}
@@ -125,6 +146,8 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	public void setDatasetService(DatasetService ds) {
 		this.ds = ds;
 	}
+	
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {

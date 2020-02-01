@@ -1,6 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Vector;
 
@@ -15,7 +16,7 @@ class FileTableModel extends AbstractTableModel {
                                     "Type"};
     
     //Vector of FileWaveType objects
-    private Vector<ImgWaveType> data = new Vector<ImgWaveType>(); 
+    private ArrayList<ImgWaveType> data = new ArrayList<ImgWaveType>(); 
     
     public FileTableModel() {
     	
@@ -33,7 +34,7 @@ class FileTableModel extends AbstractTableModel {
     	data.sort(c);
     }
     
-    public Vector<ImgWaveType> getData() {
+    public ArrayList<ImgWaveType> getData() {
     	return data;
     }
     
@@ -43,6 +44,10 @@ class FileTableModel extends AbstractTableModel {
     
     public void removeRow(int row) {
     	data.remove(row);
+    }
+    
+    public void clear() {
+    	data.clear();
     }
     
     public int getColumnCount() {
