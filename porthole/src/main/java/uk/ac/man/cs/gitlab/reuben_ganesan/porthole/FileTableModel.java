@@ -6,7 +6,9 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-//Table model for display
+/*
+ * Table Model for PortholeSelectDialog fileTable
+ */
 class FileTableModel extends AbstractTableModel {
     private String[] columnNames = {"Filename",
                                     "Wavelength",
