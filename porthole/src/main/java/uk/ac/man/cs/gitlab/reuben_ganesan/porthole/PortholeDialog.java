@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /* Parent Class for all Dialogs */
-public class PortholeDialog extends JDialog implements ActionListener {
+public class PortholeDialog extends JDialog implements ActionListener{
 
 	/**
 	 * Declare and initialise class variables
@@ -141,13 +141,6 @@ public class PortholeDialog extends JDialog implements ActionListener {
 		catch (final Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	
-
-
-
-
-	
+	}	
 
 }

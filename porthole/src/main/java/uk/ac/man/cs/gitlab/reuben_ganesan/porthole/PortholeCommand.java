@@ -3,6 +3,12 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.SwingUtilities;
+
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
+
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -86,13 +92,13 @@ public class PortholeCommand implements Command{
 			 */
 			
 			/* 1st state */
-			dialogS.addWindowListener(new WindowAdapter() {		
+			dialogS.addComponentListener(new ComponentAdapter() {		
 				
-				//On close of selectDialog, 
+				//On setVisible(false) of selectDialog, 
 				//if nextState is true, open dialogS, else disposeAllUI
-				public void windowClosing(WindowEvent e){
+				public void componentHidden(ComponentEvent e){
 					if(dialogS.getNextState()) {					
-								
+						
 					}
 					else{
 						disposeAllUI();
