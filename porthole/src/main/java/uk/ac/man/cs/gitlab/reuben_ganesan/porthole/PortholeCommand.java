@@ -57,7 +57,7 @@ public class PortholeCommand implements Command{
     FormatService formatService;
 
 	/* Declare JDialogs */
-	private static PortholeSelectDialog dialogS = null;
+	private static PortholeSelectFileDialog selectFileDialog = null;
 	
 	/* Declare class variables */
 	private ArrayList<ImgWaveType> imgData = new ArrayList<ImgWaveType>();
@@ -68,37 +68,44 @@ public class PortholeCommand implements Command{
 		 * Declare and initialise dialogs
 		 */
 		SwingUtilities.invokeLater(() -> {
-			if (dialogS == null) {
-				dialogS = new PortholeSelectDialog();
+			if (selectFileDialog == null) {
+				selectFileDialog = new PortholeSelectFileDialog();
 			}
 			
 
-			dialogS.setOpsService(ops);
-			dialogS.setLogService(log);
-			dialogS.setStatusService(status);
-			dialogS.setCommandService(cmd);
-			dialogS.setThreadService(thread);
-			dialogS.setUIService(ui);
-			dialogS.setIOService(io);
-			dialogS.setDatasetIOService(dsIO);
-			dialogS.setDatasetService(ds);
-			dialogS.setTitle("Porthole - Select Files");
+			selectFileDialog.setOpsService(ops);
+			selectFileDialog.setLogService(log);
+			selectFileDialog.setStatusService(status);
+			selectFileDialog.setCommandService(cmd);
+			selectFileDialog.setThreadService(thread);
+			selectFileDialog.setUIService(ui);
+			selectFileDialog.setIOService(io);
+			selectFileDialog.setDatasetIOService(dsIO);
+			selectFileDialog.setDatasetService(ds);
+			selectFileDialog.setTitle("Porthole - Select Files");
 								
 			/*
 			 * State machine to handle dialog flow
 			 */
 			
 			/* 1st state */
-			dialogS.addComponentListener(new ComponentAdapter() {		
+			selectFileDialog.addComponentListener(new ComponentAdapter() {		
 				
 				//On setVisible(false) of selectDialog, 
-				//if nextState is true, open dialogS, else disposeAllUI
+				//if nextState is true, 
 				public void componentHidden(ComponentEvent e){
-					if(dialogS.getNextState()) {
+					if(selectFileDialog.getNextState()) {
 						
-						imgData.addAll(dialogS.getImgData());
+						//Add all chosen files to imgData
+						imgData.addAll(selectFileDialog.getImgData());
+						
+						//Clear chosen files from dialog
+						selectFileDialog.clearImgData();
+						
+						//Declere and Initialise iterator for images
 						Iterator<ImgWaveType> imgItr = imgData.iterator();
 						
+						//Iterate through images, retrieve them
 						while(imgItr.hasNext()) {
 							imgItr.next().initImg();
 						}
@@ -114,7 +121,7 @@ public class PortholeCommand implements Command{
 			
 					
 			//Place UI in 1st state
-			dialogS.setVisible(true);
+			selectFileDialog.setVisible(true);
 		 	  		    
 	   });	
 				
@@ -126,8 +133,8 @@ public class PortholeCommand implements Command{
 	 */
 	public void disposeAllUI() {
 		
-		if(dialogS != null)
-			dialogS.dispose();
+		if(selectFileDialog != null)
+			selectFileDialog.dispose();
 	
 	}
 }

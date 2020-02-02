@@ -72,6 +72,10 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	    imgData.addAll(input); 
 	}
 	
+	public void clearImgData() {
+		imgData.clear();
+	}
+	
 	
 	//Services
 	public OpService getOpsService() {

@@ -25,7 +25,7 @@ import org.scijava.widget.FileWidget;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class  PortholeSelectDialog extends PortholeDialog {
+public class  PortholeSelectFileDialog extends PortholeDialog {
 	
 	/*
 	 * Declare and initialise class variables
@@ -52,7 +52,7 @@ public class  PortholeSelectDialog extends PortholeDialog {
 	 */
 
 	
-	public < T extends RealType<T> & NativeType<T> > PortholeSelectDialog() {
+	public < T extends RealType<T> & NativeType<T> > PortholeSelectFileDialog() {
 		setName("PortholeSelect");
 		setBounds(100, 100, 500, 450);
 		getContentPane().setLayout(new BorderLayout());
