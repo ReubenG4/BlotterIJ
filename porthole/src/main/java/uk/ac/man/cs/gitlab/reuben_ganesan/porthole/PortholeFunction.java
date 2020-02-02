@@ -34,7 +34,7 @@ public class PortholeFunction {
 	private DatasetService ds; 
 	
 	private boolean nextState = false;
-	protected ArrayList<ImgWaveType> imgData;
+	protected ArrayList<ImgPlusMeta> imgData;
 	
 	
 	    /* State */
@@ -47,11 +47,11 @@ public class PortholeFunction {
 		}
 			
 		/* Image Data */
-		public ArrayList<ImgWaveType> getImgData(){
+		public ArrayList<ImgPlusMeta> getImgData(){
 			return imgData;
 		}
 		
-		public void setImgData(ArrayList<ImgWaveType> input) {
+		public void setImgData(ArrayList<ImgPlusMeta> input) {
 		    
 		    if(!imgData.isEmpty())
 		    	imgData.clear();

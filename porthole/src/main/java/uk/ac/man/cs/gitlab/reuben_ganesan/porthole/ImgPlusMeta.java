@@ -5,21 +5,24 @@ import java.io.File;
 import io.scif.config.SCIFIOConfig;
 import io.scif.config.SCIFIOConfig.ImgMode;
 import io.scif.img.ImgOpener;
+import net.imagej.ImgPlus;
+import net.imagej.axis.Axes;
+import net.imagej.axis.AxisType;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 /*
- * Object acting as a wrapper for Img
- *  Includes reference to file holding IMG and metadata specific to plugin
+ * Object acting as a wrapper for ImgPlus
+ *  Includes reference to file and metadata specific to plugin
  */
-class ImgWaveType < T extends RealType< T > & NativeType< T > >{
+class ImgPlusMeta < T extends RealType< T > & NativeType< T > >{
 	private File file;
-	private Img<T> img;
+	private ImgPlus img;
 	private int wavelength;
 	private char type;
 	
-	public ImgWaveType(File file, int wavelength, char type) {
+	public ImgPlusMeta(File file, int wavelength, char type) {
 		this.file = file;
 		this.wavelength = wavelength;
 		this.type = type;
@@ -29,18 +32,23 @@ class ImgWaveType < T extends RealType< T > & NativeType< T > >{
 		return file.getPath();
 	}
 	
-	public void setImg(Img<T> img) {
+	public void setImg(ImgPlus<T> img) {
 		this.img = img;
 	}
 	
+	/*
+	 * Retrieves ImgPlus from file. 
+	 * Plugin may not neccessarily want to load large files into memory at initialisation of object
+	 */ 
 	public  void initImg() {
 		ImgOpener imgOpener = new ImgOpener();
 		SCIFIOConfig config = new SCIFIOConfig();
 		config.imgOpenerSetImgModes( ImgMode.CELL );
-		img = (Img<T>) imgOpener.openImgs(file.getAbsolutePath(),config).get(0);	
+		Img preImg =  imgOpener.openImgs(file.getAbsolutePath(),config).get(0);	
+		img = new ImgPlus(preImg, file.getName(), new AxisType[]{Axes.X, Axes.Y, Axes.TIME});
 	}
 	
-	public Img<?> getImg() {
+	public ImgPlus<T> getImg() {
 		return img;
 	}
 	

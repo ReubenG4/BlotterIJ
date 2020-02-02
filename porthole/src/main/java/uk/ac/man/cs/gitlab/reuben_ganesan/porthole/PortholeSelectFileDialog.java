@@ -62,7 +62,7 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 		 fileTableModel = new FileTableModel();
 		 fileTable = new JTable(fileTableModel);
 		 
-		 imgData = new ArrayList<ImgWaveType>();
+		 imgData = new ArrayList<ImgPlusMeta>();
 				
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			
@@ -166,8 +166,10 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 								
-					//Retrieve chosen images and store them in imgData
+					//Retrieve chosen files and store them in imgData
 					imgData.addAll(fileTableModel.getData());
+					
+					//Clear FileTableModel of list entries
 					fileTableModel.clear();
 					
 					//Flag for next state

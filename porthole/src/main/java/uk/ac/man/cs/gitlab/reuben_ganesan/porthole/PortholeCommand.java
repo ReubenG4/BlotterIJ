@@ -63,7 +63,7 @@ public class PortholeCommand implements Command{
 	private static FalseRGBConverter convRGB = null;
 	
 	/* Declare class variables */
-	private ArrayList<ImgWaveType> imgData = new ArrayList<ImgWaveType>();
+	private ArrayList<ImgPlusMeta> imgData = new ArrayList<ImgPlusMeta>();
 	
 	public void run() {
 		
@@ -106,7 +106,7 @@ public class PortholeCommand implements Command{
 						selectFileDialog.clearImgData();
 						
 						//Declere and Initialise iterator for images
-						Iterator<ImgWaveType> imgItr = imgData.iterator();
+						Iterator<ImgPlusMeta> imgItr = imgData.iterator();
 						
 						//Iterate through images, retrieve them
 						while(imgItr.hasNext()) {

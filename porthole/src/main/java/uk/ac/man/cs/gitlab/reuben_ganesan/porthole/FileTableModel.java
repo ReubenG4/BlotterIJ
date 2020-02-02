@@ -16,7 +16,7 @@ class FileTableModel extends AbstractTableModel {
                                     "Type"};
     
     //Vector of FileWaveType objects
-    private ArrayList<ImgWaveType> data = new ArrayList<ImgWaveType>(); 
+    private ArrayList<ImgPlusMeta> data = new ArrayList<ImgPlusMeta>(); 
     
     public FileTableModel() {
     	
@@ -24,9 +24,9 @@ class FileTableModel extends AbstractTableModel {
     
     //Sorts the table in ascending order of wavelength
     public void sortTable() {
-    	Comparator<ImgWaveType> c = new Comparator<ImgWaveType>() {
+    	Comparator<ImgPlusMeta> c = new Comparator<ImgPlusMeta>() {
     		@Override
-    		public int compare(ImgWaveType o1, ImgWaveType o2) {
+    		public int compare(ImgPlusMeta o1, ImgPlusMeta o2) {
     			return o1.getWavelength() - o2.getWavelength();
     			}
     	};
@@ -34,12 +34,12 @@ class FileTableModel extends AbstractTableModel {
     	data.sort(c);
     }
     
-    public ArrayList<ImgWaveType> getData() {
+    public ArrayList<ImgPlusMeta> getData() {
     	return data;
     }
     
     public void addRow(File file, int wavelength, char type) {
-    	data.add(new ImgWaveType(file,wavelength,type));
+    	data.add(new ImgPlusMeta(file,wavelength,type));
     }
     
     public void removeRow(int row) {
@@ -63,7 +63,7 @@ class FileTableModel extends AbstractTableModel {
     }
 
     public Object getValueAt(int row, int col) {
-    	ImgWaveType iwt = data.get(row);
+    	ImgPlusMeta iwt = data.get(row);
     	       	
     	if(col == 0)
     		return (Object)iwt.getFile();
