@@ -47,11 +47,6 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 	JButton confirmButton;
 	FileTableModel fileTableModel;
 	
-	/*
-	 * Declare other class variables
-	 */
-
-	
 	public < T extends RealType<T> & NativeType<T> > PortholeSelectFileDialog() {
 		setName("PortholeSelect");
 		setBounds(100, 100, 500, 450);

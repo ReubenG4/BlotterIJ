@@ -17,7 +17,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-/* Parent Class for all Dialogs */
+/* 
+ * Parent class for dialogs
+ */
+
 public class PortholeDialog extends JDialog implements ActionListener{
 
 	/**
@@ -50,7 +53,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	 * 
 	 */
 	
-	//State
+	/* State */
 	public boolean getNextState() {
 		return nextState;
 	}
@@ -59,7 +62,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 		this.nextState = input;
 	}
 		
-	//Image Data
+	/* Image Data */
 	public ArrayList<ImgWaveType> getImgData(){
 		return imgData;
 	}
@@ -77,7 +80,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	}
 	
 	
-	//Services
+	/* Services */
 	public OpService getOpsService() {
 		return ops;
 	}

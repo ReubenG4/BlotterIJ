@@ -2,6 +2,7 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.swing.SwingUtilities;
 
 import java.awt.event.ComponentAdapter;
@@ -20,6 +21,7 @@ import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
+
 
 /* Invoked when user selects plugin from menu */
 @Plugin(type = Command.class, headless = true,menuPath = "Plugins>Porthole>Load Images")
@@ -58,6 +60,7 @@ public class PortholeCommand implements Command{
 
 	/* Declare JDialogs */
 	private static PortholeSelectFileDialog selectFileDialog = null;
+	private static FalseRGBConverter convRGB = null;
 	
 	/* Declare class variables */
 	private ArrayList<ImgWaveType> imgData = new ArrayList<ImgWaveType>();
