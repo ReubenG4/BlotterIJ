@@ -24,7 +24,7 @@ import net.imagej.ops.OpService;
 
 
 /* Invoked when user selects plugin from menu */
-@Plugin(type = Command.class, headless = true,menuPath = "Plugins>Porthole>Load Images")
+@Plugin(type = Command.class, headless = false,menuPath = "Porthole>Load Images")
 public class PortholeCommand implements Command{
 
 	/* Ask context for access to services */
@@ -72,59 +72,50 @@ public class PortholeCommand implements Command{
 		 * Declare and initialise dialogs
 		 */
 		SwingUtilities.invokeLater(() -> {
+			
+			//Initialise select file dialog
 			if (selectFileDialog == null) {
 				selectFileDialog = new PortholeSelectFileDialog();
+				selectFileDialog.setOpsService(ops);
+				selectFileDialog.setLogService(log);
+				selectFileDialog.setStatusService(status);
+				selectFileDialog.setCommandService(cmd);
+				selectFileDialog.setThreadService(thread);
+				selectFileDialog.setUIService(ui);
+				selectFileDialog.setIOService(io);
+				selectFileDialog.setDatasetIOService(dsIO);
+				selectFileDialog.setDatasetService(ds);
+				selectFileDialog.setTitle("Porthole - Select Files");
+				
+				
+				selectFileDialog.addComponentListener(new ComponentAdapter() {		
+					public void componentHidden(ComponentEvent e){
+						//On setVisible(false) of selectDialog, 
+						//if nextState is true, 
+						if(selectFileDialog.getNextState()) {
+							//Add all chosen files to imgData
+							imgData.addAll(selectFileDialog.getImgData());
+							//Clear chosen files from dialog
+							selectFileDialog.clearImgData();
+							//Declere and Initialise iterator for images
+							Iterator<ImgPlusMeta> imgItr = imgData.iterator();
+							//Iterate through images, retrieve them
+							while(imgItr.hasNext()) {
+								imgItr.next().initImg();
+							}				
+						}
+						else{
+							disposeAllUI();
+						}					
+					}
+				});
+				
+				
 			}
-			
-
-			selectFileDialog.setOpsService(ops);
-			selectFileDialog.setLogService(log);
-			selectFileDialog.setStatusService(status);
-			selectFileDialog.setCommandService(cmd);
-			selectFileDialog.setThreadService(thread);
-			selectFileDialog.setUIService(ui);
-			selectFileDialog.setIOService(io);
-			selectFileDialog.setDatasetIOService(dsIO);
-			selectFileDialog.setDatasetService(ds);
-			selectFileDialog.setTitle("Porthole - Select Files");
 								
 			/*
 			 * State machine to handle dialog flow
-			 */
-			
-			/* 1st state */
-			selectFileDialog.addComponentListener(new ComponentAdapter() {		
-				
-				//On setVisible(false) of selectDialog, 
-				//if nextState is true, 
-				public void componentHidden(ComponentEvent e){
-					if(selectFileDialog.getNextState()) {
-						
-						//Add all chosen files to imgData
-						imgData.addAll(selectFileDialog.getImgData());
-						
-						//Clear chosen files from dialog
-						selectFileDialog.clearImgData();
-						
-						//Declere and Initialise iterator for images
-						Iterator<ImgPlusMeta> imgItr = imgData.iterator();
-						
-						//Iterate through images, retrieve them
-						while(imgItr.hasNext()) {
-							imgItr.next().initImg();
-						}
-						
-						
-							
-					}
-					else{
-						disposeAllUI();
-					}					
-				}
-				
-			});
-			
-			
+			 */		
 					
 			//Place UI in 1st state
 			selectFileDialog.setVisible(true);
