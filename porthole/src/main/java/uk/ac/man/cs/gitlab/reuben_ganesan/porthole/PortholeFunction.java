@@ -81,7 +81,7 @@ public class PortholeFunction {
 			this.log = log;
 		}
 
-		public StatusService getStatus() {
+		public StatusService getStatusService() {
 			return status;
 		}
 
@@ -89,7 +89,7 @@ public class PortholeFunction {
 			this.status = status;
 		}
 
-		public CommandService getCommand() {
+		public CommandService getCommandService() {
 			return cmd;
 		}
 

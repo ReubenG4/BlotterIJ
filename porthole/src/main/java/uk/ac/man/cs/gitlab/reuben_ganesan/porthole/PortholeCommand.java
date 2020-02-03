@@ -1,6 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
@@ -14,6 +15,7 @@ import org.scijava.io.IOService;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
@@ -64,9 +66,25 @@ public class PortholeCommand implements Command{
 	
 	/* Declare class variables */
 	private ArrayList<ImgPlusMeta> imgData = new ArrayList<ImgPlusMeta>();
+	private Hashtable<String,Service> services = new Hashtable<String,Service>();
 	private ImgPlusMeta rgbImg;
+	int currentState = 1;
+	
+	
 	
 	public void run() {
+		
+		/* Add services */
+		services.put("OpService", ops);
+		services.put("LogService", log);
+		services.put("UIService", ui);
+		services.put("CommandService", cmd);
+		services.put("StatusService", status);
+		services.put("ThreadService", thread);
+		services.put("IOService", io);
+		services.put("DatasetIOService", dsIO);
+		services.put("DatasetService", ds);
+		services.put("FormatService", formatService);
 		
 		/*
 		 * Declare and initialise dialogs
@@ -80,13 +98,14 @@ public class PortholeCommand implements Command{
 				//Register services for selectFileDialog
 				selectFileDialog.setOpsService(ops);
 				selectFileDialog.setLogService(log);
-				selectFileDialog.setStatusService(status);
-				selectFileDialog.setCommandService(cmd);
-				selectFileDialog.setThreadService(thread);
 				selectFileDialog.setUIService(ui);
+				selectFileDialog.setCommandService(cmd);
+				selectFileDialog.setStatusService(status);
+				selectFileDialog.setThreadService(thread);
 				selectFileDialog.setIOService(io);
 				selectFileDialog.setDatasetIOService(dsIO);
 				selectFileDialog.setDatasetService(ds);
+				
 				selectFileDialog.setTitle("Porthole - Select Files");
 				
 				//Add listener for closing of selectFileDialog
@@ -116,11 +135,21 @@ public class PortholeCommand implements Command{
 			}
 								
 			/*
-			 * State machine to handle dialog flow
+			 * State machine to handle program flow
 			 */		
+			switch(currentState) {
+			
+				case 1:
+					//Place UI in 1st state
+					selectFileDialog.setVisible(true);
+					break;
 					
-			//Place UI in 1st state
-			selectFileDialog.setVisible(true);
+				case 2:
+					
+					break;
+			
+			}
+			
 		 	  		    
 	   });	
 				

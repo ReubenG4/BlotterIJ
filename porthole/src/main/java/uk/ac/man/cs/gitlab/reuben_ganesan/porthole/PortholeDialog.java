@@ -8,6 +8,7 @@ import org.scijava.app.StatusService;
 import org.scijava.command.CommandService;
 import org.scijava.io.IOService;
 import org.scijava.log.LogService;
+import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
@@ -15,6 +16,7 @@ import io.scif.services.DatasetIOService;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.awt.event.ActionEvent;
 
 /* 
@@ -97,7 +99,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 		this.log = log;
 	}
 
-	public StatusService getStatus() {
+	public StatusService getStatusService() {
 		return status;
 	}
 
@@ -105,7 +107,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 		this.status = status;
 	}
 
-	public CommandService getCommand() {
+	public CommandService getCommandService() {
 		return cmd;
 	}
 
@@ -154,6 +156,9 @@ public class PortholeDialog extends JDialog implements ActionListener{
 		this.ds = ds;
 	}
 	
+	public void setServices(Hashtable<String,Service> services) {
+		
+	}
 	
 	
 	@Override
