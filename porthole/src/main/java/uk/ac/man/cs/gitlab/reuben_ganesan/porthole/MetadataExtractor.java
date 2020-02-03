@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /*
  * Helper class to extract metadata from filenames
  */
-public class FileHelper{
+public class MetadataExtractor{
 	Pattern pattern = Pattern.compile("(.*)(-)(\\d+)(\\D)(_)(.*)");
     Matcher matcher;
 	

@@ -98,7 +98,7 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 					
 					//Iterate through list of chosen files
 					Iterator<File> fileItr = inputList.iterator();						
-					FileHelper fileHelper = new FileHelper();
+					MetadataExtractor fileHelper = new MetadataExtractor();
 					File fileToAdd;
 									
 					//While iterator hasNext, add it as a row to table

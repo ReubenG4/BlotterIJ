@@ -62,9 +62,9 @@ public class PortholeCommand implements Command{
 
 	/* Declare JDialogs */
 	private static PortholeSelectFileDialog selectFileDialog = null;
-	private static FalseRGBConverter rgbConverter = null;
-	
+		
 	/* Declare class variables */
+	private static FalseRGBConverter rgbConverter = null;
 	private ArrayList<ImgPlusMeta> imgData = new ArrayList<ImgPlusMeta>();
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
 	private ImgPlusMeta rgbImg;
@@ -85,6 +85,7 @@ public class PortholeCommand implements Command{
 		services.put("DatasetService", ds);
 		services.put("FormatService", formatService);
 		
+		/* Initialise FalseRGBConverter */
 		rgbConverter = new FalseRGBConverter();
 		rgbConverter.setServices(services);
 			
@@ -146,8 +147,16 @@ public class PortholeCommand implements Command{
 			case 2:
 				/* Convert imgData to falseRGB */
 				rgbImg = rgbConverter.convert(imgData);
-				/* Show falseRGB */
+				/* Show false RGB image for user manipulation */
 				ui.show(rgbImg.getImg());
+				changeState(3);
+				break;
+				
+			case 3:
+				break;
+				
+			default:
+				ui.show("State out of bounds, value:"+nextState);
 				break;
 
 		}
