@@ -1,11 +1,13 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.scijava.app.StatusService;
 import org.scijava.command.CommandService;
 import org.scijava.io.IOService;
 import org.scijava.log.LogService;
+import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
@@ -35,7 +37,6 @@ public class PortholeFunction {
 	
 	private boolean nextState = false;
 	protected ArrayList<ImgPlusMeta> imgData;
-	
 	
 	    /* State */
 		public boolean getNextState() {
@@ -136,6 +137,18 @@ public class PortholeFunction {
 
 		public void setDatasetService(DatasetService ds) {
 			this.ds = ds;
+		}
+		
+		public void setServices(Hashtable<String,Service> services) {
+			setOpsService((OpService) services.get("OpsService"));
+			setLogService((LogService) services.get("LogService"));
+			setUIService((UIService) services.get("UIService"));
+			setCommandService((CommandService) services.get("CommandService"));
+			setStatusService((StatusService) services.get("StatusService"));
+			setThreadService((ThreadService) services.get("ThreadService"));
+			setIOService((IOService) services.get("IOService"));
+			setDatasetIOService((DatasetIOService) services.get("DatasetIOService"));
+			setDatasetService((DatasetService) services.get("DatasetService"));		
 		}
 
 }

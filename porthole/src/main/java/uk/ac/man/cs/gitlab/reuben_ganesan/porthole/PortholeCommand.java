@@ -69,12 +69,11 @@ public class PortholeCommand implements Command{
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
 	private ImgPlusMeta rgbImg;
 	int currentState = 1;
-	
-	
+	boolean running = true;
 	
 	public void run() {
 		
-		/* Add services */
+		/* Collate services with hashtable for easier initialisation of dialogs */
 		services.put("OpService", ops);
 		services.put("LogService", log);
 		services.put("UIService", ui);
@@ -86,6 +85,9 @@ public class PortholeCommand implements Command{
 		services.put("DatasetService", ds);
 		services.put("FormatService", formatService);
 		
+		rgbConverter = new FalseRGBConverter();
+		rgbConverter.setServices(services);
+			
 		/*
 		 * Declare and initialise dialogs
 		 */
@@ -96,15 +98,7 @@ public class PortholeCommand implements Command{
 				selectFileDialog = new PortholeSelectFileDialog();
 				
 				//Register services for selectFileDialog
-				selectFileDialog.setOpsService(ops);
-				selectFileDialog.setLogService(log);
-				selectFileDialog.setUIService(ui);
-				selectFileDialog.setCommandService(cmd);
-				selectFileDialog.setStatusService(status);
-				selectFileDialog.setThreadService(thread);
-				selectFileDialog.setIOService(io);
-				selectFileDialog.setDatasetIOService(dsIO);
-				selectFileDialog.setDatasetService(ds);
+				selectFileDialog.setServices(services);
 				
 				selectFileDialog.setTitle("Porthole - Select Files");
 				
@@ -124,35 +118,39 @@ public class PortholeCommand implements Command{
 							while(imgItr.hasNext()) {
 								imgItr.next().initImg();
 							}				
-						}
-						else{
+							changeState(2);
+						}	
+						else
+						{
 							disposeAllUI();
-						}					
+						}
 					}
-				});
-				
-				
-			}
-								
-			/*
-			 * State machine to handle program flow
-			 */		
-			switch(currentState) {
+				});			
+			}	
 			
-				case 1:
-					//Place UI in 1st state
-					selectFileDialog.setVisible(true);
-					break;
-					
-				case 2:
-					
-					break;
-			
-			}
-			
-		 	  		    
+			changeState(1);
 	   });	
 				
+		
+	}
+	
+	public void changeState(int nextState) {
+		
+		switch(nextState) {
+			
+			case 1:
+				/* Place UI in 1st state */
+				selectFileDialog.setVisible(true);
+				break;
+		
+			case 2:
+				/* Convert imgData to falseRGB */
+				rgbImg = rgbConverter.convert(imgData);
+				/* Show falseRGB */
+				ui.show(rgbImg.getImg());
+				break;
+
+		}
 		
 	}
 	

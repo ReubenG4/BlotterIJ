@@ -26,15 +26,7 @@ class ImgPlusMeta < T extends RealType< T > & NativeType< T > >{
 		this.file = file;
 		this.wavelength = wavelength;
 		this.type = type;
-	}
-	
-	public String getFilePath() {
-		return file.getPath();
-	}
-	
-	public void setImg(ImgPlus<T> img) {
-		this.img = img;
-	}
+	}	
 	
 	/*
 	 * Retrieves ImgPlus from file. 
@@ -48,9 +40,18 @@ class ImgPlusMeta < T extends RealType< T > & NativeType< T > >{
 		img = new ImgPlus(preImg, file.getName(), new AxisType[]{Axes.X, Axes.Y, Axes.TIME});
 	}
 	
+	public String getFilePath() {
+		return file.getPath();
+	}
+	
 	public ImgPlus<T> getImg() {
 		return img;
 	}
+	
+	public void setImg(ImgPlus<T> img) {
+		this.img = img;
+	}
+	
 	
 	public void setWavelength(int wavelength) {
 		this.wavelength = wavelength;

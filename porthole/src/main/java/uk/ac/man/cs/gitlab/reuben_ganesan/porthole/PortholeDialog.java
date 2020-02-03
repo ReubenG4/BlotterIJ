@@ -157,7 +157,15 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	}
 	
 	public void setServices(Hashtable<String,Service> services) {
-		
+		setOpsService((OpService) services.get("OpsService"));
+		setLogService((LogService) services.get("LogService"));
+		setUIService((UIService) services.get("UIService"));
+		setCommandService((CommandService) services.get("CommandService"));
+		setStatusService((StatusService) services.get("StatusService"));
+		setThreadService((ThreadService) services.get("ThreadService"));
+		setIOService((IOService) services.get("IOService"));
+		setDatasetIOService((DatasetIOService) services.get("DatasetIOService"));
+		setDatasetService((DatasetService) services.get("DatasetService"));		
 	}
 	
 	
