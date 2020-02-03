@@ -18,7 +18,7 @@ import net.imglib2.type.numeric.RealType;
  */
 class ImgPlusMeta < T extends RealType< T > & NativeType< T > >{
 	private File file;
-	private ImgPlus img;
+	private ImgPlus<T> img;
 	private int wavelength;
 	private char type;
 	
@@ -44,7 +44,7 @@ class ImgPlusMeta < T extends RealType< T > & NativeType< T > >{
 		ImgOpener imgOpener = new ImgOpener();
 		SCIFIOConfig config = new SCIFIOConfig();
 		config.imgOpenerSetImgModes( ImgMode.CELL );
-		Img preImg =  imgOpener.openImgs(file.getAbsolutePath(),config).get(0);	
+		Img<T> preImg =  (Img<T>) imgOpener.openImgs(file.getAbsolutePath(),config).get(0);	
 		img = new ImgPlus(preImg, file.getName(), new AxisType[]{Axes.X, Axes.Y, Axes.TIME});
 	}
 	

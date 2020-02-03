@@ -60,10 +60,11 @@ public class PortholeCommand implements Command{
 
 	/* Declare JDialogs */
 	private static PortholeSelectFileDialog selectFileDialog = null;
-	private static FalseRGBConverter convRGB = null;
+	private static FalseRGBConverter rgbConverter = null;
 	
 	/* Declare class variables */
 	private ArrayList<ImgPlusMeta> imgData = new ArrayList<ImgPlusMeta>();
+	private ImgPlusMeta rgbImg;
 	
 	public void run() {
 		
@@ -112,6 +113,8 @@ public class PortholeCommand implements Command{
 						while(imgItr.hasNext()) {
 							imgItr.next().initImg();
 						}
+						
+						
 							
 					}
 					else{
