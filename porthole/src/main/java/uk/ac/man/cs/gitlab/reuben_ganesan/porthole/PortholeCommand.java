@@ -76,6 +76,8 @@ public class PortholeCommand implements Command{
 			//Initialise select file dialog
 			if (selectFileDialog == null) {
 				selectFileDialog = new PortholeSelectFileDialog();
+				
+				//Register services for selectFileDialog
 				selectFileDialog.setOpsService(ops);
 				selectFileDialog.setLogService(log);
 				selectFileDialog.setStatusService(status);
@@ -87,7 +89,7 @@ public class PortholeCommand implements Command{
 				selectFileDialog.setDatasetService(ds);
 				selectFileDialog.setTitle("Porthole - Select Files");
 				
-				
+				//Add listener for closing of selectFileDialog
 				selectFileDialog.addComponentListener(new ComponentAdapter() {		
 					public void componentHidden(ComponentEvent e){
 						//On setVisible(false) of selectDialog, 
