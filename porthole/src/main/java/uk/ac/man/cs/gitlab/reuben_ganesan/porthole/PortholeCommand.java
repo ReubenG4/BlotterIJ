@@ -62,6 +62,7 @@ public class PortholeCommand implements Command{
 
 	/* Declare JDialogs */
 	private static PortholeSelectFileDialog selectFileDialog = null;
+	private static PortholeToolPanelDialog toolPanelDialog = null;
 		
 	/* Declare class variables */
 	private static FalseRGBConverter rgbConverter = null;
@@ -129,6 +130,16 @@ public class PortholeCommand implements Command{
 				});			
 			}	
 			
+			if (toolPanelDialog == null) {
+				toolPanelDialog = new PortholeToolPanelDialog();
+				toolPanelDialog.setTitle("Porthole - Tools");
+				toolPanelDialog.addComponentListener(new ComponentAdapter() {		
+					public void componentHidden(ComponentEvent e){
+						disposeAllUI();
+					}
+				});			
+			}
+			
 			changeState(1);
 	   });	
 				
@@ -148,11 +159,12 @@ public class PortholeCommand implements Command{
 				/* Convert imgData to falseRGB */
 				rgbImg = rgbConverter.convert(imgData);
 				/* Show false RGB image for user manipulation */
-				ui.show(rgbImg.getImg());
+				ui.show("FalseRGB", rgbImg.getImg());
 				changeState(3);
 				break;
 				
 			case 3:
+				toolPanelDialog.setVisible(true);
 				break;
 				
 			default:
@@ -170,6 +182,9 @@ public class PortholeCommand implements Command{
 		
 		if(selectFileDialog != null)
 			selectFileDialog.dispose();
+		
+		if(toolPanelDialog !=  null)
+			toolPanelDialog.dispose();
 	
 	}
 }

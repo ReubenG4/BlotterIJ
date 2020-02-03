@@ -41,7 +41,7 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 	JScrollPane tableScroller;
 	JTable fileTable;
 	JLabel fileName;
-	JToolBar fileBar;
+	JPanel fileButtons;
 	JButton addButton;
 	JButton removeButton;
 	JButton confirmButton;
@@ -49,10 +49,11 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 	
 	public < T extends RealType<T> & NativeType<T> > PortholeSelectFileDialog() {
 		setName("PortholeSelect");
-		setBounds(100, 100, 500, 450);
+		setSize(500, 450);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		
-		 fileBar = new JToolBar("");
+		 fileButtons = new JPanel();
 		 addButton = new JButton("Add");
 		 removeButton = new JButton("Remove");
 		 confirmButton = new JButton("Confirm");
@@ -121,7 +122,7 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 				
 			});
 			
-			fileBar.add(addButton);
+			fileButtons.add(addButton);
 			
 			/*
 			 * removeButton configuration
@@ -146,8 +147,8 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 				
 			});
 			
-			fileBar.add(removeButton);
-			filePanel.add(fileBar);
+			fileButtons.add(removeButton);
+			filePanel.add(fileButtons);
 		
 			
 		}
