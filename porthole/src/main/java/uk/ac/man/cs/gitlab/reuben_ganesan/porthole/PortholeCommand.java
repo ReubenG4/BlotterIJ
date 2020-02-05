@@ -132,7 +132,7 @@ public class PortholeCommand implements Command{
 			
 			if (toolPanelDialog == null) {
 				toolPanelDialog = new PortholeToolPanelDialog();
-				toolPanelDialog.setTitle("Porthole - Tools");
+				toolPanelDialog.setTitle("Porthole");
 				toolPanelDialog.addComponentListener(new ComponentAdapter() {		
 					public void componentHidden(ComponentEvent e){
 						disposeAllUI();
