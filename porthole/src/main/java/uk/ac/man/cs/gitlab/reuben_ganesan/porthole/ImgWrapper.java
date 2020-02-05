@@ -16,39 +16,39 @@ import net.imglib2.type.numeric.RealType;
  * Object acting as a wrapper for ImgPlus
  *  Includes reference to file and metadata specific to plugin
  */
-class ImgPlusMeta < T extends RealType< T > & NativeType< T > >{
+class ImgWrapper < T extends RealType< T > & NativeType< T > >{
 	private File file;
-	private ImgPlus<T> img;
+	private Img<T> img;
 	private int wavelength;
 	private char type;
 	
-	public ImgPlusMeta(File file, int wavelength, char type) {
+	public ImgWrapper(File file, int wavelength, char type) {
 		this.file = file;
 		this.wavelength = wavelength;
 		this.type = type;
 	}	
 	
 	/*
-	 * Retrieves ImgPlus from file. 
+	 * Retrieves Img from file. 
 	 * Plugin may not neccessarily want to load large files into memory at initialisation of object
 	 */ 
 	public  void initImg() {
 		ImgOpener imgOpener = new ImgOpener();
 		SCIFIOConfig config = new SCIFIOConfig();
 		config.imgOpenerSetImgModes( ImgMode.CELL );
-		Img<T> preImg =  (Img<T>) imgOpener.openImgs(file.getAbsolutePath(),config).get(0);	
-		img = new ImgPlus(preImg, file.getName(), new AxisType[]{Axes.X, Axes.Y, Axes.TIME});
+		img =  (Img<T>) imgOpener.openImgs(file.getAbsolutePath(),config).get(0);	
+		
 	}
 	
 	public String getFilePath() {
 		return file.getPath();
 	}
 	
-	public ImgPlus<T> getImg() {
+	public Img<T> getImg() {
 		return img;
 	}
 	
-	public void setImg(ImgPlus<T> img) {
+	public void setImg(Img<T> img) {
 		this.img = img;
 	}
 	

@@ -39,7 +39,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	private DatasetService ds; 
 	
 	private boolean nextState = false;
-	protected ArrayList<ImgPlusMeta> imgData;
+	protected ArrayList<ImgWrapper> imgData;
 	
 	
 	/**
@@ -65,11 +65,11 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	}
 		
 	/* Image Data */
-	public ArrayList<ImgPlusMeta> getImgData(){
+	public ArrayList<ImgWrapper> getImgData(){
 		return imgData;
 	}
 	
-	public void setImgData(ArrayList<ImgPlusMeta> input) {
+	public void setImgData(ArrayList<ImgWrapper> input) {
 	    
 	    if(!imgData.isEmpty())
 	    	imgData.clear();

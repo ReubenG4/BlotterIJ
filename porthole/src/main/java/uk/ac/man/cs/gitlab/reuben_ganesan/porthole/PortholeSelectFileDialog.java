@@ -67,7 +67,7 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 		 fileTableModel = new FileTableModel();
 		 fileTable = new JTable(fileTableModel);
 		 
-		 imgData = new ArrayList<ImgPlusMeta>();
+		 imgData = new ArrayList<ImgWrapper>();
 				
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			

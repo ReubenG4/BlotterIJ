@@ -24,7 +24,7 @@ public class PortholeToolPanelDialog extends PortholeDialog{
 		toolPanel = new JPanel();
 		pcaButton = new JButton("PCA");
 		
-		imgData = new ArrayList<ImgPlusMeta>();
+		imgData = new ArrayList<ImgWrapper>();
 		
 		getContentPane().add(toolPanel);
 		{

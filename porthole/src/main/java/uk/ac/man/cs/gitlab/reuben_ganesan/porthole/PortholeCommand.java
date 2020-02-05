@@ -66,9 +66,9 @@ public class PortholeCommand implements Command{
 		
 	/* Declare class variables */
 	private static FalseRGBConverter rgbConverter = null;
-	private ArrayList<ImgPlusMeta> imgData = new ArrayList<ImgPlusMeta>();
+	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
-	private ImgPlusMeta rgbImg;
+	private ImgWrapper rgbImg;
 	int currentState = 1;
 	boolean running = true;
 	
@@ -115,7 +115,7 @@ public class PortholeCommand implements Command{
 							//Clear chosen files from dialog
 							selectFileDialog.clearImgData();
 							//Declere and Initialise iterator for images
-							Iterator<ImgPlusMeta> imgItr = imgData.iterator();
+							Iterator<ImgWrapper> imgItr = imgData.iterator();
 							//Iterate through images, retrieve them
 							while(imgItr.hasNext()) {
 								imgItr.next().initImg();

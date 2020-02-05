@@ -3,20 +3,25 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.plugin.RGBStackMerge;
+
+
 public class FalseRGBConverter extends PortholeFunction {
 	
-	public ImgPlusMeta convert(ArrayList<ImgPlusMeta> input) {
+	public ImgWrapper convert(ArrayList<ImgWrapper> input) {
 		
 		/* Declare and initalise class variables */
-		imgData = new ArrayList<ImgPlusMeta>();	
-		ArrayList<ImgPlusMeta> rImgData = new ArrayList<ImgPlusMeta>();
-		ArrayList<ImgPlusMeta> gImgData = new ArrayList<ImgPlusMeta>();
-		ArrayList<ImgPlusMeta> bImgData = new ArrayList<ImgPlusMeta>();
+		imgData = new ArrayList<ImgWrapper>();	
+		ArrayList<ImgWrapper> rImgData = new ArrayList<ImgWrapper>();
+		ArrayList<ImgWrapper> gImgData = new ArrayList<ImgWrapper>();
+		ArrayList<ImgWrapper> bImgData = new ArrayList<ImgWrapper>();
 		
 		//Chosen RGB data
-		ImgPlusMeta rImgDataChosen;
-		ImgPlusMeta gImgDataChosen;
-		ImgPlusMeta bImgDataChosen;
+		ImgWrapper rImgDataChosen;
+		ImgWrapper gImgDataChosen;
+		ImgWrapper bImgDataChosen;
 		
 		//Difference between chosen RGB data wavelength and waveband median
 		int rWaveDiff;
@@ -30,7 +35,7 @@ public class FalseRGBConverter extends PortholeFunction {
 		
 		/* Initialise imgData and iterator */
 		imgData.addAll(input);
-		Iterator<ImgPlusMeta> imgItr = imgData.iterator();
+		Iterator<ImgWrapper> imgItr = imgData.iterator();
 		
 		/* Check input size, return if not enough */
 		if(imgData == null)
@@ -46,7 +51,7 @@ public class FalseRGBConverter extends PortholeFunction {
 		 */
 		while(imgItr.hasNext()){
 			
-			ImgPlusMeta imgCurr = imgItr.next();
+			ImgWrapper imgCurr = imgItr.next();
 			int wavelength = imgCurr.getWavelength();
 			
 			if( wavelength >= 625 && wavelength <= 740) {
@@ -66,11 +71,11 @@ public class FalseRGBConverter extends PortholeFunction {
 		
 		/*
 		 * Iterate through sorted RGBdata
-		 * Choose an ImgPlusMeta closest to the median of its respective waveband
+		 * Choose an Img closest to the median of its respective waveband
 		 */
-		Iterator<ImgPlusMeta> rItr = rImgData.iterator(); 
-		Iterator<ImgPlusMeta> gItr = gImgData.iterator(); 
-		Iterator<ImgPlusMeta> bItr = bImgData.iterator(); 
+		Iterator<ImgWrapper> rItr = rImgData.iterator(); 
+		Iterator<ImgWrapper> gItr = gImgData.iterator(); 
+		Iterator<ImgWrapper> bItr = bImgData.iterator(); 
 		
 		rImgDataChosen = rItr.next();
 		rWaveDiff = Math.abs(rImgDataChosen.getWavelength() - rWaveMedian);
@@ -82,44 +87,37 @@ public class FalseRGBConverter extends PortholeFunction {
 		bWaveDiff = Math.abs(bImgDataChosen.getWavelength() - bWaveMedian);
 		
 		while(rItr.hasNext()) {
-			
-			ImgPlusMeta imgCurr = rItr.next();
+			ImgWrapper imgCurr = rItr.next();
 			int newWaveDiff = Math.abs(imgCurr.getWavelength() - rWaveMedian);
 			
 			if(newWaveDiff < rWaveDiff) {
 				rWaveDiff = newWaveDiff;
 				rImgDataChosen = imgCurr;
-			}
-			
+			}		
 		}
 		
 		while(gItr.hasNext()) {
-			
-			ImgPlusMeta imgCurr = gItr.next();
+			ImgWrapper imgCurr = gItr.next();
 			int newWaveDiff = Math.abs(imgCurr.getWavelength() - gWaveMedian);
 			
 			if(newWaveDiff < gWaveDiff) {
 				gWaveDiff = newWaveDiff;
 				gImgDataChosen = imgCurr;
 			}
-			
 		}
 
-	
 		while(bItr.hasNext()) {
-			
-			ImgPlusMeta imgCurr = bItr.next();
+			ImgWrapper imgCurr = bItr.next();
 			int newWaveDiff = Math.abs(imgCurr.getWavelength() - bWaveMedian);
 			
 			if(newWaveDiff < bWaveDiff) {
 				bWaveDiff = newWaveDiff;
 				bImgDataChosen = imgCurr;
-			}
-			
+			}	
 		}
-		
-		
-		
+	
+		/*Declare and Initialise RGBStackMerge */
+
 		
 		return imgData.get(0);
 		
