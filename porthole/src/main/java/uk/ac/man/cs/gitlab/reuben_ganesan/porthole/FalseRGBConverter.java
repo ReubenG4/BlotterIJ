@@ -3,7 +3,6 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 public class FalseRGBConverter extends PortholeFunction {
 	
 	public ImgWrapper convert(ArrayList<ImgWrapper> input) {
@@ -113,7 +112,7 @@ public class FalseRGBConverter extends PortholeFunction {
 		}
 	
 		/*Declare and Initialise RGBStackMerge */
-		
+	
 		
 		return imgData.get(0);
 		
