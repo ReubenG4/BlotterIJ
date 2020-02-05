@@ -3,10 +3,6 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.plugin.RGBStackMerge;
-
 
 public class FalseRGBConverter extends PortholeFunction {
 	
@@ -117,7 +113,7 @@ public class FalseRGBConverter extends PortholeFunction {
 		}
 	
 		/*Declare and Initialise RGBStackMerge */
-
+		
 		
 		return imgData.get(0);
 		

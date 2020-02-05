@@ -195,11 +195,6 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 	}
 	
 	
-	/*
-	 * Accessors & Mutators
-	 */	
-	
-	
 	
 	/*
 	 * Fits columns to width of data
