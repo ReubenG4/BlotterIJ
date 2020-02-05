@@ -47,6 +47,10 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 	JButton confirmButton;
 	FileTableModel fileTableModel;
 	
+	/*
+	 * Dialog used to select files to load 
+	 */
+	
 	public < T extends RealType<T> & NativeType<T> > PortholeSelectFileDialog() {
 		setName("PortholeSelect");
 		setSize(500, 450);

@@ -151,12 +151,12 @@ public class PortholeCommand implements Command{
 		switch(nextState) {
 			
 			case 1:
-				/* Place UI in 1st state */
+				/* State 1: File Selection */
 				selectFileDialog.setVisible(true);
 				break;
 		
 			case 2:
-				/* Convert imgData to falseRGB */
+				/* State 2: Produce and show FalseRGB for user view */
 				rgbImg = rgbConverter.convert(imgData);
 				/* Show false RGB image for user manipulation */
 				ui.show("FalseRGB", rgbImg.getImg());
@@ -164,11 +164,12 @@ public class PortholeCommand implements Command{
 				break;
 				
 			case 3:
+				/* State 3: Tool Panel */
 				toolPanelDialog.setVisible(true);
 				break;
 				
 			default:
-				ui.show("State out of bounds, value:"+nextState);
+				ui.showDialog("State out of bounds, value:"+nextState);
 				break;
 
 		}
