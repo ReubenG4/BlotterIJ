@@ -2,6 +2,8 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import net.imglib2.img.display.imagej.ImageJFunctions;
+
 
 public class FalseRGBConverter extends PortholeFunction {
 	

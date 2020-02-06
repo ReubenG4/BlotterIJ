@@ -19,11 +19,13 @@
 	<name>Porthole</name>
 	<description>A plugin to assist with selection and analysis of multispectral images</description>
 	<url>https://github.com/[MY-ORG]/[MY-REPO]</url>
-	<inceptionYear>2013</inceptionYear>
+	<inceptionYear>2019</inceptionYear>
+	
 	<organization>
 		<name>[MY-ORGANIZATION-NAME]</name>
 		<url>[MY-ORGANIZATION-WEB-SITE]</url>
 	</organization>
+	
 	<licenses>
 		<license>
 			<name>CC0 1.0 Universal License</name>
@@ -83,6 +85,11 @@
 	<dependencies>
 	
 		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-ij</artifactId>
+		</dependency>
+	
+		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej</artifactId>
 		</dependency>
@@ -92,16 +99,13 @@
         	<artifactId>ij</artifactId>
     	</dependency>
     	
-    	<dependency>
-    		<groupId>net.imglib2</groupId>
-    		<artifactId>imglib2-ij</artifactId>
-    	</dependency>
 		
 		<dependency>
       		<groupId>junit</groupId>
       		<artifactId>junit</artifactId>
       		<scope>test</scope>
     	</dependency>
-    	
+
+		
 	</dependencies>
 </project>
