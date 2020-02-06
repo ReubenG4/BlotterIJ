@@ -2,12 +2,18 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.plugin.RGBStackMerge;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 
 public class FalseRGBConverter extends PortholeFunction {
 	
-	public ImgWrapper convert(ArrayList<ImgWrapper> input) {
+	public < T extends RealType<T> & NativeType<T> >ImgWrapper convert(ArrayList<ImgWrapper> input) {
 		
 		/* Declare and initalise class variables */
 		imgData = new ArrayList<ImgWrapper>();	
@@ -114,7 +120,14 @@ public class FalseRGBConverter extends PortholeFunction {
 		}
 	
 		/*Declare and Initialise RGBStackMerge */
-	
+		RGBStackMerge rgbsm = new RGBStackMerge();
+		
+		//RGBStackMerge uses legacy ImagePlus, conversion needed
+		ImagePlus rImgChosen = ImageJFunctions.wrap(rImgDataChosen.getImg(),"red");
+		ImagePlus gImgChosen = ImageJFunctions.wrap(gImgDataChosen.getImg(), "green");
+		ImagePlus bImgChosen = ImageJFunctions.wrap(bImgDataChosen.getImg(),"blue");
+		
+		
 		
 		return imgData.get(0);
 		
