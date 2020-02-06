@@ -19,6 +19,7 @@ import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
+import ij.ImagePlus;
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
@@ -68,7 +69,7 @@ public class PortholeCommand implements Command{
 	private static FalseRGBConverter rgbConverter = null;
 	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
-	private ImgWrapper rgbImg;
+	private ImagePlus rgbImg;
 	int currentState = 1;
 	boolean running = true;
 	
@@ -159,7 +160,12 @@ public class PortholeCommand implements Command{
 				/* State 2: Produce and show FalseRGB for user view */
 				rgbImg = rgbConverter.convert(imgData);
 				/* Show false RGB image for user manipulation */
-				ui.show("FalseRGB", rgbImg.getImg());
+				if(rgbImg != null) {
+					rgbImg.setTitle("FalseRGB");
+					rgbImg.show();
+				}
+				else
+					ui.show("FalseRGB",imgData.get(0).getImg());
 				changeState(3);
 				break;
 				

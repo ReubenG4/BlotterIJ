@@ -13,7 +13,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class FalseRGBConverter extends PortholeFunction {
 	
-	public < T extends RealType<T> & NativeType<T> >ImgWrapper convert(ArrayList<ImgWrapper> input) {
+	public < T extends RealType<T> & NativeType<T> >ImagePlus convert(ArrayList<ImgWrapper> input) {
 		
 		/* Declare and initalise class variables */
 		imgData = new ArrayList<ImgWrapper>();	
@@ -44,9 +44,9 @@ public class FalseRGBConverter extends PortholeFunction {
 		if(imgData == null)
 			return null;
 		
-		if(imgData.size() < 3) {
-			return imgData.get(0);
-		}
+		if(imgData.size() < 3) 
+			return null;
+		
 		
 		/* 
 		 * Iterate through imgData
@@ -69,7 +69,7 @@ public class FalseRGBConverter extends PortholeFunction {
 		/* If not enough r,g or b data present, show first loaded image */
 		if(rImgData.size() == 0 || gImgData.size() == 0 || bImgData.size() == 0) {
 			getUIService().showDialog("Not enough RGB data present, showing first loaded image");
-			return imgData.get(0);
+			return null;
 		}
 		
 		/*
@@ -119,17 +119,15 @@ public class FalseRGBConverter extends PortholeFunction {
 			}	
 		}
 	
-		/*Declare and Initialise RGBStackMerge */
-		RGBStackMerge rgbsm = new RGBStackMerge();
-		
-		//RGBStackMerge uses legacy ImagePlus, conversion needed
+		//RGBStackMergeExt uses legacy ImagePlus, conversion needed
 		ImagePlus rImgChosen = ImageJFunctions.wrap(rImgDataChosen.getImg(),"red");
 		ImagePlus gImgChosen = ImageJFunctions.wrap(gImgDataChosen.getImg(), "green");
 		ImagePlus bImgChosen = ImageJFunctions.wrap(bImgDataChosen.getImg(),"blue");
 		
+		RGBStackMergeExt rgbsm = new RGBStackMergeExt();
+		ImagePlus rgb = rgbsm.mergeStacks(rImgChosen, gImgChosen, bImgChosen);
 		
-		
-		return imgData.get(0);
+		return rgb;
 		
 	}
 
