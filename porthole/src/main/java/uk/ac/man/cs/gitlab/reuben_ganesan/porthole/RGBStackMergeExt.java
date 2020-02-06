@@ -13,7 +13,11 @@ import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 import ij.process.LUT;
 
-/** This plugin implements the Image/Color/Merge Channels command. */
+/** Adapted legacy code from ij.plugin.RGBStackMerge  
+ *  Reproduced mostly wholesale due to time constraints
+ *  Used to produce FalseRGB image from dataset
+ *  Adaption in mergeStacks to allow code to be used headlessly
+ * */
 public class RGBStackMergeExt {
 	private static String none = "*None*";
 	private static int maxChannels = 7;
