@@ -8,14 +8,14 @@ import javax.swing.JPanel;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class PortholeToolPanelDialog extends PortholeDialog{
+public class BlotterToolPanelDialog extends BlotterDialog{
 	/*
 	 * Declare JComponents
 	 */		
 	JPanel toolPanel;
 	JButton pcaButton;
 	
-	public < T extends RealType<T> & NativeType<T> > PortholeToolPanelDialog() {
+	public < T extends RealType<T> & NativeType<T> > BlotterToolPanelDialog() {
 		setName("PortholeTools");
 		setSize(125, 300);
 		setLocationRelativeTo(null);

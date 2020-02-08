@@ -1,9 +1,9 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
-public class  PortholeProgressBar extends PortholeDialog {
+public class  BlotterProgressBar extends BlotterDialog {
 	
 	
-	public PortholeProgressBar() {
+	public BlotterProgressBar() {
 		setName("PortholeProgressBar");
 		setLocationRelativeTo(null);
 	}

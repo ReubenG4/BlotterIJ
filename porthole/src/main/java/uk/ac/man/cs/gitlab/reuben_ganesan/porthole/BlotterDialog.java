@@ -23,7 +23,7 @@ import java.awt.event.ActionEvent;
  * Parent class for dialogs
  */
 
-public class PortholeDialog extends JDialog implements ActionListener{
+public class BlotterDialog extends JDialog implements ActionListener{
 
 	/**
 	 * Declare and initialise class variables
@@ -45,7 +45,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	/**
 	 * Create the dialog.
 	 */
-	public PortholeDialog() {	
+	public BlotterDialog() {	
 				
 		
 	}
@@ -177,7 +177,7 @@ public class PortholeDialog extends JDialog implements ActionListener{
 	
 	public static void main(final String[] args) {
 		try {
-			final PortholeDialog dialog = new PortholeDialog();
+			final BlotterDialog dialog = new BlotterDialog();
 			//dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		}

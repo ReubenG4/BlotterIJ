@@ -11,7 +11,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 
-public class FalseRGBConverter extends PortholeFunction {
+public class FalseRGBConverter extends BlotterFunction {
 	
 	public < T extends RealType<T> & NativeType<T> >ImagePlus convert(ArrayList<ImgWrapper> input) {
 		

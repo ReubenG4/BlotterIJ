@@ -27,8 +27,8 @@ import net.imagej.ops.OpService;
 
 
 /* Invoked when user selects plugin from menu */
-@Plugin(type = Command.class, headless = false,menuPath = "Porthole>Load Images")
-public class PortholeCommand implements Command{
+@Plugin(type = Command.class, headless = false,menuPath = "Plugins>Blotter>Load Images")
+public class BlotterCommand implements Command{
 
 	/* Ask context for access to services */
 	@Parameter
@@ -62,8 +62,8 @@ public class PortholeCommand implements Command{
     FormatService formatService;
 
 	/* Declare JDialogs */
-	private static PortholeSelectFileDialog selectFileDialog = null;
-	private static PortholeToolPanelDialog toolPanelDialog = null;
+	private static BlotterSelectFileDialog selectFileDialog = null;
+	private static BlotterToolPanelDialog toolPanelDialog = null;
 		
 	/* Declare class variables */
 	private static FalseRGBConverter rgbConverter = null;
@@ -98,12 +98,12 @@ public class PortholeCommand implements Command{
 			
 			//Initialise select file dialog
 			if (selectFileDialog == null) {
-				selectFileDialog = new PortholeSelectFileDialog();
+				selectFileDialog = new BlotterSelectFileDialog();
 				
 				//Register services for selectFileDialog
 				selectFileDialog.setServices(services);
 				
-				selectFileDialog.setTitle("Porthole - Select Files");
+				selectFileDialog.setTitle("Blotter - Select Files");
 				
 				//Add listener for closing of selectFileDialog
 				selectFileDialog.addComponentListener(new ComponentAdapter() {		
@@ -132,8 +132,8 @@ public class PortholeCommand implements Command{
 			}	
 			
 			if (toolPanelDialog == null) {
-				toolPanelDialog = new PortholeToolPanelDialog();
-				toolPanelDialog.setTitle("Porthole");
+				toolPanelDialog = new BlotterToolPanelDialog();
+				toolPanelDialog.setTitle("Blotter");
 				toolPanelDialog.addComponentListener(new ComponentAdapter() {		
 					public void componentHidden(ComponentEvent e){
 						disposeAllUI();

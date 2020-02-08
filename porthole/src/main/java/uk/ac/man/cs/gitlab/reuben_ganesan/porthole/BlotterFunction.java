@@ -20,7 +20,7 @@ import net.imagej.ops.OpService;
  */
 
 
-public class PortholeFunction {
+public class BlotterFunction {
 	
 	/**
 	 * Declare and initialise class variables

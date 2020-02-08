@@ -24,7 +24,7 @@ import org.scijava.widget.FileWidget;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class  PortholeSelectFileDialog extends PortholeDialog {
+public class  BlotterSelectFileDialog extends BlotterDialog {
 	
 	/*
 	 * Declare and initialise class variables
@@ -50,7 +50,7 @@ public class  PortholeSelectFileDialog extends PortholeDialog {
 	 * Dialog used to select files to load 
 	 */
 	
-	public < T extends RealType<T> & NativeType<T> > PortholeSelectFileDialog() {
+	public < T extends RealType<T> & NativeType<T> > BlotterSelectFileDialog() {
 		setName("PortholeSelect");
 		setSize(500, 450);
 		setLocationRelativeTo(null);
