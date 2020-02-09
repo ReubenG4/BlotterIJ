@@ -24,6 +24,7 @@ import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 
 
 /* Invoked when user selects plugin from menu */
@@ -159,13 +160,19 @@ public class BlotterCommand implements Command{
 			case 2:
 				/* State 2: Produce and show FalseRGB for user view */
 				rgbImg = rgbConverter.convert(imgData);
+				
 				/* Show false RGB image for user manipulation */
 				if(rgbImg != null) {
 					rgbImg.setTitle("FalseRGB");
-					rgbImg.show();
+					ui.show("FalseRGB", rgbImg);
 				}
-				else
-					ui.show("FalseRGB",imgData.get(0).getImg());
+				else {
+					//If no false RGB image produced, wrap and use first image loaded
+					rgbImg = ImageJFunctions.wrap(imgData.get(0).getImg(),"FalseRGB");
+					rgbImg.setTitle("FalseRGB");
+					ui.show("FalseRGB",rgbImg);
+				}
+						
 				changeState(3);
 				break;
 				

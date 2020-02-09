@@ -16,7 +16,7 @@ import ij.process.LUT;
 /** Adapted legacy code from ij.plugin.RGBStackMerge  
  *  Reproduced mostly wholesale due to time constraints
  *  Used to produce FalseRGB image from dataset
- *  Adaption in mergeStacks to allow code to be used headlessly
+ *  Overloading of mergeStacks to allow code to be used headlessly
  * */
 public class RGBStackMergeExt {
 	private static String none = "*None*";
