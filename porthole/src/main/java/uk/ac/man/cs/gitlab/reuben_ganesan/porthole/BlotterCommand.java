@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
 
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import org.scijava.app.StatusService;
@@ -20,6 +21,7 @@ import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
 import ij.ImagePlus;
+import ij.gui.Roi;
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
@@ -67,12 +69,15 @@ public class BlotterCommand implements Command{
 	private static BlotterToolPanelDialog toolPanelDialog = null;
 		
 	/* Declare class variables */
-	private static FalseRGBConverter rgbConverter = null;
 	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
 	private ImagePlus rgbImg;
 	int currentState = 1;
 	boolean running = true;
+	Rectangle selection;
+	
+	private static FalseRGBConverter rgbConverter = null;
+	private static BlotterPCA pca = null;
 	
 	public void run() {
 		
@@ -91,9 +96,13 @@ public class BlotterCommand implements Command{
 		/* Initialise FalseRGBConverter */
 		rgbConverter = new FalseRGBConverter();
 		rgbConverter.setServices(services);
+		
+		/* Initialise BlotterPCA */
+		pca = new BlotterPCA();
+		pca.setServices(services);
 			
 		/*
-		 * Declare and initialise dialogs
+		 * Declare and initialise dialog onExit routines
 		 */
 		SwingUtilities.invokeLater(() -> {
 			
@@ -103,7 +112,7 @@ public class BlotterCommand implements Command{
 				
 				//Register services for selectFileDialog
 				selectFileDialog.setServices(services);
-				
+	
 				selectFileDialog.setTitle("Blotter - Select Files");
 				
 				//Add listener for closing of selectFileDialog
@@ -137,16 +146,35 @@ public class BlotterCommand implements Command{
 				toolPanelDialog.setTitle("Blotter");
 				toolPanelDialog.addComponentListener(new ComponentAdapter() {		
 					public void componentHidden(ComponentEvent e){
-						disposeAllUI();
+						//On setVisible(false) of toolPanelDialog, 
+						//if nextState is true, 
+						if(toolPanelDialog.getNextState()) {
+							//If Selection has been chosen
+							if(toolPanelDialog.getSelection() != null) {
+								//Retrieve selection
+								selection = toolPanelDialog.getSelection();
+								changeState(4);
+							}
+						}
+						else
+						{
+							disposeAllUI();
+						}			
 					}
 				});			
 			}
 			
+			
+			//Place FSM in first state
 			changeState(1);
 	   });	
 				
 		
 	}
+	
+	/*
+	 * Finite State Machine for governing program flow
+	 */
 	
 	public void changeState(int nextState) {
 		
@@ -177,8 +205,14 @@ public class BlotterCommand implements Command{
 				break;
 				
 			case 3:
-				/* State 3: Tool Panel */
+				/* State 3: Show Tool Panel */
 				toolPanelDialog.setVisible(true);
+				break;
+				
+			case 4:
+				/* State 4: Perform PCA */
+				pca.run(imgData,selection);
+				changeState(3);
 				break;
 				
 			default:

@@ -1,6 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.awt.FlowLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 	 */		
 	JPanel toolPanel;
 	JButton pcaButton;
+	
+	/*
+	 * Declare Class variables
+	 */
+	Rectangle selection = null;
 	
 	public < T extends RealType<T> & NativeType<T> > BlotterToolPanelDialog() {
 		setName("PortholeTools");
@@ -61,17 +67,26 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 					
 					//Check if the correct image has been selected
 					if(title.compareTo("FalseRGB") != 0) {
-						IJ.error("Please use FalseRGB for area selection");
+						IJ.error("Please area select using FalseRGB image");
 						return;
 					}
 					
+					//With selection verified, get the rectangle
+					selection = roi.getBounds();
+					
+					//Set flag for next state
 					setNextState(true);
+					setVisible(false);
 				}
 				
 			});
 			toolPanel.add(pcaButton);
 		}
 		
+	}
+	
+	public Rectangle getSelection() {
+		return selection;
 	}
 	
 }
