@@ -64,6 +64,8 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 						IJ.error("Please use FalseRGB for area selection");
 						return;
 					}
+					
+					setNextState(true);
 				}
 				
 			});

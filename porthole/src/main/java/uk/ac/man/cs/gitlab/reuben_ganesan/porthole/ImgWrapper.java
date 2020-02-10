@@ -10,7 +10,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 /*
- * Object acting as a wrapper for ImgPlus
+ * Object acting as a wrapper for Img
  *  Includes reference to file and metadata specific to plugin
  */
 class ImgWrapper < T extends RealType< T > & NativeType< T > >{

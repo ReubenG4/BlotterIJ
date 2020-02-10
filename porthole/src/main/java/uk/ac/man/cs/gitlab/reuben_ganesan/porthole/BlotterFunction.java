@@ -35,17 +35,8 @@ public class BlotterFunction {
 	private DatasetIOService dsIO;
 	private DatasetService ds; 
 	
-	private boolean nextState = false;
 	protected ArrayList<ImgWrapper> imgData;
-	
-	    /* State */
-		public boolean getNextState() {
-			return nextState;
-		}
-			
-		public void setNextState(boolean input) {
-			this.nextState = input;
-		}
+		
 			
 		/* Image Data */
 		public ArrayList<ImgWrapper> getImgData(){
