@@ -5,10 +5,14 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -101,67 +105,16 @@ public class BlotterCommand implements Command{
 		pca = new BlotterPCA();
 		pca.setServices(services);
 			
-		/*
-		 * Declare and initialise dialog onExit routines
-		 */
 		SwingUtilities.invokeLater(() -> {
-			
-			//Initialise select file dialog
-			if (selectFileDialog == null) {
-				selectFileDialog = new BlotterSelectFileDialog();
-				
-				//Register services for selectFileDialog
-				selectFileDialog.setServices(services);
-	
-				selectFileDialog.setTitle("Blotter - Select Files");
-				
-				//Add listener for closing of selectFileDialog
-				selectFileDialog.addComponentListener(new ComponentAdapter() {		
-					public void componentHidden(ComponentEvent e){
-						//On setVisible(false) of selectDialog, 
-						//if nextState is true, 
-						if(selectFileDialog.getNextState()) {
-							//Add all chosen files to imgData
-							imgData.addAll(selectFileDialog.getImgData());
-							//Clear chosen files from dialog
-							selectFileDialog.clearImgData();		
-							changeState(2);
-						}	
-						else
-						{
-							disposeAllUI();
-						}
-					}
-				});			
-			}	
-			
-			if (toolPanelDialog == null) {
-				toolPanelDialog = new BlotterToolPanelDialog();
-				toolPanelDialog.setTitle("Blotter");
-				toolPanelDialog.addComponentListener(new ComponentAdapter() {		
-					public void componentHidden(ComponentEvent e){
-						//On setVisible(false) of toolPanelDialog, 
-						//if nextState is true, 
-						if(toolPanelDialog.getNextState()) {
-							//If Selection has been chosen
-							if(toolPanelDialog.getSelection() != null) {
-								//Retrieve selection
-								selection = toolPanelDialog.getSelection();
-								changeState(4);
-							}
-						}
-						else
-						{
-							disposeAllUI();
-						}			
-					}
-				});			
-			}
-			
+					
+			//Initialise JDialogs
+			initSelectFileDialog();
+			initToolPanelDialog();
 			
 			//Place FSM in first state
-			changeState(1);
-	   });	
+			changeState(1);	
+			
+		});	
 				
 		
 	}
@@ -215,6 +168,69 @@ public class BlotterCommand implements Command{
 
 		}
 		
+	}
+	
+	
+	
+	/* 
+	 * Initialises selectFileDialog 
+	 */
+	public void initSelectFileDialog() {
+		//Initialise select file dialog
+		if (selectFileDialog == null) {
+			selectFileDialog = new BlotterSelectFileDialog();
+			
+			//Register services for selectFileDialog
+			selectFileDialog.setServices(services);
+
+			selectFileDialog.setTitle("Blotter - Select Files");
+			
+			//Add listener for closing of selectFileDialog
+			selectFileDialog.addComponentListener(new ComponentAdapter() {		
+				public void componentHidden(ComponentEvent e){
+					//On setVisible(false) of selectDialog, 
+					//if nextState is true, 
+					if(selectFileDialog.getNextState()) {
+						//Add all chosen files to imgData
+						imgData.addAll(selectFileDialog.getImgData());
+						//Clear chosen files from dialog
+						selectFileDialog.clearImgData();		
+						changeState(2);
+					}					
+				}		
+			});
+			
+			selectFileDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			
+		}//if selectFileDialog == null	
+	}
+	
+	/* 
+	 * Initialises toolPanelDialog 
+	 */
+	public void initToolPanelDialog() {
+		
+		if (toolPanelDialog == null) {
+			toolPanelDialog = new BlotterToolPanelDialog();
+			toolPanelDialog.setTitle("Blotter");
+			toolPanelDialog.addComponentListener(new ComponentAdapter() {		
+				public void componentHidden(ComponentEvent e){
+					//On setVisible(false) of toolPanelDialog, 
+					//if nextState is true, 
+					if(toolPanelDialog.getNextState()) {
+						//If Selection has been chosen
+						if(toolPanelDialog.getSelection() != null) {
+							//Retrieve selection
+							selection = toolPanelDialog.getSelection();
+							changeState(4);
+						}
+					}		
+				}
+			});		
+			
+			toolPanelDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			
+		}//if toolPanelDialog==null
 	}
 	
 	/*
