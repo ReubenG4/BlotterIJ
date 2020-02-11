@@ -35,7 +35,7 @@ public class BlotterCommand implements Command{
 
 	/* Ask context for access to services */
 	@Parameter
-	OpService ops;
+	OpService op;
 
 	@Parameter
 	LogService log;
@@ -82,7 +82,7 @@ public class BlotterCommand implements Command{
 	public void run() {
 		
 		/* Collate services with hashtable for easier initialisation of dialogs */
-		services.put("OpService", ops);
+		services.put("OpService", op);
 		services.put("LogService", log);
 		services.put("UIService", ui);
 		services.put("CommandService", cmd);
@@ -124,13 +124,7 @@ public class BlotterCommand implements Command{
 							//Add all chosen files to imgData
 							imgData.addAll(selectFileDialog.getImgData());
 							//Clear chosen files from dialog
-							selectFileDialog.clearImgData();
-							//Declere and Initialise iterator for images
-							Iterator<ImgWrapper> imgItr = imgData.iterator();
-							//Iterate through images, retrieve them
-							while(imgItr.hasNext()) {
-								imgItr.next().initImg();
-							}				
+							selectFileDialog.clearImgData();		
 							changeState(2);
 						}	
 						else

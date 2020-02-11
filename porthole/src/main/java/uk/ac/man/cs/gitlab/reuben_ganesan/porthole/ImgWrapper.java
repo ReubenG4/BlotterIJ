@@ -42,6 +42,9 @@ class ImgWrapper < T extends RealType< T > & NativeType< T > >{
 	}
 	
 	public Img<T> getImg() {
+		if(img == null)
+			initImg();
+		
 		return img;
 	}
 	

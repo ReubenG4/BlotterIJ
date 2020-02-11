@@ -131,7 +131,7 @@ public class BlotterFunction {
 		}
 		
 		public void setServices(Hashtable<String,Service> services) {
-			setOpsService((OpService) services.get("OpsService"));
+			setOpsService((OpService) services.get("OpService"));
 			setLogService((LogService) services.get("LogService"));
 			setUIService((UIService) services.get("UIService"));
 			setCommandService((CommandService) services.get("CommandService"));
