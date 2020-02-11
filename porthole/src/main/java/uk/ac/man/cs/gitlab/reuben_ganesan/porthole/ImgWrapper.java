@@ -25,6 +25,12 @@ class ImgWrapper < T extends RealType< T > & NativeType< T > >{
 		this.type = type;
 	}	
 	
+	public ImgWrapper(Img<T> img, int wavelength, char type) {
+		this.img = img;
+		this.wavelength = wavelength;
+		this.type = type;
+	}	
+	
 	/*
 	 * Retrieves Img from file. 
 	 * Plugin may not neccessarily want to load large files into memory at initialisation of object
@@ -33,8 +39,15 @@ class ImgWrapper < T extends RealType< T > & NativeType< T > >{
 		ImgOpener imgOpener = new ImgOpener();
 		SCIFIOConfig config = new SCIFIOConfig();
 		config.imgOpenerSetImgModes( ImgMode.CELL );
-		img =  (Img<T>) imgOpener.openImgs(file.getAbsolutePath(),config).get(0);	
-		
+		img =  (Img<T>) imgOpener.openImgs(file.getAbsolutePath(),config).get(0);		
+	}
+	
+	/*
+	 * Sets img pointer to null.
+	 * Plugin may want to not hold references to large files.
+	 */
+	public void  nullImg() {
+		img = null;
 	}
 	
 	public String getFilePath() {
