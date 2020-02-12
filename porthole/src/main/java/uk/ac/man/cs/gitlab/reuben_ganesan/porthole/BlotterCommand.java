@@ -2,17 +2,12 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
-
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -25,7 +20,6 @@ import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
 import ij.ImagePlus;
-import ij.gui.Roi;
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
