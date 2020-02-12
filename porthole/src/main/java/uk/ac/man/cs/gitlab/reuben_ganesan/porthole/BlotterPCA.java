@@ -62,22 +62,26 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 			int yIndex = 0;
 			
 			//Iterate through y-axis of image
-			while(yIndex < height) {		
+			while(yIndex < height) {
+				//set x-position to zero
 				xIndex = 0;
-
+				//set y-position of cursor
+				cursor.setPosition(yIndex,1);
+				
 				//Iterate through x-axis of image
 				while(xIndex < width) {
-					//Set position of cursor
+					//Set x-position of cursor
 					cursor.setPosition(xIndex,0);
-					cursor.setPosition(yIndex,1);
 		
 					//Get value of pixel and store it in pxlData
 					value = cursor.get();
 					pxlData[xIndex][yIndex][zIndex] = value.getRealDouble();
+					
+					//Increment x-position
 					xIndex++;
 				}//while x-axis end
 
-				//move cursor 1 pixel on y-axis
+				//Increment y-position
 				yIndex++;
 			}//while y-axis end
 
