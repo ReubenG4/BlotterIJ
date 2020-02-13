@@ -11,21 +11,26 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import Jama.EigenvalueDecomposition;
-import Jama.Matrix;
 
 public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
+	
+	//Declare class variables
+	private double [][][] pxlData;
 	
 	
 	/* Main Function */
 	public Img<T> run(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 		
-		double[][][] pxlData = extractPixelData(inputData,selection);
+		extractPixelData(inputData,selection);
 		
 		
 		
 		return null;
 		
 	}
+	
+	
+	
 	
 	/* Extracts Pixel Data from selected region of input data */	
 	public double[][][] extractPixelData(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
@@ -42,7 +47,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		int height = selection.height;
 
 		//Initialise target array to hold pixel data
-		double[][][] pxlData = new double[width][height][inputData.size()];
+		pxlData = new double[width][height][inputData.size()];
 
 		//Iterate through inputData
 		int zIndex = 0;
@@ -63,8 +68,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 			
 			//Iterate through y-axis of image
 			while(yIndex < height) {
-				//set x-position to zero
-				xIndex = 0;
+				
 				//set y-position of cursor
 				cursor.setPosition(yIndex,1);
 				
@@ -81,6 +85,9 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 					xIndex++;
 				}//while x-axis end
 
+				//set x-position to zero
+				xIndex = 0;
+	
 				//Increment y-position
 				yIndex++;
 			}//while y-axis end
@@ -92,10 +99,5 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		}
 		
 		return pxlData;	
-	}
-	
-	
-	public class CovarianceData{
-		
 	}
 }
