@@ -1,4 +1,4 @@
-package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
+package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;

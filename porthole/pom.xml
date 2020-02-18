@@ -13,7 +13,7 @@
 	</parent>
 
 	<groupId>uk.ac.man.cs.gitlab.reuben-ganesan</groupId>
-	<artifactId>porthole</artifactId>
+	<artifactId>BlotterIJ</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
 	<name>Porthole</name>
@@ -69,7 +69,7 @@
 	</ciManagement>
 
 	<properties>
-		<main-class>Porthole</main-class>
+		<main-class>BlotterIJ</main-class>
 		<license.licenseName>cc0</license.licenseName>
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<license.projectName>ImageJ software for multidimensional image processing and analysis.</license.projectName>

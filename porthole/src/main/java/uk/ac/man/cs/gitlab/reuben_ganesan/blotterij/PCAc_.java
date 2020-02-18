@@ -1,4 +1,4 @@
-package uk.ac.man.cs.gitlab.reuben_ganesan.porthole;
+package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 /* PCA plugin for ImageJ
  * 
  * This plugin uses statistics to calculate an orientation vector
