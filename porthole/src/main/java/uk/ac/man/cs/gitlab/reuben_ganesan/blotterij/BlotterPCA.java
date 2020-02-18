@@ -16,21 +16,30 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 	
 	//Declare class variables
 	private double [][][] pxlData;
+	private EigenData eigenData;
+	
+	private int width;
+	private int height;
+	private int depth;
 	
 	
 	/* Main Function */
 	public Img<T> run(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 		
+		//Retrieve dimensions
+		width = selection.width;
+		height = selection.height;
+		depth = inputData.size();
+		
+		//Extract pixel data
 		extractPixelData(inputData,selection);
 		
-		
+		//Calculate eigenvectors
+		eigenData = new EigenData(pxlData, width, height, depth);
 		
 		return null;
 		
 	}
-	
-	
-	
 	
 	/* Extracts Pixel Data from selected region of input data */	
 	public double[][][] extractPixelData(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
@@ -42,12 +51,9 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		//Initialise Iterator
 		Iterator<ImgWrapper<T>> itr = inputData.iterator();
 
-		//Initialise bounds for target array to hold pixel data
-		int width = selection.width;
-		int height = selection.height;
 
 		//Initialise target array to hold pixel data
-		pxlData = new double[width][height][inputData.size()];
+		pxlData = new double[depth][width][height];
 
 		//Iterate through inputData
 		int zIndex = 0;
@@ -79,7 +85,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		
 					//Get value of pixel and store it in pxlData
 					value = cursor.get();
-					pxlData[xIndex][yIndex][zIndex] = value.getRealDouble();
+					pxlData[zIndex][xIndex][yIndex] = value.getRealDouble();
 					
 					//Increment x-position
 					xIndex++;
