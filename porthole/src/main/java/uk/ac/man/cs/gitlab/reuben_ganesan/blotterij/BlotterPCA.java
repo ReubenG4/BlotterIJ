@@ -43,7 +43,6 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		//Calculate covariants
 		covarData = new CovarData(pxlData, width, height, depth);
 		
-		
 		return null;
 		
 	}
