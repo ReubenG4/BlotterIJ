@@ -29,7 +29,7 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 	Rectangle selection = null;
 	
 	public < T extends RealType<T> & NativeType<T> > BlotterToolPanelDialog() {
-		setName("PortholeTools");
+		setName("BlotterTools");
 		setSize(125, 300);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new FlowLayout());
@@ -53,10 +53,7 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 					ImageProcessor ip = imp.getProcessor();
 					Roi roi = imp.getRoi();
 					
-					//Retrieve image variables
-					int bitDepth = imp.getBitDepth();
-					double min = ip.getMin();
-					double max = ip.getMax();
+					//Retrieve image title
 					String title = imp.getTitle();
 					
 					//Check if an area has been selected

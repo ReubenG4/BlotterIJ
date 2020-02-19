@@ -51,7 +51,7 @@ public class  BlotterSelectFileDialog extends BlotterDialog {
 	 */
 	
 	public < T extends RealType<T> & NativeType<T> > BlotterSelectFileDialog() {
-		setName("PortholeSelect");
+		setName("BlotterSelect");
 		setSize(500, 450);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -166,7 +166,6 @@ public class  BlotterSelectFileDialog extends BlotterDialog {
 		
 			confirmButton.addActionListener(new ActionListener(){
 
-				@SuppressWarnings("unchecked")
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 								

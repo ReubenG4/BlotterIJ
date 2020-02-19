@@ -16,7 +16,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 	
 	//Declare class variables
 	private double [][][] pxlData;
-	private EigenData eigenData;
+	private CovarData covarData;
 	
 	private int width;
 	private int height;
@@ -34,8 +34,8 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		//Extract pixel data
 		extractPixelData(inputData,selection);
 		
-		//Calculate eigenvectors
-		eigenData = new EigenData(pxlData, width, height, depth);
+		//Calculate covariants
+		covarData = new CovarData(pxlData, width, height, depth);
 		
 		return null;
 		

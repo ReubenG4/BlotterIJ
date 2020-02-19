@@ -2,7 +2,10 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.concurrent.ExecutionException;
+
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
 import java.awt.Rectangle;
@@ -77,6 +80,8 @@ public class BlotterCommand implements Command{
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPCA pca = null;
 	
+	
+	
 	public void run() {
 		
 		/* Collate services with hashtable for easier initialisation of dialogs */
@@ -124,35 +129,26 @@ public class BlotterCommand implements Command{
 			case 1:
 				/* State 1: File Selection */
 				selectFileDialog.setVisible(true);
+				selectFileDialog.toFront();
 				break;
 		
 			case 2:
 				/* State 2: Produce and show FalseRGB for user view */
-				rgbImg = rgbConverter.convert(imgData);
-				
-				/* Show false RGB image for user manipulation */
-				if(rgbImg != null) {
-					rgbImg.setTitle("FalseRGB");
-					ui.show("FalseRGB", rgbImg);
-				}
-				else {
-					//If no false RGB image produced, wrap and use first image loaded
-					rgbImg = ImageJFunctions.wrap(imgData.get(0).getImg(),"FalseRGB");
-					rgbImg.setTitle("FalseRGB");
-					ui.show("FalseRGB",rgbImg);
-				}
-						
+				stateWorker2.execute();
 				changeState(3);
 				break;
 				
+				
 			case 3:
-				/* State 3: Show Tool Panel */
+				/* Make tool panel visible */
 				toolPanelDialog.setVisible(true);
+				toolPanelDialog.toFront();			
 				break;
+				
 				
 			case 4:
 				/* State 4: Perform PCA */
-				pca.run(imgData,selection);
+				stateWorker4.execute();
 				changeState(3);
 				break;
 				
@@ -164,6 +160,40 @@ public class BlotterCommand implements Command{
 		
 	}
 	
+	
+	/*Declare SwingWorker Threads*/
+	//SwingWorker for State2
+	SwingWorker stateWorker2 = new SwingWorker() {
+
+		@Override
+		protected Object doInBackground() throws Exception {
+			ImagePlus rgbImg = rgbConverter.convert(imgData);
+			
+			/* Show false RGB image for user manipulation */
+			if(rgbImg != null) {
+				rgbImg.setTitle("FalseRGB");
+			}
+			else {
+				//If no false RGB image produced, wrap and use first image loaded
+				rgbImg = ImageJFunctions.wrap(imgData.get(0).getImg(),"FalseRGB");
+				rgbImg.setTitle("FalseRGB");
+			}
+			ui.show("FalseRGB",rgbImg);
+			return null;
+		}
+		
+	
+	};
+	
+	//SwingWorker for State 4
+		SwingWorker stateWorker4 = new SwingWorker() {
+			@Override
+			protected Object doInBackground() throws Exception {
+				pca.run(imgData,selection);
+				return null;
+			}
+			
+		};
 	
 	
 	/* 
