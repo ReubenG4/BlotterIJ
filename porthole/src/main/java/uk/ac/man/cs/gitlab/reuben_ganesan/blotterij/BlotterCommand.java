@@ -139,7 +139,7 @@ public class BlotterCommand implements Command{
 				
 				
 			case 3:
-				/* Make tool panel visible */
+				/* State 3: Make tool panel visible */
 				toolPanelDialog.setVisible(true);
 				toolPanelDialog.toFront();			
 				break;
@@ -170,7 +170,7 @@ public class BlotterCommand implements Command{
 
 		@Override
 		protected Object doInBackground() throws Exception {
-			ImagePlus rgbImg = rgbConverter.convert(imgData);
+			rgbImg = rgbConverter.convert(imgData);
 			
 			if(rgbImg != null) {
 				rgbImg.setTitle("FalseRGB");

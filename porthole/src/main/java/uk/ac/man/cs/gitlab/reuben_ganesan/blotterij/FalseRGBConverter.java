@@ -121,11 +121,17 @@ public class FalseRGBConverter extends BlotterFunction {
 		//RGBStackMergeExt uses legacy ImagePlus, conversion needed
 		IJ.showStatus("Generating False RGB Image...");
 		IJ.showProgress(0,4);
+		
 		ImagePlus rImgChosen = ImageJFunctions.wrap(rImgDataChosen.getImg(),"red");
+		IJ.showStatus("Generating False RGB Image...");
 		IJ.showProgress(1,4);
+		
 		ImagePlus gImgChosen = ImageJFunctions.wrap(gImgDataChosen.getImg(), "green");
+		IJ.showStatus("Generating False RGB Image...");
 		IJ.showProgress(2,4);
+		
 		ImagePlus bImgChosen = ImageJFunctions.wrap(bImgDataChosen.getImg(),"blue");
+		IJ.showStatus("Generating False RGB Image...");
 		IJ.showProgress(3,4);
 		
 		RGBStackMergeExt rgbsm = new RGBStackMergeExt();

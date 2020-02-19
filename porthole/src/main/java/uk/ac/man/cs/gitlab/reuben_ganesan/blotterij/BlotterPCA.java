@@ -4,6 +4,9 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.commons.math4.linear.EigenDecomposition;
+import org.apache.commons.math4.linear.RealMatrix;
+
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
@@ -11,12 +14,15 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import Jama.EigenvalueDecomposition;
+import ij.IJ;
 
 public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
 	//Declare class variables
 	private double [][][] pxlData;
 	private CovarData covarData;
+	private EigenDecomposition eigenData;
+	private RealMatrix example;
 	
 	private int width;
 	private int height;
@@ -32,17 +38,18 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		depth = inputData.size();
 		
 		//Extract pixel data
-		extractPixelData(inputData,selection);
+		extractData(inputData,selection);
 		
 		//Calculate covariants
 		covarData = new CovarData(pxlData, width, height, depth);
+		
 		
 		return null;
 		
 	}
 	
 	/* Extracts Pixel Data from selected region of input data */	
-	public double[][][] extractPixelData(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
+	public double[][][] extractData(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 		
 		//Initialise Interval 
 		FinalInterval region = FinalInterval.createMinSize(selection.x,selection.y,
@@ -54,10 +61,13 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 
 		//Initialise target array to hold pixel data
 		pxlData = new double[depth][width][height];
-
+		
 		//Iterate through inputData
 		int zIndex = 0;
 		while(itr.hasNext()) {
+			//Show progress bar
+			IJ.showStatus("Extracting pixel data...");
+			IJ.showProgress(zIndex,depth);
 
 			//Retrieve image
 			ImgWrapper<T> curr = itr.next();
@@ -71,6 +81,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 			//Initialise initial values for cursor
 			int xIndex = 0;
 			int yIndex = 0;
+			
 			
 			//Iterate through y-axis of image
 			while(yIndex < height) {
@@ -104,6 +115,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 			curr.nullImg();
 		}
 		
+		IJ.showProgress(zIndex,depth);
 		return pxlData;	
 	}
 }
