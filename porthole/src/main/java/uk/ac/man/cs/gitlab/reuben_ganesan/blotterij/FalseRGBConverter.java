@@ -3,6 +3,7 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ij.IJ;
 import ij.ImagePlus;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
@@ -118,12 +119,19 @@ public class FalseRGBConverter extends BlotterFunction {
 		}
 	
 		//RGBStackMergeExt uses legacy ImagePlus, conversion needed
+		IJ.showStatus("Generating False RGB Image...");
+		IJ.showProgress(0,4);
 		ImagePlus rImgChosen = ImageJFunctions.wrap(rImgDataChosen.getImg(),"red");
+		IJ.showProgress(1,4);
 		ImagePlus gImgChosen = ImageJFunctions.wrap(gImgDataChosen.getImg(), "green");
+		IJ.showProgress(2,4);
 		ImagePlus bImgChosen = ImageJFunctions.wrap(bImgDataChosen.getImg(),"blue");
+		IJ.showProgress(3,4);
 		
 		RGBStackMergeExt rgbsm = new RGBStackMergeExt();
+		
 		ImagePlus rgb = rgbsm.mergeStacks(rImgChosen, gImgChosen, bImgChosen);
+		IJ.showProgress(4,4);
 		
 		return rgb;
 		

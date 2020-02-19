@@ -135,7 +135,6 @@ public class BlotterCommand implements Command{
 			case 2:
 				/* State 2: Produce and show FalseRGB for user view */
 				stateWorker2.execute();
-				changeState(3);
 				break;
 				
 				
@@ -149,7 +148,6 @@ public class BlotterCommand implements Command{
 			case 4:
 				/* State 4: Perform PCA */
 				stateWorker4.execute();
-				changeState(3);
 				break;
 				
 			default:
@@ -162,14 +160,18 @@ public class BlotterCommand implements Command{
 	
 	
 	/*Declare SwingWorker Threads*/
-	//SwingWorker for State2
+	
+	/*
+	 * SwingWorker for State 2 
+	 * Show false RGB image for user manipulation
+	 * Changes to state 3 when done
+	 */
 	SwingWorker stateWorker2 = new SwingWorker() {
 
 		@Override
 		protected Object doInBackground() throws Exception {
 			ImagePlus rgbImg = rgbConverter.convert(imgData);
 			
-			/* Show false RGB image for user manipulation */
 			if(rgbImg != null) {
 				rgbImg.setTitle("FalseRGB");
 			}
@@ -182,18 +184,31 @@ public class BlotterCommand implements Command{
 			return null;
 		}
 		
+		@Override
+		protected void done(){
+			changeState(3);
+		}
 	
 	};
 	
-	//SwingWorker for State 4
-		SwingWorker stateWorker4 = new SwingWorker() {
-			@Override
-			protected Object doInBackground() throws Exception {
-				pca.run(imgData,selection);
-				return null;
-			}
+	/*
+	 * SwingWorker for State 4 
+	 * Runs PCA
+	 * Changes to state 3 when done
+	 */
+	SwingWorker stateWorker4 = new SwingWorker() {
+		@Override
+		protected Object doInBackground() throws Exception {
+			pca.run(imgData,selection);
+			return null;
+		}
 			
-		};
+		@Override
+		protected void done(){
+			changeState(3);
+		}
+		
+	};
 	
 	
 	/* 
