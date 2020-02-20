@@ -2,8 +2,6 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.concurrent.ExecutionException;
-
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;

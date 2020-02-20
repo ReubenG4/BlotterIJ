@@ -4,16 +4,12 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.commons.math4.linear.EigenDecomposition;
-import org.apache.commons.math4.linear.RealMatrix;
-
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-import Jama.EigenvalueDecomposition;
 import ij.IJ;
 
 public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
