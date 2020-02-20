@@ -21,13 +21,9 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 	//Declare class variables
 	private double [][][] pxlData;
 	private CovarData covarData;
-	private EigenDecomposition eigenData;
-	private RealMatrix example;
-	
 	private int width;
 	private int height;
 	private int depth;
-	
 	
 	/* Main Function */
 	public Img<T> run(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {

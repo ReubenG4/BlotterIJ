@@ -5,15 +5,15 @@ import java.util.stream.Stream;
 
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.BlockRealMatrix;
+import org.apache.commons.math4.linear.EigenDecomposition;
 import org.apache.commons.math4.linear.RealMatrix;
-import org.apache.commons.math4.stat.correlation.Covariance;
-
 import ij.IJ;
 
 public class CovarData{
 	
 	private RealMatrix covariance = null;
 	private RealMatrix flattenedData = null;
+	private EigenDecomposition eigenData = null;
 	private double[] mean = null;
 	
 	private int width;
@@ -39,7 +39,6 @@ public class CovarData{
 		//Initialise array to hold mean
 		mean = new double[noOfWavelengths];
 		
-		
 		IJ.showStatus("Flattening pixel data...");
 		
 		/* Flatten pxlData[z][x][y] to produce flattenedData[z][p], where p are the pixels visited in row order*/
@@ -53,6 +52,10 @@ public class CovarData{
 		//Calculate the covariance of datasets
 		calcCovariance();
 		
+		//Calculate eigenvectors and eigenvalues
+		IJ.showStatus("Calculating Eigen decomposition...");
+		eigenData = new EigenDecomposition(covariance);
+		IJ.showStatus("Eigen decomposition calculated...");
 	}
 		
 		
