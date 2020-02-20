@@ -36,7 +36,7 @@ public class CovarData{
 		//Initialise Matrix to hold covariance
 		covariance = new Array2DRowRealMatrix(noOfWavelengths,noOfWavelengths);
 		
-		//Initialise array to hold mean
+		//Initialise array to hold mean for each dataset
 		mean = new double[noOfWavelengths];
 		
 		IJ.showStatus("Flattening pixel data...");
@@ -135,7 +135,7 @@ public class CovarData{
 				}
 				
 				//Divide by n-1
-				result = sumDim1Dim2 / (noOfWavelengths - 1);
+				result = sumDim1Dim2 / (noOfPixels - 1);
 				
 				//If dim1 doesn't match dim2, not on diagonal, set cov(dim1,dim2) = cov(dim2,dim1) = result
 				if(dim1 != dim2) {
