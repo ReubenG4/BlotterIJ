@@ -16,7 +16,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 	
 	//Declare class variables
 	private double [][][] pxlData;
-	private CovarData covarData;
+	private EigenData covarData;
 	private int width;
 	private int height;
 	private int depth;
@@ -33,7 +33,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		extractData(inputData,selection);
 		
 		//Calculate covariants
-		covarData = new CovarData(pxlData, width, height, depth);
+		covarData = new EigenData(pxlData, width, height, depth);
 		
 		return null;
 		
@@ -87,7 +87,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		
 					//Get value of pixel and store it in pxlData
 					value = cursor.get();
-					pxlData[zIndex][xIndex][yIndex] = value.getRealDouble();
+					pxlData[zIndex][yIndex][xIndex] = value.getRealDouble();
 					
 					//Increment x-position
 					xIndex++;

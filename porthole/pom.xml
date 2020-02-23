@@ -16,7 +16,7 @@
 	<artifactId>BlotterIJ</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<name>Porthole</name>
+	<name>BlotterIJ</name>
 	<description>A plugin to assist with selection and analysis of multispectral images</description>
 	<url>https://github.com/[MY-ORG]/[MY-REPO]</url>
 	<inceptionYear>2019</inceptionYear>
@@ -112,6 +112,14 @@
  			 <version>4.0-SNAPSHOT</version>
 		</dependency>
 
+
+		<dependency>
+  			<groupId>org.knowm.xchart</groupId>
+  			<artifactId>xchart</artifactId>
+  			<version>3.6.1</version>
+		</dependency>
+		
+		
 		
 	</dependencies>
 </project>

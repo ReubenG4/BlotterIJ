@@ -9,7 +9,7 @@ import org.apache.commons.math4.linear.EigenDecomposition;
 import org.apache.commons.math4.linear.RealMatrix;
 import ij.IJ;
 
-public class CovarData{
+public class EigenData{
 	
 	private RealMatrix covariance = null;
 	private RealMatrix flattenedData = null;
@@ -21,7 +21,7 @@ public class CovarData{
 	private int noOfWavelengths;
 	private int noOfPixels;
 	
-	CovarData(double[][][] pxlData, int width, int height, int noOfWavelengths){
+	EigenData(double[][][] pxlData, int width, int height, int noOfWavelengths){
 		
 		//Initialise class variables
 		this.width = width;
@@ -41,7 +41,7 @@ public class CovarData{
 		
 		IJ.showStatus("Flattening pixel data...");
 		
-		/* Flatten pxlData[z][x][y] to produce flattenedData[z][p], where p are the pixels visited in row order*/
+		/* Flatten pxlData[z][y][x] to produce flattenedData[z][p], where p are the pixels visited in row order*/
 		for (int index=0; index < noOfWavelengths; index++) {
 			flattenedData.setRow(index, Stream.of(pxlData[index]).flatMapToDouble(DoubleStream::of).toArray());
 		}
