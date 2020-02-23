@@ -14,8 +14,8 @@ import net.imglib2.type.numeric.RealType;
  *  Includes reference to file and metadata specific to plugin
  */
 class ImgWrapper < T extends RealType< T > & NativeType< T > >{
-	private File file;
-	private Img<T> img;
+	private File file = null;
+	private Img<T> img = null;
 	private int wavelength;
 	private char type;
 	
@@ -55,7 +55,7 @@ class ImgWrapper < T extends RealType< T > & NativeType< T > >{
 	}
 	
 	public Img<T> getImg() {
-		if(img == null)
+		if(img == null && file != null )
 			initImg();
 		
 		return img;
