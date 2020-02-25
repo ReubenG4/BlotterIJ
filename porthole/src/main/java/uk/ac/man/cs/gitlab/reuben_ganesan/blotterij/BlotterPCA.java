@@ -28,7 +28,6 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		//Calculate eigenvectors and eigenvalues
 		pcaData = new PcaData(pxlData);
 	
-		
 	}
 	
 	
