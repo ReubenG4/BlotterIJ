@@ -16,7 +16,7 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 	
 	//Declare class variables
 	private double [][][] pxlData;
-	private EigenData covarData;
+	private EigenData eigenData;
 	private int width;
 	private int height;
 	private int depth;
@@ -32,8 +32,9 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		//Extract pixel data
 		extractData(inputData,selection);
 		
-		//Calculate covariants
-		covarData = new EigenData(pxlData, width, height, depth);
+		//Calculate eigenvectors and eigenvalues
+		eigenData = new EigenData(pxlData, width, height, depth);
+		
 		
 		return null;
 		
@@ -51,10 +52,14 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 
 
 		//Initialise target array to hold pixel data
-		pxlData = new double[depth][width][height];
+		pxlData = new double[depth][height][width];
 		
 		//Iterate through inputData
+		//Initialise initial values for cursor
+		int xIndex = 0;
+		int yIndex = 0;
 		int zIndex = 0;
+		
 		while(itr.hasNext()) {
 			//Show progress bar
 			IJ.showStatus("Extracting pixel data...");
@@ -65,15 +70,9 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 
 			//Initialise cursor for image, cursor iterates within specified region/interval
 			RandomAccess<T> cursor = curr.getImg().randomAccess(region);
-
 			//Declare pointer to hold return object from cursor
 			T value;
 
-			//Initialise initial values for cursor
-			int xIndex = 0;
-			int yIndex = 0;
-			
-			
 			//Iterate through y-axis of image
 			while(yIndex < height) {
 				
@@ -99,14 +98,15 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 				//Increment y-position
 				yIndex++;
 			}//while y-axis end
-
+			
+			IJ.showProgress(zIndex,depth);
 			//Update zIndex to point to next z of pxlData
 			zIndex++;
 			//Null currently accessed image pointer to allow for garbage collection
 			curr.nullImg();
 		}
 		
-		IJ.showProgress(zIndex,depth);
+		IJ.showProgress(depth,depth);
 		return pxlData;	
 	}
 }

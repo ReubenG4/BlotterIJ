@@ -7,9 +7,11 @@ import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.BlockRealMatrix;
 import org.apache.commons.math4.linear.EigenDecomposition;
 import org.apache.commons.math4.linear.RealMatrix;
+import org.apache.commons.math4.linear.RealVector;
+
 import ij.IJ;
 
-public class EigenData{
+public class PcaData{
 	
 	private RealMatrix covariance = null;
 	private RealMatrix flattenedData = null;
@@ -21,7 +23,7 @@ public class EigenData{
 	private int noOfWavelengths;
 	private int noOfPixels;
 	
-	EigenData(double[][][] pxlData, int width, int height, int noOfWavelengths){
+	PcaData(double[][][] pxlData, int width, int height, int noOfWavelengths){
 		
 		//Initialise class variables
 		this.width = width;
@@ -41,11 +43,11 @@ public class EigenData{
 		
 		IJ.showStatus("Flattening pixel data...");
 		
-		/* Flatten pxlData[z][y][x] to produce flattenedData[z][p], where p are the pixels visited in row order*/
+		/* Flatten pxlData[z][y][x] to produce flattenedData[z][p]*/
 		for (int index=0; index < noOfWavelengths; index++) {
 			flattenedData.setRow(index, Stream.of(pxlData[index]).flatMapToDouble(DoubleStream::of).toArray());
 		}
-			
+		
 		//Calculate the mean of each dataset
 		calcMean();
 		
@@ -56,6 +58,16 @@ public class EigenData{
 		IJ.showStatus("Calculating Eigen decomposition...");
 		eigenData = new EigenDecomposition(covariance);
 		IJ.showStatus("Eigen decomposition calculated...");
+		
+		
+	}
+	
+	public RealVector getEigenector(int index) {
+		return eigenData.getEigenvector(index);
+	}
+	
+	public double[] getEigenvalues() {
+		return eigenData.getRealEigenvalues();
 	}
 		
 		
