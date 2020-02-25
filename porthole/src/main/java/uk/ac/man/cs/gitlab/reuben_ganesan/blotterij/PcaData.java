@@ -10,6 +10,10 @@ import org.apache.commons.math4.linear.RealMatrix;
 import org.apache.commons.math4.linear.RealVector;
 
 import ij.IJ;
+/*
+ * Calculates eigenvalues and eigenvectors from covariance matrix of pixel data
+ * 
+ */
 
 public class PcaData{
 	
@@ -17,19 +21,17 @@ public class PcaData{
 	private RealMatrix flattenedData = null;
 	private EigenDecomposition eigenData = null;
 	private double[] mean = null;
-	private RealMatrix eigenVectors = null;
 	private RealMatrix eigenValues = null;
+	private RealMatrix eigenVectors = null;
 	
-	private int width;
-	private int height;
 	private int noOfWavelengths;
 	private int noOfPixels;
 	
+	PcaData(PxlData input){
+		this(input.getData(),input.getWidth(),input.getHeight(), input.getDepth());
+	}
+	
 	PcaData(double[][][] pxlData, int width, int height, int noOfWavelengths){
-		
-		//Initialise class variables
-		this.width = width;
-		this.height = height;
 		
 		//Find out number of pixels in a single dataset
 		noOfPixels = width * height;
@@ -66,11 +68,12 @@ public class PcaData{
 	}
 	
 	public RealVector getEigenvectors(int index) {
-		return null;
+				
+		return eigenData.getEigenvector(index);
 	}
 	
-	public double[] getEigenvalues(){
-		return null;
+	public double getEigenvalue(int index){
+		return eigenData.getRealEigenvalue(index);
 	}
 		
 		
