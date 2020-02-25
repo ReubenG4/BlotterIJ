@@ -17,6 +17,8 @@ public class PcaData{
 	private RealMatrix flattenedData = null;
 	private EigenDecomposition eigenData = null;
 	private double[] mean = null;
+	private RealMatrix eigenVectors = null;
+	private RealMatrix eigenValues = null;
 	
 	private int width;
 	private int height;
@@ -57,17 +59,18 @@ public class PcaData{
 		//Calculate eigenvectors and eigenvalues
 		IJ.showStatus("Calculating Eigen decomposition...");
 		eigenData = new EigenDecomposition(covariance);
+		eigenValues = eigenData.getV();
+		eigenVectors = eigenData.getD();
 		IJ.showStatus("Eigen decomposition calculated...");
-		
-		
+				
 	}
 	
-	public RealVector getEigenector(int index) {
-		return eigenData.getEigenvector(index);
+	public RealVector getEigenvectors(int index) {
+		return null;
 	}
 	
-	public double[] getEigenvalues() {
-		return eigenData.getRealEigenvalues();
+	public double[] getEigenvalues(){
+		return null;
 	}
 		
 		
