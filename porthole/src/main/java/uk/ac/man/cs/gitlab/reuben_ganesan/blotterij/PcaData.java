@@ -68,7 +68,11 @@ public class PcaData{
 				
 	}
 	
-	public RealVector getEigenvectors(int index) {
+	public PcaFeature getFeature(int index) {
+		return new PcaFeature(getEigenvector(index),getEigenvalue(index));
+	}
+	
+	public RealVector getEigenvector(int index) {
 		return eigenData.getEigenvector(index);
 	}
 	
