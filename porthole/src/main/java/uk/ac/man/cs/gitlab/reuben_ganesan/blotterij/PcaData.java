@@ -17,10 +17,11 @@ import ij.IJ;
 
 public class PcaData{
 	
-	private RealMatrix covariance = null;
-	private RealMatrix flattenedData = null;
 	private EigenDecomposition eigenData = null;
 	private double[] mean = null;
+	private RealMatrix covariance = null;
+	private RealMatrix flattenedData = null;
+
 	private RealMatrix eigenValues = null;
 	private RealMatrix eigenVectors = null;
 	
@@ -31,7 +32,7 @@ public class PcaData{
 		this(input.getData(),input.getWidth(),input.getHeight(), input.getDepth());
 	}
 	
-	PcaData(double[][][] pxlData, int width, int height, int noOfWavelengths){
+	PcaData(double[][][] input, int width, int height, int noOfWavelengths){
 		
 		//Find out number of pixels in a single dataset
 		noOfPixels = width * height;
@@ -49,7 +50,7 @@ public class PcaData{
 		
 		/* Flatten pxlData[z][y][x] to produce flattenedData[z][p]*/
 		for (int index=0; index < noOfWavelengths; index++) {
-			flattenedData.setRow(index, Stream.of(pxlData[index]).flatMapToDouble(DoubleStream::of).toArray());
+			flattenedData.setRow(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());
 		}
 		
 		//Calculate the mean of each dataset

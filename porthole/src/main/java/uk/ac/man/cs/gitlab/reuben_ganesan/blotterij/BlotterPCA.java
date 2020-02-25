@@ -31,4 +31,13 @@ public class BlotterPCA <T extends RealType<T> & NativeType<T>>extends BlotterFu
 		
 	}
 	
+	
+	public PxlData getPxlData() {
+		return pxlData;
+	}
+	
+	public PcaData getPcaData() {
+		return pcaData;
+	}
+	
 }

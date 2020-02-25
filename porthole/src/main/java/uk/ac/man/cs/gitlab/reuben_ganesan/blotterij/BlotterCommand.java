@@ -70,10 +70,16 @@ public class BlotterCommand implements Command{
 	/* Declare class variables */
 	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
+	
+	
 	private ImagePlus rgbImg;
+	Rectangle selection;
+	private PxlData pxlData;
+	
+	
 	int currentState = 1;
 	boolean running = true;
-	Rectangle selection;
+
 	
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPCA pca = null;
@@ -200,6 +206,7 @@ public class BlotterCommand implements Command{
 		@Override
 		protected Object doInBackground() throws Exception {
 			pca.run(imgData,selection);
+			pxlData = pca.getPxlData();
 			return null;
 		}
 			
