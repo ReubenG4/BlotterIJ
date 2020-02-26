@@ -92,7 +92,7 @@ public class BlotterCommand implements Command{
 
 	
 	private static FalseRGBConverter rgbConverter = null;
-	private static BlotterPCA pca = null;
+	private static BlotterPcaCalc pca = null;
 	
 	
 	
@@ -115,12 +115,12 @@ public class BlotterCommand implements Command{
 		rgbConverter.setServices(services);
 		
 		/* Initialise BlotterPCA */
-		pca = new BlotterPCA();
+		pca = new BlotterPcaCalc();
 		pca.setServices(services);
 			
 		SwingUtilities.invokeLater(() -> {
 					
-			//Initialise JDialogs
+			//Initialise behaviour of JDialogs and how command handles them upon return
 			initSelectFileDialog();
 			initToolPanelDialog();
 			initSelectFeatureDialog();

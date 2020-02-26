@@ -9,15 +9,15 @@ import org.apache.commons.math4.linear.BlockRealMatrix;
 import org.apache.commons.math4.linear.EigenDecomposition;
 import org.apache.commons.math4.linear.RealMatrix;
 import org.apache.commons.math4.linear.RealVector;
-import org.apache.commons.math4.stat.correlation.Covariance;
-
 import ij.IJ;
 /*
  * Calculates eigenvalues and eigenvectors from covariance matrix of pixel data
  * 
  */
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
-public class PcaData{
+public class PcaData<T extends RealType<T> & NativeType<T>>{
 	
 	private EigenDecomposition eigenData = null;
 	private double[] mean = null;
@@ -27,7 +27,7 @@ public class PcaData{
 	private int noOfWavelengths;
 	private int noOfPixels;
 	
-	PcaData(PxlData input){
+	PcaData(PxlData<T> input){
 		this(input.getData(),input.getWidth(),input.getHeight(), input.getDepth());
 	}
 	
