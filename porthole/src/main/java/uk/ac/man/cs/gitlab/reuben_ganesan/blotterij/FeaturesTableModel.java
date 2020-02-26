@@ -3,15 +3,19 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+
+import org.apache.commons.math4.linear.RealVector;
+import org.apache.commons.math4.linear.RealVectorFormat;
 
 /*
  * Table Model for PCASelectDialog fileTable
  */
 class FeaturesTableModel extends AbstractTableModel {
-    private String[] columnNames = {"Name",
+    private String[] columnNames = {"N","Vector",
                                     "Value",};
     
     //Vector of FileWaveType objects
@@ -21,7 +25,7 @@ class FeaturesTableModel extends AbstractTableModel {
     	
     }
     
-    //Sorts the table in ascending order of value
+    //Sorts the table in ascending order of eigenvaluevalue
     public void sortTable() {
     	Comparator<PcaFeature> c = new Comparator<PcaFeature>() {
     		@Override
@@ -30,15 +34,35 @@ class FeaturesTableModel extends AbstractTableModel {
     			double o1Value = o1.getValue();
     			double o2Value = o2.getValue();
     			
-    			return Double.compare(o1Value, o2Value);
+    			return Double.compare(o2Value, o1Value);
     			}
     	};
     	
     	data.sort(c);
+    	
+    	
+    	//Indexes table data in order of eigenvalue
+    	Iterator<PcaFeature> itr = data.iterator();
+    	
+    	int index = 1;
+    	while (itr.hasNext()) {
+    		PcaFeature feature = itr.next();
+    		feature.setIndex(index);
+    		index++;
+    	}
+    	
+    	
     }
     
     public ArrayList<PcaFeature> getData() {
     	return data;
+    }
+    
+    public void addData(ArrayList<PcaFeature> data){
+    	Iterator<PcaFeature> itr = data.iterator();
+    	
+    	while(itr.hasNext())
+    		addRow(itr.next());
     }
     
     public void addRow(PcaFeature input) {
@@ -68,21 +92,20 @@ class FeaturesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int col) {
     	PcaFeature iwt = data.get(row);
     	       	
-    	
-    	if(col == 0) {
-    		String name = "Feature "+row;
-    		return name;
-    	}
+    	if(col == 0) 
+    		return (Object)iwt.getIndex();
     		
-    	if(col == 1)
-    		return (Object)Double.toString(iwt.getValue());
+    	if(col == 1) 
+    		return (Object)iwt.getVector();
     	
-    	
+    	if(col == 2)
+    		return (Object)iwt.getValue();
+    		
     	return null;          
     }
 
     public Class<? extends Object> getColumnClass(int c) {
-        return getValueAt(0,c).getClass();
+        return getValueAt(0,c).getClass();      
     }
     
 }

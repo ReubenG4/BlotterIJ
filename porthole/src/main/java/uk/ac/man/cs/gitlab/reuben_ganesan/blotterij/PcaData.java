@@ -9,6 +9,7 @@ import org.apache.commons.math4.linear.BlockRealMatrix;
 import org.apache.commons.math4.linear.EigenDecomposition;
 import org.apache.commons.math4.linear.RealMatrix;
 import org.apache.commons.math4.linear.RealVector;
+import org.apache.commons.math4.stat.correlation.Covariance;
 
 import ij.IJ;
 /*
@@ -84,7 +85,7 @@ public class PcaData{
 		ArrayList<PcaFeature> features = new ArrayList<PcaFeature>();
 		
 		for(int index = 0; index < noOfWavelengths; index++) {
-			features.add(new PcaFeature(getEigenvector(index),getEigenvalue(index)));
+			features.add(getFeature(index));
 		}
 		
 		
@@ -121,6 +122,7 @@ public class PcaData{
 			}
 			//Find mean for pixel value in this dimension
 			mean[yIndex] = xSum / noOfPixels;
+			IJ.showMessage(Double.toString(mean[yIndex]));
 			
 			//Update progress bar
 			IJ.showStatus("Calculating Mean of Datasets...");

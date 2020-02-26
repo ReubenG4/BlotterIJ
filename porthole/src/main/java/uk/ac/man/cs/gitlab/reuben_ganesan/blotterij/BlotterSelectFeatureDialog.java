@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,12 +17,12 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-import org.scijava.widget.FileWidget;
+import org.apache.commons.math4.linear.RealVector;
 
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class  BlotterSelectFeatureDialog extends BlotterDialog {
+public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	
 	/*
 	 * Declare and initialise class variables
@@ -41,11 +39,11 @@ public class  BlotterSelectFeatureDialog extends BlotterDialog {
 	JTable featuresTable;
 	JLabel fileName;
 	JPanel fileButtons;
-	JButton getButton;
+	JButton displayButton;
 	FeaturesTableModel featuresTableModel;
 	
 	/*
-	 * Dialog used to select files to load 
+	 * Dialog used to select feature to display 
 	 */
 	
 	public < T extends RealType<T> & NativeType<T> > BlotterSelectFeatureDialog() {
@@ -55,20 +53,21 @@ public class  BlotterSelectFeatureDialog extends BlotterDialog {
 		getContentPane().setLayout(new BorderLayout());
 		
 		
-		 getButton = new JButton("Get");
+		 displayButton = new JButton("Display");
 		 buttonPanel = new JPanel();
 		 infoPanel = new JPanel();
 		 featuresPanel = new JPanel();
 		 featuresTableModel = new FeaturesTableModel();
 		 featuresTable = new JTable(featuresTableModel);
 		 
-				
+		 featureData = new ArrayList<PcaFeature>();
+		 
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			
 			featuresTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		    featuresTable.setRowSelectionAllowed(true);
 		    featuresTable.setColumnSelectionAllowed(false);
-			//featuresTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
+		    featuresTable.setDefaultRenderer(RealVector.class, new FeaturesTableCellRenderer());
 			
 			tableScroller = new JScrollPane(featuresTable);
 			featuresTable.setFillsViewportHeight(true);
@@ -79,11 +78,11 @@ public class  BlotterSelectFeatureDialog extends BlotterDialog {
 		{
 			
 			/*
-			 * confirmButton configuration
-			 * confirms the selection of files
+			 * displayButton configuration
+			 * displays selected feature
 			 */
 		
-			getButton.addActionListener(new ActionListener(){
+			displayButton.addActionListener(new ActionListener(){
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
@@ -94,13 +93,23 @@ public class  BlotterSelectFeatureDialog extends BlotterDialog {
 				
 			});
 			
-			buttonPanel.add(getButton);
-			getButton.setEnabled(false);
+			buttonPanel.add(displayButton);
+			displayButton.setEnabled(false);
 			
 		}	
 		
 	}
 	
+	public void prepareForDisplay() {
+		featuresTableModel.addData(featureData);
+		featuresTableModel.sortTable();
+		featuresTableModel.fireTableDataChanged();
+		resizeColumnWidth();
+		
+		//If there's more than one row available, enable the confirm button
+		if(featuresTableModel.getRowCount() > 2)
+			displayButton.setEnabled(true);	
+	}
 	
 	
 	/*
@@ -121,5 +130,6 @@ public class  BlotterSelectFeatureDialog extends BlotterDialog {
 	        columnModel.getColumn(column).setPreferredWidth(width);
 	    }
 	}
+
 	
 }

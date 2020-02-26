@@ -66,16 +66,18 @@ public class BlotterCommand implements Command{
 	/* Declare JDialogs */
 	private static BlotterSelectFileDialog selectFileDialog = null;
 	private static BlotterToolPanelDialog toolPanelDialog = null;
+	private static BlotterSelectFeatureDialog selectFeatureDialog = null;
 		
 	/* Declare class variables */
-	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
 	
 	
 	private ImagePlus rgbImg;
 	Rectangle selection;
 	private PxlData pxlData;
-	
+	private PcaData pcaData;
+	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
+	private ArrayList<PcaFeature> features = new ArrayList<PcaFeature>();
 	
 	int currentState = 1;
 	boolean running = true;
@@ -113,6 +115,7 @@ public class BlotterCommand implements Command{
 			//Initialise JDialogs
 			initSelectFileDialog();
 			initToolPanelDialog();
+			initSelectFeatureDialog();
 			
 			//Place FSM in first state
 			changeState(1);	
@@ -151,10 +154,20 @@ public class BlotterCommand implements Command{
 				
 			case 4:
 				/* State 4: Perform PCA */
+				//ui.showDialog("x: "+selection.x+"y: "+selection.y);
 				stateWorker4.execute();
 				//pca.run(imgData,selection);
 				//pxlData = pca.getPxlData();
+				//pcaData = pca.getPcaData();
 				//changeState(3);
+				break;
+				
+			case 5:
+				/* State 5: Display features found by PCA for selection */
+				selectFeatureDialog.setFeatureData(pcaData.getFeatureList());
+				selectFeatureDialog.prepareForDisplay();
+				selectFeatureDialog.setVisible(true);
+				selectFeatureDialog.toFront();
 				break;
 				
 			default:
@@ -208,12 +221,13 @@ public class BlotterCommand implements Command{
 		protected Object doInBackground() throws Exception {
 			pca.run(imgData,selection);
 			pxlData = pca.getPxlData();
+			pcaData = pca.getPcaData();
 			return null;
 		}
 			
 		@Override
 		protected void done(){
-			changeState(3);
+			changeState(5);
 		}
 		
 	};
@@ -279,6 +293,37 @@ public class BlotterCommand implements Command{
 			
 		}//if toolPanelDialog==null
 	}
+	
+	
+	/* 
+	 * Initialises selectFeatureDialog 
+	 */
+	public void initSelectFeatureDialog() {
+		//Initialise select file dialog
+		if (selectFeatureDialog == null) {
+			selectFeatureDialog = new BlotterSelectFeatureDialog();
+			
+			//Register services for selectFileDialog
+			selectFeatureDialog.setServices(services);
+
+			selectFeatureDialog.setTitle("Blotter - Select Feature");
+			
+			//Add listener for closing of selectFeatureDialog
+			selectFileDialog.addComponentListener(new ComponentAdapter() {		
+				public void componentHidden(ComponentEvent e){
+					//On setVisible(false) of selectDialog, 
+					//if nextState is true, 
+					if(selectFeatureDialog.getNextState()) {
+						
+					}					
+				}		
+			});
+			
+			selectFileDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			
+		}//if selectFileDialog == null	
+	}
+	
 	
 	/*
 	 * Cleans up all Java Swing components

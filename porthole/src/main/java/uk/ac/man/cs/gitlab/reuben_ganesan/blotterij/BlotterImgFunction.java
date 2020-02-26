@@ -3,7 +3,6 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 import java.util.ArrayList;
 
 public class BlotterImgFunction extends BlotterFunction{
-	
 	protected ArrayList<ImgWrapper> imgData;
 	
 	/* Image Data */

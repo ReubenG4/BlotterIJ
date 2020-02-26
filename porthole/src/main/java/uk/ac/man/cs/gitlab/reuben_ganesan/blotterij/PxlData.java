@@ -45,10 +45,16 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 		data = new double[depth][height][width];
 		
 		//Iterate through inputData
-		//Initialise initial values for cursor
+		//Initialise initial values for cursor and array indexer
 		int xIndex = 0;
 		int yIndex = 0;
+		int xCursor = selection.x;
+		int yCursor = selection.y;
+		
 		int zIndex = 0;
+		
+		ImgWrapper<T> curr;
+		RandomAccess<T> cursor;
 		
 		while(itr.hasNext()) {
 			//Show progress bar
@@ -56,23 +62,30 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 			IJ.showProgress(zIndex,depth);
 
 			//Retrieve image
-			ImgWrapper<T> curr = itr.next();
+			curr = itr.next();
 
 			//Initialise cursor for image, cursor iterates within specified region/interval
-			RandomAccess<T> cursor = curr.getImg().randomAccess(region);
+			cursor = curr.getImg().randomAccess(region);
+			
 			//Declare pointer to hold return object from cursor
 			T value;
-
+			
+			//Reset cursor and array indexer values
+			xIndex = 0;
+			yIndex = 0;
+			xCursor = selection.x;
+			yCursor = selection.y;
+			
 			//Iterate through y-axis of image
 			while(yIndex < height) {
 				
 				//set y-position of cursor
-				cursor.setPosition(yIndex,1);
+				cursor.setPosition(yCursor,1);
 				
 				//Iterate through x-axis of image
 				while(xIndex < width) {
 					//Set x-position of cursor
-					cursor.setPosition(xIndex,0);
+					cursor.setPosition(xCursor,0);
 		
 					//Get value of pixel and store it in pxlData
 					value = cursor.get();
@@ -80,14 +93,17 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 					
 					//Increment x-position
 					xIndex++;
-				}//while x-axis end
+					xCursor++;
+				}
 
-				//set x-position to zero
+				//Reset x position
+				xCursor = selection.x;
 				xIndex = 0;
-	
+				
 				//Increment y-position
 				yIndex++;
-			}//while y-axis end
+				yCursor++;
+			}
 			
 			IJ.showProgress(zIndex,depth);
 			//Update zIndex to point to next z of pxlData

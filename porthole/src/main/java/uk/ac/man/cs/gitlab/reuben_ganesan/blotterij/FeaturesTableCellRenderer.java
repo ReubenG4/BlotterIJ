@@ -4,15 +4,16 @@ import java.io.File;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.apache.commons.math4.linear.RealVector;
+
 class FeaturesTableCellRenderer extends DefaultTableCellRenderer{
 	
 	public FeaturesTableCellRenderer() {super();}
 	
 	public void setValue(Object value) {
 		
-		File file = (File)value;
-		
-		setText(file.getName());
+		RealVector vector = (RealVector)value;
+		setText(vector.toString());
 	}
 	
 }
