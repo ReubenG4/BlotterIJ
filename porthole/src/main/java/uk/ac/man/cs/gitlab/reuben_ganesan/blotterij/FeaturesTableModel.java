@@ -10,14 +10,14 @@ import javax.swing.table.AbstractTableModel;
 /*
  * Table Model for PCASelectDialog fileTable
  */
-class PcaTableModel extends AbstractTableModel {
+class FeaturesTableModel extends AbstractTableModel {
     private String[] columnNames = {"Name",
                                     "Value",};
     
     //Vector of FileWaveType objects
     private ArrayList<PcaFeature> data = new ArrayList<PcaFeature>(); 
     
-    public PcaTableModel() {
+    public FeaturesTableModel() {
     	
     }
     
