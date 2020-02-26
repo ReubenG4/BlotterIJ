@@ -152,7 +152,8 @@ public class BlotterCommand implements Command{
 			case 4:
 				/* State 4: Perform PCA */
 				stateWorker4.execute();
-				//pca.run(imgData, selection);
+				//pca.run(imgData,selection);
+				//pxlData = pca.getPxlData();
 				//changeState(3);
 				break;
 				

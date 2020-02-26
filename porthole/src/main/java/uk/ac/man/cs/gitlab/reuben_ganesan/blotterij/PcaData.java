@@ -1,5 +1,6 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
+import java.util.ArrayList;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
@@ -21,9 +22,6 @@ public class PcaData{
 	private double[] mean = null;
 	private RealMatrix covariance = null;
 	private RealMatrix flattenedData = null;
-
-	private RealMatrix eigenValues = null;
-	private RealMatrix eigenVectors = null;
 	
 	private int noOfWavelengths;
 	private int noOfPixels;
@@ -35,7 +33,9 @@ public class PcaData{
 	PcaData(double[][][] input, int width, int height, int noOfWavelengths){
 		
 		//Find out number of pixels in a single dataset
-		noOfPixels = width * height;
+		this.noOfPixels = width * height;
+		
+		this.noOfWavelengths = noOfWavelengths;
 		
 		//Initialise Matrix to hold flattened pxlData
 		flattenedData = new BlockRealMatrix(noOfWavelengths, noOfPixels);
@@ -62,9 +62,8 @@ public class PcaData{
 		//Calculate eigenvectors and eigenvalues
 		IJ.showStatus("Calculating Eigen decomposition...");
 		eigenData = new EigenDecomposition(covariance);
-		eigenValues = eigenData.getV();
-		eigenVectors = eigenData.getD();
 		IJ.showStatus("Eigen decomposition calculated...");
+	
 				
 	}
 	
@@ -80,6 +79,19 @@ public class PcaData{
 		return eigenData.getRealEigenvalue(index);
 	}
 		
+	public ArrayList<PcaFeature> getFeatureList(){
+		
+		ArrayList<PcaFeature> features = new ArrayList<PcaFeature>();
+		
+		for(int index = 0; index < noOfWavelengths; index++) {
+			features.add(new PcaFeature(getEigenvector(index),getEigenvalue(index)));
+		}
+		
+		
+		return features;
+		
+	}
+	
 		
 	public void calcMean() {	
 		

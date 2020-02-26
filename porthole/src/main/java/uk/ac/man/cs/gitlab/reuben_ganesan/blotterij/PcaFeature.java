@@ -6,12 +6,11 @@ public class PcaFeature{
 	RealVector eigenvector;
 	double eigenvalue;
 	
-	PcaFeature(RealVector eigenvector, double eigenvalue ){
+	PcaFeature(RealVector eigenvector, double eigenvalue){
 		this.eigenvector = eigenvector;
 		this.eigenvalue = eigenvalue;
 	}
 	
-
 	public double getValue() {
 		return eigenvalue;
 	}
