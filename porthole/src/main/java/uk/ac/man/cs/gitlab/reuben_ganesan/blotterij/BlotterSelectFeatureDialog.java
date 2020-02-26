@@ -4,9 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Comparator;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,11 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.math4.linear.RealVector;
 
+import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -27,7 +29,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	/*
 	 * Declare and initialise class variables
 	 */
-	
+	ArrayList<PcaFeature> selectedFeatures = new ArrayList<PcaFeature>();
 	
 	/*
 	 * Declare JComponents
@@ -39,8 +41,11 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	JTable featuresTable;
 	JLabel fileName;
 	JPanel fileButtons;
-	JButton displayButton;
+	JButton confirmButton;
 	FeaturesTableModel featuresTableModel;
+	ListSelectionModel featuresListSelectionModel;
+	
+	
 	
 	/*
 	 * Dialog used to select feature to display 
@@ -53,12 +58,13 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		getContentPane().setLayout(new BorderLayout());
 		
 		
-		 displayButton = new JButton("Display");
+		 confirmButton = new JButton("Confirm");
 		 buttonPanel = new JPanel();
 		 infoPanel = new JPanel();
 		 featuresPanel = new JPanel();
 		 featuresTableModel = new FeaturesTableModel();
 		 featuresTable = new JTable(featuresTableModel);
+		 featuresListSelectionModel =  featuresTable.getSelectionModel();
 		 
 		 featureData = new ArrayList<PcaFeature>();
 		 
@@ -70,7 +76,8 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		    featuresTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		    featuresTable.setSize(800,600);
 		    featuresTable.setDefaultRenderer(RealVector.class, new FeaturesTableCellRenderer());
-			
+		    featuresListSelectionModel.addListSelectionListener(new featuresListSelectionHandler());
+		    
 			tableScroller = new JScrollPane(featuresTable);
 			featuresTable.setFillsViewportHeight(true);
 			infoPanel.add(tableScroller);
@@ -80,38 +87,48 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		{
 			
 			/*
-			 * displayButton configuration
-			 * displays selected feature
+			 * confirmButton configuration
+			 * confirms selected features
 			 */
 		
-			displayButton.addActionListener(new ActionListener(){
+			confirmButton.addActionListener(new ActionListener(){
 
+				//If confirm is clicked and selection is valid
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-								
-					
-									
+					setNextState(true);
+					setVisible(false);
 				}
 				
 			});
 			
-			buttonPanel.add(displayButton);
-			displayButton.setEnabled(false);
+			buttonPanel.add(confirmButton);
+			confirmButton.setEnabled(false);
 			
 		}	
 		
 	}
 	
 	public void prepareForDisplay() {
+		featureData.sort(new Comparator<PcaFeature>() {
+    		@Override
+    		public int compare(PcaFeature o1, PcaFeature o2) {
+    			
+    			double o1Value = o1.getValue();
+    			double o2Value = o2.getValue();
+    			
+    			return Double.compare(o2Value, o1Value);
+    			}
+    	});
+		
 		featuresTableModel.addData(featureData);
-		featuresTableModel.sortTable();
 		featuresTableModel.fireTableDataChanged();
 		resizeColumnWidth();
 		pack();
-		
-		//If there's more than one row available, enable the confirm button
-		if(featuresTableModel.getRowCount() > 2)
-			displayButton.setEnabled(true);	
+	}
+	
+	public ArrayList<PcaFeature> getSelected() {
+		return selectedFeatures;
 	}
 	
 	
@@ -132,6 +149,28 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	            width=300;
 	        columnModel.getColumn(column).setPreferredWidth(width);
 	    }
+	}
+
+	class featuresListSelectionHandler implements ListSelectionListener{
+		
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+			if(lsm.isSelectionEmpty()) {
+				confirmButton.setEnabled(false);
+			}
+			else {
+				selectedFeatures.clear();
+				int[] choices = featuresTable.getSelectedRows();
+				if(choices.length > 0) {
+					for(int index=0; index < choices.length; index++)
+						selectedFeatures.add(featureData.get(choices[index]));
+				}
+				confirmButton.setEnabled(true);
+			}
+				
+		}
+		
 	}
 
 	

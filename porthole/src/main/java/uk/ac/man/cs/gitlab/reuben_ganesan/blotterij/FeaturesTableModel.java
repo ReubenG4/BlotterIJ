@@ -39,19 +39,6 @@ class FeaturesTableModel extends AbstractTableModel {
     	};
     	
     	data.sort(c);
-    	
-    	
-    	//Indexes table data in order of eigenvalue
-    	Iterator<PcaFeature> itr = data.iterator();
-    	
-    	int index = 1;
-    	while (itr.hasNext()) {
-    		PcaFeature feature = itr.next();
-    		feature.setIndex(index);
-    		index++;
-    	}
-    	
-    	
     }
     
     public ArrayList<PcaFeature> getData() {
@@ -60,9 +47,16 @@ class FeaturesTableModel extends AbstractTableModel {
     
     public void addData(ArrayList<PcaFeature> data){
     	Iterator<PcaFeature> itr = data.iterator();
-    	
-    	while(itr.hasNext())
-    		addRow(itr.next());
+    	int index = 0;
+    		
+    	//Assign each an index
+    	while(itr.hasNext()) {
+    		
+    		PcaFeature itrFeature = itr.next();
+    		itrFeature.setIndex(index++);
+    		addRow(itrFeature);
+    		
+    	}	
     }
     
     public void addRow(PcaFeature input) {

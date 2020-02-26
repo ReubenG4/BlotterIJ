@@ -2,6 +2,8 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -9,6 +11,11 @@ import javax.swing.WindowConstants;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+
+import org.apache.commons.math4.linear.Array2DRowRealMatrix;
+import org.apache.commons.math4.linear.BlockRealMatrix;
+import org.apache.commons.math4.linear.RealMatrix;
+import org.apache.commons.math4.linear.RealMatrixFormat;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -20,6 +27,7 @@ import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
+import ij.IJ;
 import ij.ImagePlus;
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
@@ -73,11 +81,11 @@ public class BlotterCommand implements Command{
 	
 	
 	private ImagePlus rgbImg;
-	Rectangle selection;
+	Rectangle regionOfInterest;
 	private PxlData pxlData;
 	private PcaData pcaData;
 	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
-	private ArrayList<PcaFeature> features = new ArrayList<PcaFeature>();
+	private ArrayList<PcaFeature> selectedFeatures = new ArrayList<PcaFeature>();
 	
 	int currentState = 1;
 	boolean running = true;
@@ -154,12 +162,7 @@ public class BlotterCommand implements Command{
 				
 			case 4:
 				/* State 4: Perform PCA */
-				//ui.showDialog("x: "+selection.x+"y: "+selection.y);
 				stateWorker4.execute();
-				//pca.run(imgData,selection);
-				//pxlData = pca.getPxlData();
-				//pcaData = pca.getPcaData();
-				//changeState(3);
 				break;
 				
 			case 5:
@@ -168,6 +171,11 @@ public class BlotterCommand implements Command{
 				selectFeatureDialog.prepareForDisplay();
 				selectFeatureDialog.setVisible(true);
 				selectFeatureDialog.toFront();
+				break;
+				
+			case 6:
+				/* State 6: Construct Feature Vector and results */
+				IJ.showMessage("State 6 reached");
 				break;
 				
 			default:
@@ -219,7 +227,7 @@ public class BlotterCommand implements Command{
 	SwingWorker stateWorker4 = new SwingWorker() {
 		@Override
 		protected Object doInBackground() throws Exception {
-			pca.run(imgData,selection);
+			pca.run(imgData,regionOfInterest);
 			pxlData = pca.getPxlData();
 			pcaData = pca.getPcaData();
 			return null;
@@ -282,7 +290,7 @@ public class BlotterCommand implements Command{
 						//If Selection has been chosen
 						if(toolPanelDialog.getSelection() != null) {
 							//Retrieve selection
-							selection = toolPanelDialog.getSelection();
+							regionOfInterest = toolPanelDialog.getSelection();
 							changeState(4);
 						}
 					}		
@@ -299,22 +307,25 @@ public class BlotterCommand implements Command{
 	 * Initialises selectFeatureDialog 
 	 */
 	public void initSelectFeatureDialog() {
-		//Initialise select file dialog
+		//Initialise selectFeaturedialog
 		if (selectFeatureDialog == null) {
 			selectFeatureDialog = new BlotterSelectFeatureDialog();
 			
-			//Register services for selectFileDialog
+			//Register services for selectFeatureDialog
 			selectFeatureDialog.setServices(services);
 
 			selectFeatureDialog.setTitle("Blotter - Select Feature");
 			
 			//Add listener for closing of selectFeatureDialog
-			selectFileDialog.addComponentListener(new ComponentAdapter() {		
+			selectFeatureDialog.addComponentListener(new ComponentAdapter() {		
 				public void componentHidden(ComponentEvent e){
-					//On setVisible(false) of selectDialog, 
+					//On setVisible(false) of selectFeatureDialog, 
 					//if nextState is true, 
 					if(selectFeatureDialog.getNextState()) {
-						
+						//Retrieve selected features
+						selectedFeatures = selectFeatureDialog.getSelected();
+						changeState(6);
+								
 					}					
 				}		
 			});
