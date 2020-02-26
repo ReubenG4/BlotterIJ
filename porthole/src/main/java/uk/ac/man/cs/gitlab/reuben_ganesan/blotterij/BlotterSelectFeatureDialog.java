@@ -62,7 +62,6 @@ public class  BlotterSelectFeatureDialog extends BlotterDialog {
 		 featuresTableModel = new FeaturesTableModel();
 		 featuresTable = new JTable(featuresTableModel);
 		 
-		 imgData = new ArrayList<ImgWrapper>();
 				
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			

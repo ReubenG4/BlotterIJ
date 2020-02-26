@@ -39,7 +39,7 @@ public class BlotterDialog extends JDialog implements ActionListener{
 	private DatasetService ds; 
 	
 	private boolean nextState = false;
-	protected ArrayList<ImgWrapper> imgData;
+	
 	
 	
 	/**
@@ -63,25 +63,7 @@ public class BlotterDialog extends JDialog implements ActionListener{
 	public void setNextState(boolean input) {
 		this.nextState = input;
 	}
-		
-	/* Image Data */
-	public ArrayList<ImgWrapper> getImgData(){
-		return imgData;
-	}
-	
-	public void setImgData(ArrayList<ImgWrapper> input) {
-	    
-	    if(!imgData.isEmpty())
-	    	imgData.clear();
-	    
-	    imgData.addAll(input); 
-	}
-	
-	public void clearImgData() {
-		imgData.clear();
-	}
-	
-	
+				
 	/* Services */
 	public OpService getOpsService() {
 		return ops;

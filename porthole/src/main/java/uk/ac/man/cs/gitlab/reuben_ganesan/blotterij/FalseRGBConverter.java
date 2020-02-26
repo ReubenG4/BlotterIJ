@@ -10,7 +10,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 
-public class FalseRGBConverter extends BlotterFunction {
+public class FalseRGBConverter extends BlotterImgFunction {
 	
 	public < T extends RealType<T> & NativeType<T> >ImagePlus convert(ArrayList<ImgWrapper> input) {
 		

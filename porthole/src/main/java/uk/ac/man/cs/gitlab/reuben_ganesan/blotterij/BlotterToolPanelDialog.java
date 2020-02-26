@@ -37,7 +37,6 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 		toolPanel = new JPanel();
 		pcaButton = new JButton("PCA");
 		
-		imgData = new ArrayList<ImgWrapper>();
 		
 		getContentPane().add(toolPanel);
 		{

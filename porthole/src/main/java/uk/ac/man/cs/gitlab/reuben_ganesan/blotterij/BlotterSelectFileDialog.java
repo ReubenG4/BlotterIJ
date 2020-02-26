@@ -24,7 +24,7 @@ import org.scijava.widget.FileWidget;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class  BlotterSelectFileDialog extends BlotterDialog {
+public class  BlotterSelectFileDialog extends BlotterImgDialog {
 	
 	/*
 	 * Declare and initialise class variables
@@ -191,7 +191,6 @@ public class  BlotterSelectFileDialog extends BlotterDialog {
 		}	
 		
 	}
-	
 	
 	
 	/*

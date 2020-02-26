@@ -34,26 +34,6 @@ public class BlotterFunction {
 	private UIService ui;
 	private DatasetIOService dsIO;
 	private DatasetService ds; 
-	
-	protected ArrayList<ImgWrapper> imgData;
-		
-			
-		/* Image Data */
-		public ArrayList<ImgWrapper> getImgData(){
-			return imgData;
-		}
-		
-		public void setImgData(ArrayList<ImgWrapper> input) {
-		    
-		    if(!imgData.isEmpty())
-		    	imgData.clear();
-		    
-		    imgData.addAll(input); 
-		}
-		
-		public void clearImgData() {
-			imgData.clear();
-		}
 		
 		
 		/* Services */
