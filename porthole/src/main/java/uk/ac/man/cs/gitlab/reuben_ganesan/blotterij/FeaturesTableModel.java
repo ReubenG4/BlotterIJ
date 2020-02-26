@@ -15,8 +15,8 @@ import org.apache.commons.math4.linear.RealVectorFormat;
  * Table Model for PCASelectDialog fileTable
  */
 class FeaturesTableModel extends AbstractTableModel {
-    private String[] columnNames = {"N","Vector",
-                                    "Value",};
+    private String[] columnNames = {"N","Eigenvector",
+                                    "Eigenalue",};
     
     //Vector of FileWaveType objects
     private ArrayList<PcaFeature> data = new ArrayList<PcaFeature>(); 

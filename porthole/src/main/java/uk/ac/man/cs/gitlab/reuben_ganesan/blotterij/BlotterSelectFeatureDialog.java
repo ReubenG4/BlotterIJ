@@ -64,9 +64,11 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		 
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			
-			featuresTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			featuresTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		    featuresTable.setRowSelectionAllowed(true);
 		    featuresTable.setColumnSelectionAllowed(false);
+		    featuresTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		    featuresTable.setSize(800,600);
 		    featuresTable.setDefaultRenderer(RealVector.class, new FeaturesTableCellRenderer());
 			
 			tableScroller = new JScrollPane(featuresTable);
@@ -105,6 +107,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		featuresTableModel.sortTable();
 		featuresTableModel.fireTableDataChanged();
 		resizeColumnWidth();
+		pack();
 		
 		//If there's more than one row available, enable the confirm button
 		if(featuresTableModel.getRowCount() > 2)

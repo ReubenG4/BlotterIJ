@@ -68,31 +68,6 @@ public class PcaData{
 				
 	}
 	
-	public PcaFeature getFeature(int index) {
-		return new PcaFeature(getEigenvector(index),getEigenvalue(index));
-	}
-	
-	public RealVector getEigenvector(int index) {
-		return eigenData.getEigenvector(index);
-	}
-	
-	public double getEigenvalue(int index){
-		return eigenData.getRealEigenvalue(index);
-	}
-		
-	public ArrayList<PcaFeature> getFeatureList(){
-		
-		ArrayList<PcaFeature> features = new ArrayList<PcaFeature>();
-		
-		for(int index = 0; index < noOfWavelengths; index++) {
-			features.add(getFeature(index));
-		}
-		
-		
-		return features;
-		
-	}
-	
 		
 	public void calcMean() {	
 		
@@ -122,7 +97,7 @@ public class PcaData{
 			}
 			//Find mean for pixel value in this dimension
 			mean[yIndex] = xSum / noOfPixels;
-			IJ.showMessage(Double.toString(mean[yIndex]));
+			//IJ.showMessage(Double.toString(mean[yIndex]));
 			
 			//Update progress bar
 			IJ.showStatus("Calculating Mean of Datasets...");
@@ -199,5 +174,34 @@ public class PcaData{
 		return;
 	}
 	
+	
+	public PcaFeature getFeature(int index) {
+		return new PcaFeature(getEigenvector(index),getEigenvalue(index));
+	}
+	
+	public RealVector getEigenvector(int index) {
+		return eigenData.getEigenvector(index);
+	}
+	
+	public double getEigenvalue(int index){
+		return eigenData.getRealEigenvalue(index);
+	}
+	
+	public RealMatrix getFlattenedData() {
+		return flattenedData;
+	}
+		
+	public ArrayList<PcaFeature> getFeatureList(){
+		
+		ArrayList<PcaFeature> features = new ArrayList<PcaFeature>();
+		
+		for(int index = 0; index < noOfWavelengths; index++) {
+			features.add(getFeature(index));
+		}
+		
+		
+		return features;
+		
+	}
 	
 }
