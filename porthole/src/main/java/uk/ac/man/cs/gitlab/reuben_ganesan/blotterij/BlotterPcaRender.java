@@ -5,6 +5,9 @@ import java.util.Iterator;
 
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.RealMatrix;
+import org.knowm.xchart.QuickChart;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
 
 import ij.IJ;
 
@@ -39,6 +42,8 @@ public class BlotterPcaRender{
 		
 		finalData = featureVector.multiply(rowDataAdjust);
 		IJ.showMessage("Final data calculated");
+		
+		renderPlot();
 	}
 		
 	public void assembleRowFeatureVector() {
@@ -80,6 +85,20 @@ public class BlotterPcaRender{
 		IJ.showProgress(1,1);
 		//Transpose mean-adjusted data
 		rowDataAdjust = rowDataAdjust.transpose();
+	}
+	
+	
+	public void renderPlot() {
+		double yData[] = finalData.getRow(0);
+		double xData[] = new double[finalData.getColumnDimension()];
+		
+		for(int index = 0; index < finalData.getColumnDimension(); index++)
+			xData[index] = index;
+		
+		
+		XYChart chart = QuickChart.getChart("Final Data", "Pixels", "Value", "FinalData", xData, yData);
+		
+		new SwingWrapper(chart).displayChart();
 	}
 	
 }
