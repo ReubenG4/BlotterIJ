@@ -2,8 +2,6 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
-
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -12,10 +10,6 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import org.apache.commons.math4.linear.Array2DRowRealMatrix;
-import org.apache.commons.math4.linear.BlockRealMatrix;
-import org.apache.commons.math4.linear.RealMatrix;
-import org.apache.commons.math4.linear.RealMatrixFormat;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -92,7 +86,8 @@ public class BlotterCommand implements Command{
 
 	
 	private static FalseRGBConverter rgbConverter = null;
-	private static BlotterPcaCalc pca = null;
+	private static BlotterPcaCalc pcaCalc = null;
+	private static BlotterPcaRender pcaRender = null;
 	
 	
 	
@@ -115,8 +110,8 @@ public class BlotterCommand implements Command{
 		rgbConverter.setServices(services);
 		
 		/* Initialise BlotterPCA */
-		pca = new BlotterPcaCalc();
-		pca.setServices(services);
+		pcaCalc = new BlotterPcaCalc();
+		pcaCalc.setServices(services);
 			
 		SwingUtilities.invokeLater(() -> {
 					
@@ -227,9 +222,9 @@ public class BlotterCommand implements Command{
 	SwingWorker stateWorker4 = new SwingWorker() {
 		@Override
 		protected Object doInBackground() throws Exception {
-			pca.run(imgData,regionOfInterest);
-			pxlData = pca.getPxlData();
-			pcaData = pca.getPcaData();
+			pcaCalc.run(imgData,regionOfInterest);
+			pxlData = pcaCalc.getPxlData();
+			pcaData = pcaCalc.getPcaData();
 			return null;
 		}
 			

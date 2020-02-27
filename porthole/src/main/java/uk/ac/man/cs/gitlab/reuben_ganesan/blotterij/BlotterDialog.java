@@ -15,7 +15,6 @@ import org.scijava.ui.UIService;
 import io.scif.services.DatasetIOService;
 
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.awt.event.ActionEvent;
 

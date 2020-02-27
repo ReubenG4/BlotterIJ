@@ -188,6 +188,14 @@ public class PcaData{
 	public RealMatrix getFlattenedData() {
 		return flattenedData;
 	}
+	
+	public double[] getMean() {
+		return mean;
+	}
+	
+	public int getNoOfWavelengths() {
+		return noOfWavelengths;
+	}
 		
 	public ArrayList<PcaFeature> getFeatureList(){
 		
