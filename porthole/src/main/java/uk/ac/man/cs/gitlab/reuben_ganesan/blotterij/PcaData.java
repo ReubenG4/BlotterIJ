@@ -14,10 +14,8 @@ import ij.IJ;
  * Calculates eigenvalues and eigenvectors from covariance matrix of pixel data
  * 
  */
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
 
-public class PcaData<T extends RealType<T> & NativeType<T>>{
+public class PcaData{
 	
 	private EigenDecomposition eigenData = null;
 	private double[] mean = null;
@@ -27,7 +25,7 @@ public class PcaData<T extends RealType<T> & NativeType<T>>{
 	private int noOfWavelengths;
 	private int noOfPixels;
 	
-	PcaData(PxlData<T> input){
+	PcaData(PxlData input){
 		this(input.getData(),input.getWidth(),input.getHeight(), input.getDepth());
 	}
 	

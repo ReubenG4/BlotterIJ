@@ -2,16 +2,13 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-
-import org.apache.commons.math4.linear.RealMatrix;
-
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 public class BlotterPcaCalc <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
 	//Declare class variables
-	private PxlData<T> pxlData;
+	private PxlData pxlData;
 	private PcaData pcaData;
 	private int width;
 	private int height;
@@ -26,18 +23,14 @@ public class BlotterPcaCalc <T extends RealType<T> & NativeType<T>>extends Blott
 		setDepth(inputData.size());
 		
 		//Extract pixel data
-		pxlData = new PxlData<T>(inputData, selection);
+		pxlData = new PxlData(inputData, selection);
 		
 		//Calculate eigenvectors and eigenvalues
 		pcaData = new PcaData(pxlData);
 	
 	}
 	
-	public RealMatrix getFlattenedPxlData() {
-		return getPcaData().getFlattenedData();
-	}
-	
-	public PxlData<T> getPxlData() {
+	public PxlData getPxlData() {
 		return pxlData;
 	}
 	

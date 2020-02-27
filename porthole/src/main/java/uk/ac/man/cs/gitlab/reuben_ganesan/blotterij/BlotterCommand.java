@@ -120,7 +120,7 @@ public class BlotterCommand implements Command{
 			
 		SwingUtilities.invokeLater(() -> {
 					
-			//Initialise behaviour of JDialogs and how command handles them upon return
+			//Initialise JDialogs
 			initSelectFileDialog();
 			initToolPanelDialog();
 			initSelectFeatureDialog();
