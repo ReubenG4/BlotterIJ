@@ -16,6 +16,7 @@ public class BlotterPcaRender{
 	RealMatrix flattenedData;
 	RealMatrix featureVector;
 	RealMatrix rowDataAdjust;
+	RealMatrix finalData;
 	
 	int noOfWavelengths;
 	int noOfFeatures;
@@ -31,11 +32,13 @@ public class BlotterPcaRender{
 		noOfWavelengths = pcaData.getNoOfWavelengths();
 		noOfFeatures = input.size();
 		
-		IJ.showMessage("Calculating Feature Vector...");
+		
 		assembleRowFeatureVector();
-		IJ.showMessage("Calculating means-adjusted data");
 		assembleRowDataAdjust();
-		IJ.showMessage("Ready for final transformation...");
+		IJ.showStatus("Ready for final transformation...");
+		
+		finalData = featureVector.multiply(rowDataAdjust);
+		IJ.showMessage("Final data calculated");
 	}
 		
 	public void assembleRowFeatureVector() {
@@ -44,9 +47,12 @@ public class BlotterPcaRender{
 		featureVector = new Array2DRowRealMatrix(noOfWavelengths,noOfFeatures);
 		Iterator<PcaFeature> itr = selectedFeatures.iterator();
 		int index = 0;
-		while(itr.hasNext())
+		while(itr.hasNext()) {
+			IJ.showStatus("Calculating Feature Vector...");
+			IJ.showProgress(index,noOfFeatures);
 			featureVector.setColumnVector(index++, itr.next().getVector());
-		
+		}
+		IJ.showProgress(1,1);
 		//Transpose feature vector
 		featureVector = featureVector.transpose();
 		
@@ -56,18 +62,22 @@ public class BlotterPcaRender{
 		
 		//Adjust data to produce mean-adjusted data
 		rowDataAdjust = flattenedData.copy();
-		int noOfPixels = rowDataAdjust.getRowDimension();
+		int noOfPixels = rowDataAdjust.getColumnDimension();
 		
-		for(int indexRow=0; indexRow < noOfWavelengths; indexRow++) {
+		for(int indexCol=0; indexCol < noOfWavelengths; indexCol++) {
+			IJ.showStatus("Calculating means-adjusted data");
+			IJ.showProgress(indexCol, noOfWavelengths);
+			
 			//Get row, subtract mean of the row from each pixel, set adjusted row back
-			double[] rowAdjusted = rowDataAdjust.getRow(indexRow);
+			double[] dataAdjusted = rowDataAdjust.getColumn(indexCol);
 			
 			for(int indexPxl=0; indexPxl < noOfPixels; indexPxl++)
-				rowAdjusted[indexPxl] -= mean[indexRow];
+				dataAdjusted[indexPxl] -= mean[indexCol];
 			
-			rowDataAdjust.setRow(indexRow, rowAdjusted);
+			rowDataAdjust.setColumn(indexCol, dataAdjusted);
 		}
 		
+		IJ.showProgress(1,1);
 		//Transpose mean-adjusted data
 		rowDataAdjust = rowDataAdjust.transpose();
 	}

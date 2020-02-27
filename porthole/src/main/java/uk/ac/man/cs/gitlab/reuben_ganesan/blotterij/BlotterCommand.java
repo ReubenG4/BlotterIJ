@@ -158,6 +158,9 @@ public class BlotterCommand implements Command{
 			case 4:
 				/* State 4: Perform PCA */
 				stateWorker4.execute();
+//				pcaCalc.run(imgData,regionOfInterest);
+//				pxlData = pcaCalc.getPxlData();
+//				pcaData = pcaCalc.getPcaData();		
 				break;
 				
 			case 5:
@@ -170,7 +173,7 @@ public class BlotterCommand implements Command{
 				
 			case 6:
 				/* State 6: Construct Feature Vector and results */
-				IJ.showMessage("State 6 reached");
+				stateWorker6.execute();
 				break;
 				
 			default:
@@ -217,7 +220,7 @@ public class BlotterCommand implements Command{
 	/*
 	 * SwingWorker for State 4 
 	 * Runs PCA
-	 * Changes to state 3 when done
+	 * Changes to state 5 when done
 	 */
 	SwingWorker stateWorker4 = new SwingWorker() {
 		@Override
@@ -231,6 +234,26 @@ public class BlotterCommand implements Command{
 		@Override
 		protected void done(){
 			changeState(5);
+		}
+		
+	};
+	
+	
+	/*
+	 * SwingWorker for State 6 
+	 * Calculate FinalData and renders it as a scatter plot and/or histogram
+	 * Changes to state 7 when done
+	 */
+	SwingWorker stateWorker6 = new SwingWorker() {
+		@Override
+		protected Object doInBackground() throws Exception {
+			pcaRender = new BlotterPcaRender(pcaData,selectedFeatures);
+			return null;
+		}
+			
+		@Override
+		protected void done(){
+			IJ.showMessage("Final data calculated, return to calling command successful.");
 		}
 		
 	};

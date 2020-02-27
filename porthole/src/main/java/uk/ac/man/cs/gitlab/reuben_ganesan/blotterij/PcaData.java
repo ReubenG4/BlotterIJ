@@ -37,7 +37,7 @@ public class PcaData{
 		this.noOfWavelengths = noOfWavelengths;
 		
 		//Initialise Matrix to hold flattened pxlData
-		flattenedData = new BlockRealMatrix(noOfWavelengths, noOfPixels);
+		flattenedData = new BlockRealMatrix(noOfPixels, noOfWavelengths);
 		
 		//Initialise Matrix to hold covariance
 		covariance = new Array2DRowRealMatrix(noOfWavelengths,noOfWavelengths);
@@ -49,8 +49,11 @@ public class PcaData{
 		
 		/* Flatten pxlData[z][y][x] to produce flattenedData[z][p]*/
 		for (int index=0; index < noOfWavelengths; index++) {
-			flattenedData.setRow(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());
+			flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());
 		}
+		
+		//Transpose to place data in row and each column holding a dimension
+		//IJ.showMessage("flattenedData =  Rows: "+flattenedData.getRowDimension()+" Columns: "+flattenedData.getColumnDimension());
 		
 		//Calculate the mean of each dataset
 		calcMean();
@@ -70,11 +73,11 @@ public class PcaData{
 	public void calcMean() {	
 		
 		//Declare function variables
-		double xSum;
+		double pxlSum;
 		
 		/*
-		 * Let y be row position,dimension
-		 * 	   x be column position, pixel value
+		 * Let x be row position, pixel values
+		 * 	   y be column position, wavelength dimension
 		 */
 		
 		//Initialise progress bar
@@ -84,24 +87,16 @@ public class PcaData{
 		/* Calculate Mean
 		 *	Mean of pixels across a dimension
 		 */
-	
-		for(int yIndex=0; yIndex<noOfWavelengths; yIndex++) {
-			//Reset values of xSum
-			xSum = 0;
-			
-			for(int xIndex=0; xIndex<noOfPixels; xIndex++) {
-				//Sum up value of all pixels in this dimension
-				xSum += flattenedData.getEntry(yIndex,xIndex);
-			}
-			//Find mean for pixel value in this dimension
-			mean[yIndex] = xSum / noOfPixels;
-			//IJ.showMessage(Double.toString(mean[yIndex]));
-			
-			//Update progress bar
-			IJ.showStatus("Calculating Mean of Datasets...");
-			IJ.showProgress(yIndex, noOfWavelengths);	
-		}
 		
+		for(int yIndex = 0; yIndex > noOfWavelengths; yIndex++) {
+			
+			pxlSum = 0;
+			for(int xIndex = 0; xIndex > noOfPixels; xIndex++) {
+				pxlSum += flattenedData.getEntry(xIndex, yIndex);
+			}
+			mean[yIndex] = pxlSum / noOfPixels;	
+		}
+			
 		//Reset progress bar
 		IJ.showProgress(1,1);
 		IJ.showStatus("Mean calculation done...");
@@ -139,8 +134,8 @@ public class PcaData{
 				
 				// sum[(dim1 pxl value - dim1 pxl mean)(dim2 pxl value - dim2 pxl mean)]
 				for(int xIndex=0; xIndex < noOfPixels; xIndex++) {
-					sumDim1Dim2 += ( flattenedData.getEntry(dim1,xIndex) - mean[dim1] ) *
-								   ( flattenedData.getEntry(dim2,xIndex) - mean[dim2] );
+					sumDim1Dim2 += ( flattenedData.getEntry(xIndex,dim1) - mean[dim1] ) *
+								   ( flattenedData.getEntry(xIndex,dim2) - mean[dim2] );
 				}
 				
 				//Divide by n-1
