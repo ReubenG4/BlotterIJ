@@ -27,6 +27,7 @@ import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
 
@@ -174,7 +175,10 @@ public class BlotterCommand implements Command{
 			case 6:
 				/* State 6: Construct Feature Vector and results */
 				stateWorker6.execute();
-				//pcaRender = new BlotterPcaRender(pcaData,selectedFeatures);
+				pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
+				pcaRender.run();
+				Img newImg = pcaRender.renderFinalData();
+				ui.show(newImg);
 				break;
 				
 			default:
@@ -248,7 +252,7 @@ public class BlotterCommand implements Command{
 	SwingWorker stateWorker6 = new SwingWorker() {
 		@Override
 		protected Object doInBackground() throws Exception {
-			pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
+			
 			return null;
 		}
 			

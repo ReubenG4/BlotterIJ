@@ -20,7 +20,12 @@ import org.knowm.xchart.style.Styler.LegendPosition;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import ij.IJ;
+import net.imglib2.Cursor;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.type.numeric.real.DoubleType;
 
 public class BlotterPcaRender extends BlotterFunction{
 	
@@ -53,6 +58,10 @@ public class BlotterPcaRender extends BlotterFunction{
 		width = selection.width;
 		height = selection.height;
 		
+	}
+	
+	public void run() {
+		
 		assembleRowFeatureVector();
 		assembleRowDataAdjust();
 		IJ.showStatus("Ready for final transformation...");
@@ -60,24 +69,23 @@ public class BlotterPcaRender extends BlotterFunction{
 		finalData = featureVector.multiply(rowDataAdjust);
 		IJ.showMessage("Final data calculated");
 		
-		adjustFinalData();
-		
+		//renderFinalData();
 		//renderPlot();
+		
 	}
 	
-	public Img adjustFinalData() {
-		
-		RealMatrix adjustedFinalData = new Array2DRowRealMatrix(width,height);
-		
-			double[] row = finalData.getRow(0);
-			int pxlIndex = 0;
-			for(int yIndex = 0; yIndex < height; yIndex++) {
-				for(int xIndex = 0; xIndex < height; xIndex++) {
-					adjustedFinalData.setEntry(xIndex, yIndex , row[pxlIndex++]);
-				}
-			}
+	public Img renderFinalData() {
 			
-			Img<DoubleType> newImg = getOpsService().create().img(new long[]{width,height});
+			ArrayImg<DoubleType,DoubleArray> newImg = ArrayImgs.doubles(width,height); 
+			Cursor<DoubleType> curs = newImg.localizingCursor();
+			
+			int rowIndex=0;
+			double[] row = finalData.getRow(0);
+			
+			while(curs.hasNext()) {
+				curs.fwd();
+				curs.get().set(row[rowIndex++]);
+			}
 			
 		return newImg;
 	}

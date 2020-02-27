@@ -51,12 +51,10 @@ public class PcaData{
 		boolean isReverse = false;
 		double[] reversed;
 		/*
-		 * Flatten pxlData[z][y][x] to produce flattenedData[z][p] Reverse every other
-		 * row of pixels to preserve euclidean distance
+		 * Flatten pxlData[z][y][x] to produce flattenedData[z][p] 
 		 */
 		for (int index=0; index < noOfWavelengths; index++) {
-				flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());
-			
+				flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());		
 		}
 		
 		//Transpose to place data in row and each column holding a dimension
