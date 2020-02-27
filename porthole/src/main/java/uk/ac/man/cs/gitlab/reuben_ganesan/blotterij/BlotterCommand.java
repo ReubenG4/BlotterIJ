@@ -174,7 +174,7 @@ public class BlotterCommand implements Command{
 				
 			case 6:
 				/* State 6: Construct Feature Vector and results */
-				stateWorker6.execute();
+				//stateWorker6.execute();
 				pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
 				pcaRender.run();
 				Img newImg = pcaRender.renderFinalData();
@@ -252,7 +252,7 @@ public class BlotterCommand implements Command{
 	SwingWorker stateWorker6 = new SwingWorker() {
 		@Override
 		protected Object doInBackground() throws Exception {
-			
+			pcaRender.run();
 			return null;
 		}
 			
