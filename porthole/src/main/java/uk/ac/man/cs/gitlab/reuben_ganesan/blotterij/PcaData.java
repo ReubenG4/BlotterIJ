@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.BlockRealMatrix;
 import org.apache.commons.math4.linear.EigenDecomposition;
@@ -47,9 +48,26 @@ public class PcaData{
 		
 		IJ.showStatus("Flattening pixel data...");
 		
-		/* Flatten pxlData[z][y][x] to produce flattenedData[z][p]*/
+		boolean isReverse = false;
+		double[] reversed;
+		/*
+		 * Flatten pxlData[z][y][x] to produce flattenedData[z][p] Reverse every other
+		 * row of pixels to preserve euclidean distance
+		 */
 		for (int index=0; index < noOfWavelengths; index++) {
-			flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());
+			if(isReverse) {
+				reversed = Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray();
+			
+				ArrayUtils.reverse(reversed);
+				
+				flattenedData.setColumn(index,reversed);
+				isReverse = false;
+			}
+			else
+			{
+				flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());
+				isReverse = true;
+			}
 		}
 		
 		//Transpose to place data in row and each column holding a dimension
