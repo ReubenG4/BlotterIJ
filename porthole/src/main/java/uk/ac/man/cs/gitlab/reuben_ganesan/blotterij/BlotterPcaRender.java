@@ -2,12 +2,21 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.RealMatrix;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
+import org.knowm.xchart.style.Styler.ChartTheme;
+import org.knowm.xchart.style.Styler.LegendPosition;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import ij.IJ;
 
@@ -77,7 +86,7 @@ public class BlotterPcaRender{
 			double[] dataAdjusted = rowDataAdjust.getColumn(indexCol);
 			
 			for(int indexPxl=0; indexPxl < noOfPixels; indexPxl++)
-				dataAdjusted[indexPxl] -= mean[indexCol];
+				dataAdjusted[indexPxl] = dataAdjusted[indexPxl] - mean[indexCol];
 			
 			rowDataAdjust.setColumn(indexCol, dataAdjusted);
 		}
@@ -89,16 +98,34 @@ public class BlotterPcaRender{
 	
 	
 	public void renderPlot() {
+		
+		//Prepare series data
 		double yData[] = finalData.getRow(0);
-		double xData[] = new double[finalData.getColumnDimension()];
 		
-		for(int index = 0; index < finalData.getColumnDimension(); index++)
-			xData[index] = index;
+		List<Double> yDataList = new ArrayList<Double>();
+		
+		for(int index=0; index<finalData.getColumnDimension(); index++)
+			yDataList.add(yData[index]);
 		
 		
-		XYChart chart = QuickChart.getChart("Final Data", "Pixels", "Value", "FinalData", xData, yData);
+		List<Integer> xDataList = new ArrayList<Integer>();
+		for(int index=0; index<finalData.getColumnDimension(); index++)
+			xDataList.add(index);
+			
+		 // Create Chart
+		XYChart chart = new XYChartBuilder().width(800).height(600).build();
 		
-		new SwingWrapper(chart).displayChart();
+		// Customize Chart
+		chart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Scatter);
+	    chart.getStyler().setChartTitleVisible(false);
+	    chart.getStyler().setLegendPosition(LegendPosition.InsideSW);
+	    chart.getStyler().setMarkerSize(1);
+	    
+	    //Add series to chart
+	    XYSeries series = chart.addSeries("Vector 0", xDataList, yDataList);
+		
+	    //Display chart
+		new SwingWrapper<XYChart>(chart).displayChart();
 	}
 	
 }

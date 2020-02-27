@@ -174,6 +174,7 @@ public class BlotterCommand implements Command{
 			case 6:
 				/* State 6: Construct Feature Vector and results */
 				stateWorker6.execute();
+				//pcaRender = new BlotterPcaRender(pcaData,selectedFeatures);
 				break;
 				
 			default:
