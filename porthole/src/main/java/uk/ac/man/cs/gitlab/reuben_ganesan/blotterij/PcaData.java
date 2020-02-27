@@ -55,19 +55,8 @@ public class PcaData{
 		 * row of pixels to preserve euclidean distance
 		 */
 		for (int index=0; index < noOfWavelengths; index++) {
-			if(isReverse) {
-				reversed = Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray();
-			
-				ArrayUtils.reverse(reversed);
-				
-				flattenedData.setColumn(index,reversed);
-				isReverse = false;
-			}
-			else
-			{
 				flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());
-				isReverse = true;
-			}
+			
 		}
 		
 		//Transpose to place data in row and each column holding a dimension

@@ -248,7 +248,7 @@ public class BlotterCommand implements Command{
 	SwingWorker stateWorker6 = new SwingWorker() {
 		@Override
 		protected Object doInBackground() throws Exception {
-			pcaRender = new BlotterPcaRender(pcaData,selectedFeatures);
+			pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
 			return null;
 		}
 			

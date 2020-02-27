@@ -1,5 +1,6 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,8 +20,9 @@ import org.knowm.xchart.style.Styler.LegendPosition;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import ij.IJ;
+import net.imglib2.img.Img;
 
-public class BlotterPcaRender{
+public class BlotterPcaRender extends BlotterFunction{
 	
 	//Declare class variables
 	ArrayList<PcaFeature> selectedFeatures;
@@ -30,20 +32,26 @@ public class BlotterPcaRender{
 	RealMatrix rowDataAdjust;
 	RealMatrix finalData;
 	
+	int width;
+	int height;
+	
 	int noOfWavelengths;
 	int noOfFeatures;
 	
 	double mean[];
 	
-	public BlotterPcaRender(PcaData pcaData, ArrayList<PcaFeature> input){
+	public BlotterPcaRender(PcaData pcaData, ArrayList<PcaFeature> input, Rectangle selection){
 		
 		flattenedData = pcaData.getFlattenedData();
 		mean = pcaData.getMean();
 		selectedFeatures = input;
 		
+		
 		noOfWavelengths = pcaData.getNoOfWavelengths();
 		noOfFeatures = input.size();
 		
+		width = selection.width;
+		height = selection.height;
 		
 		assembleRowFeatureVector();
 		assembleRowDataAdjust();
@@ -52,7 +60,26 @@ public class BlotterPcaRender{
 		finalData = featureVector.multiply(rowDataAdjust);
 		IJ.showMessage("Final data calculated");
 		
-		renderPlot();
+		adjustFinalData();
+		
+		//renderPlot();
+	}
+	
+	public Img adjustFinalData() {
+		
+		RealMatrix adjustedFinalData = new Array2DRowRealMatrix(width,height);
+		
+			double[] row = finalData.getRow(0);
+			int pxlIndex = 0;
+			for(int yIndex = 0; yIndex < height; yIndex++) {
+				for(int xIndex = 0; xIndex < height; xIndex++) {
+					adjustedFinalData.setEntry(xIndex, yIndex , row[pxlIndex++]);
+				}
+			}
+			
+			Img<DoubleType> newImg = getOpsService().create().img(new long[]{width,height});
+			
+		return newImg;
 	}
 		
 	public void assembleRowFeatureVector() {
