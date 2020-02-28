@@ -41,7 +41,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	JTable featuresTable;
 	JLabel fileName;
 	JPanel fileButtons;
-	JButton confirmButton;
+	JButton renderButton;
 	FeaturesTableModel featuresTableModel;
 	ListSelectionModel featuresListSelectionModel;
 	
@@ -58,7 +58,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		getContentPane().setLayout(new BorderLayout());
 		
 		
-		 confirmButton = new JButton("Confirm");
+		 renderButton = new JButton("Render");
 		 buttonPanel = new JPanel();
 		 infoPanel = new JPanel();
 		 featuresPanel = new JPanel();
@@ -91,7 +91,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 			 * confirms selected features
 			 */
 		
-			confirmButton.addActionListener(new ActionListener(){
+			renderButton.addActionListener(new ActionListener(){
 
 				//If confirm is clicked and selection is valid
 				@Override
@@ -102,8 +102,8 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 				
 			});
 			
-			buttonPanel.add(confirmButton);
-			confirmButton.setEnabled(false);
+			buttonPanel.add(renderButton);
+			renderButton.setEnabled(false);
 			
 		}	
 		
@@ -157,7 +157,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		public void valueChanged(ListSelectionEvent e) {
 			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
 			if(lsm.isSelectionEmpty()) {
-				confirmButton.setEnabled(false);
+				renderButton.setEnabled(false);
 			}
 			else {
 				selectedFeatures.clear();
@@ -166,7 +166,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 					for(int index=0; index < choices.length; index++)
 						selectedFeatures.add(featureData.get(choices[index]));
 				}
-				confirmButton.setEnabled(true);
+				renderButton.setEnabled(true);
 			}
 				
 		}
