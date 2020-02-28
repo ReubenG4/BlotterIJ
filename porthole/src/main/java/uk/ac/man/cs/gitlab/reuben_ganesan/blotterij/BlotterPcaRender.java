@@ -63,7 +63,10 @@ public class BlotterPcaRender extends BlotterFunction{
 	public void run() {
 		
 		assembleRowFeatureVector();
-		assembleRowDataAdjust();
+		
+		if(flattenedData != null)
+			assembleRowDataAdjust();
+		
 		IJ.showStatus("Ready for final transformation...");
 		
 		finalData = featureVector.multiply(rowDataAdjust);
@@ -72,22 +75,6 @@ public class BlotterPcaRender extends BlotterFunction{
 		//renderFinalData();
 		//renderPlot();
 		
-	}
-	
-	public Img renderFinalData() {
-			
-			ArrayImg<DoubleType,DoubleArray> newImg = ArrayImgs.doubles(width,height); 
-			Cursor<DoubleType> curs = newImg.localizingCursor();
-			
-			int rowIndex=0;
-			double[] row = finalData.getRow(0);
-			
-			while(curs.hasNext()) {
-				curs.fwd();
-				curs.get().set(row[rowIndex++]);
-			}
-			
-		return newImg;
 	}
 		
 	public void assembleRowFeatureVector() {
@@ -110,7 +97,11 @@ public class BlotterPcaRender extends BlotterFunction{
 	public void assembleRowDataAdjust() {
 		
 		//Adjust data to produce mean-adjusted data
-		rowDataAdjust = flattenedData.copy();
+		rowDataAdjust = flattenedData;
+		
+		//Null pointer to flattenedData to allow for garbage collection
+		flattenedData = null;
+		
 		int noOfPixels = rowDataAdjust.getColumnDimension();
 		
 		for(int indexCol=0; indexCol < noOfWavelengths; indexCol++) {
@@ -161,6 +152,27 @@ public class BlotterPcaRender extends BlotterFunction{
 		
 	    //Display chart
 		new SwingWrapper<XYChart>(chart).displayChart();
+	}
+	
+	public Img renderFinalData() {
+		
+		ArrayImg<DoubleType,DoubleArray> newImg = ArrayImgs.doubles(width,height); 
+		Cursor<DoubleType> curs = newImg.cursor();
+		
+		int rowIndex=0;
+		double[] row = finalData.getRow(0);
+		
+		while(curs.hasNext()) {
+			curs.fwd();
+			curs.get().set(row[rowIndex++]);
+		}
+		
+	  return newImg;
+   }
+	
+	public void setSelectedFeatures(ArrayList<PcaFeature> input) {
+		selectedFeatures = input;
+		
 	}
 	
 }

@@ -27,6 +27,9 @@ public class BlotterPcaCalc <T extends RealType<T> & NativeType<T>>extends Blott
 		
 		//Calculate eigenvectors and eigenvalues
 		pcaData = new PcaData(pxlData);
+		
+		//Null pixel data for garbage collection
+		pxlData = null;
 	
 	}
 	

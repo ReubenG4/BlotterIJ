@@ -77,7 +77,6 @@ public class BlotterCommand implements Command{
 	
 	private ImagePlus rgbImg;
 	Rectangle regionOfInterest;
-	private PxlData pxlData;
 	private PcaData pcaData;
 	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
 	private ArrayList<PcaFeature> selectedFeatures = new ArrayList<PcaFeature>();
@@ -158,10 +157,7 @@ public class BlotterCommand implements Command{
 				
 			case 4:
 				/* State 4: Perform PCA */
-				stateWorker4.execute();
-//				pcaCalc.run(imgData,regionOfInterest);
-//				pxlData = pcaCalc.getPxlData();
-//				pcaData = pcaCalc.getPcaData();		
+				stateWorker4.execute();	
 				break;
 				
 			case 5:
@@ -175,7 +171,13 @@ public class BlotterCommand implements Command{
 			case 6:
 				/* State 6: Construct Feature Vector and results */
 				//stateWorker6.execute();
-				pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
+				if(pcaRender == null) {
+					pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
+					pcaData.disposeFlattenedData();
+				}	
+				else
+					pcaRender.setSelectedFeatures(selectedFeatures);
+				
 				pcaRender.run();
 				Img newImg = pcaRender.renderFinalData();
 				ui.show(newImg);
@@ -231,7 +233,6 @@ public class BlotterCommand implements Command{
 		@Override
 		protected Object doInBackground() throws Exception {
 			pcaCalc.run(imgData,regionOfInterest);
-			pxlData = pcaCalc.getPxlData();
 			pcaData = pcaCalc.getPcaData();
 			return null;
 		}

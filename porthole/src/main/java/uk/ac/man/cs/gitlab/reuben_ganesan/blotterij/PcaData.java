@@ -189,6 +189,10 @@ public class PcaData{
 		return flattenedData;
 	}
 	
+	public void disposeFlattenedData() {
+		flattenedData = null;
+	}
+	
 	public double[] getMean() {
 		return mean;
 	}
