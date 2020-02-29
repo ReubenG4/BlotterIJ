@@ -10,7 +10,7 @@ public class BlotterFeatureDialog extends BlotterDialog{
 		return featureData;
 	}
 	
-	public void setFeatureData(ArrayList<PcaFeature> input) {
+	public void addFeatureData(ArrayList<PcaFeature> input) {
 	    
 	    if(!featureData.isEmpty())
 	    	featureData.clear();

@@ -162,8 +162,10 @@ public class BlotterCommand implements Command{
 				
 			case 5:
 				/* State 5: Display features found by PCA for selection */
-				selectFeatureDialog.setFeatureData(pcaData.getFeatureList());
-				selectFeatureDialog.prepareForDisplay();
+				if(selectFeatureDialog.getFeatureData().size() == 0) {
+					selectFeatureDialog.addFeatureData(pcaData.getFeatureList());
+					selectFeatureDialog.prepareForDisplay();
+				}
 				selectFeatureDialog.setVisible(true);
 				selectFeatureDialog.toFront();
 				break;
@@ -174,13 +176,15 @@ public class BlotterCommand implements Command{
 				if(pcaRender == null) {
 					pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
 					pcaData.disposeFlattenedData();
-				}	
-				else
+				}
+				else {
 					pcaRender.setSelectedFeatures(selectedFeatures);
-				
+				}
+					
 				pcaRender.run();
 				Img newImg = pcaRender.renderFinalData();
 				ui.show(newImg);
+				changeState(5);
 				break;
 				
 			default:
@@ -253,12 +257,23 @@ public class BlotterCommand implements Command{
 	SwingWorker stateWorker6 = new SwingWorker() {
 		@Override
 		protected Object doInBackground() throws Exception {
+			if(pcaRender == null) {
+				pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
+				pcaData.disposeFlattenedData();
+			}
+			else {
+				pcaRender.setSelectedFeatures(selectedFeatures);
+			}
+				
 			pcaRender.run();
-			return null;
+			Img newImg = pcaRender.renderFinalData();
+			ui.show(newImg);
+			return null;	
 		}
 			
 		@Override
 		protected void done(){
+			changeState(5);
 			IJ.showMessage("Final data calculated, return to calling command successful.");
 		}
 		
@@ -287,7 +302,10 @@ public class BlotterCommand implements Command{
 						//Add all chosen files to imgData
 						imgData.addAll(selectFileDialog.getImgData());
 						//Clear chosen files from dialog
-						selectFileDialog.clearImgData();		
+						selectFileDialog.clearImgData();	
+						
+						//Reset nextState flag and state transition
+						selectFileDialog.setNextState(false);
 						changeState(2);
 					}					
 				}		
@@ -315,6 +333,9 @@ public class BlotterCommand implements Command{
 						if(toolPanelDialog.getSelection() != null) {
 							//Retrieve selection
 							regionOfInterest = toolPanelDialog.getSelection();
+							
+							//Reset nextState flag and state transition
+							toolPanelDialog.setNextState(false);
 							changeState(4);
 						}
 					}		
@@ -348,6 +369,7 @@ public class BlotterCommand implements Command{
 					if(selectFeatureDialog.getNextState()) {
 						//Retrieve selected features
 						selectedFeatures = selectFeatureDialog.getSelected();
+						selectFeatureDialog.setNextState(false);
 						changeState(6);
 								
 					}					

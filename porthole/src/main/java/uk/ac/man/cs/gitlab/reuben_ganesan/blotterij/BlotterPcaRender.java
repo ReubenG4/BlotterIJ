@@ -63,10 +63,9 @@ public class BlotterPcaRender extends BlotterFunction{
 		IJ.showStatus("Ready for final transformation...");
 		
 		finalData = featureVector.multiply(rowDataAdjust);
-		IJ.showMessage("Final data calculated");
+		IJ.showStatus("Final data calculated");
 		
-		//renderFinalData();
-		//renderPlot();
+		
 		
 	}
 		
@@ -92,7 +91,7 @@ public class BlotterPcaRender extends BlotterFunction{
 		//Adjust data to produce mean-adjusted data
 		rowDataAdjust = flattenedData;
 		
-		//Null pointer to flattenedData to allow for garbage collection
+		//Null pointer to flattenedData, it is no longer relevant
 		flattenedData = null;
 		
 		int noOfPixels = rowDataAdjust.getColumnDimension();

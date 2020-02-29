@@ -132,6 +132,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	}
 	
 	
+	
 	/*
 	 * Fits columns to width of data
 	 * Source: https://stackoverflow.com/questions/17627431/auto-resizing-the-jtable-column-widths
