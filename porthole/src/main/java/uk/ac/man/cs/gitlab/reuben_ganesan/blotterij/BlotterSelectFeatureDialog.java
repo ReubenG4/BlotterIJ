@@ -158,7 +158,11 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 					for(int index=0; index < choices.length; index++)
 						selectedFeatures.add(featureData.get(choices[index]));
 				}
-				renderButton.setEnabled(true);
+				
+				if(choices.length == 1)
+					renderButton.setEnabled(true);
+				else
+					renderButton.setEnabled(false);
 			}
 				
 		}

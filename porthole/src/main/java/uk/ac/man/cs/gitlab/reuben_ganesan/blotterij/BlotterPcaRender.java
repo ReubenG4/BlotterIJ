@@ -42,12 +42,6 @@ public class BlotterPcaRender extends BlotterFunction{
 		
 	}
 	
-	public void run(ArrayList<PcaFeature> selectedFeatures) {
-		
-		finalData = pcaData.calcFinalData(selectedFeatures);
-		IJ.showStatus("Final data calculated");
-			
-	}
 		
 	
 	public void scatterPlot() {
@@ -81,10 +75,17 @@ public class BlotterPcaRender extends BlotterFunction{
 		new SwingWrapper<XYChart>(chart).displayChart();
 	}
 	
-	public Img render() {
+	public Img render(ArrayList<PcaFeature> selectedFeatures) {
+		
+		IJ.showStatus("Calculating final data");
+		finalData = pcaData.calcFinalData(selectedFeatures);
+		IJ.showStatus("Converting final data to image...");
+		
 		
 		ArrayImg<DoubleType,DoubleArray> newImg = ArrayImgs.doubles(width,height); 
 		Cursor<DoubleType> curs = newImg.cursor();
+		
+		int endProgress = finalData.getRowDimension();
 		
 		int rowIndex=0;
 		double[] row = finalData.getRow(0);
@@ -92,7 +93,10 @@ public class BlotterPcaRender extends BlotterFunction{
 		while(curs.hasNext()) {
 			curs.fwd();
 			curs.get().set(row[rowIndex++]);
+			IJ.showProgress(rowIndex,endProgress);
 		}
+		
+		IJ.showStatus("Rendering image...");
 		
 	  return newImg;
    }

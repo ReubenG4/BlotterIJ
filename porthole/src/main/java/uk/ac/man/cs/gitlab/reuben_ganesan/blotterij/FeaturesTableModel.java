@@ -47,7 +47,7 @@ class FeaturesTableModel extends AbstractTableModel {
     
     public void addData(ArrayList<PcaFeature> data){
     	Iterator<PcaFeature> itr = data.iterator();
-    	int index = 0;
+    	int index = 1;
     		
     	//Assign each an index
     	while(itr.hasNext()) {

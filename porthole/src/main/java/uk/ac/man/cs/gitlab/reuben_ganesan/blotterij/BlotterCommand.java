@@ -74,7 +74,7 @@ public class BlotterCommand implements Command{
 	/* Declare class variables */
 	private Hashtable<String,Service> services = new Hashtable<String,Service>();
 	
-	
+	private Img imageToRender;
 	private ImagePlus rgbImg;
 	Rectangle regionOfInterest;
 	private PcaData pcaData;
@@ -89,7 +89,10 @@ public class BlotterCommand implements Command{
 	private static BlotterPcaCalc pcaCalc = null;
 	private static BlotterPcaRender pcaRender = null;
 	
-	
+	/* Declare SwingWorker objects */
+	StateWorker2 stateWorker2;
+	StateWorker4 stateWorker4;
+	StateWorker6 stateWorker6;
 	
 	public void run() {
 		
@@ -144,6 +147,7 @@ public class BlotterCommand implements Command{
 		
 			case 2:
 				/* State 2: Produce and show FalseRGB for user view */
+				stateWorker2 = new StateWorker2();
 				stateWorker2.execute();
 				break;
 				
@@ -156,11 +160,9 @@ public class BlotterCommand implements Command{
 				
 				
 			case 4:
-				/* State 4: Perform PCA */
+				/* State 4: Perform PCA, produce eigenvectors and eigenvalues, save mean adjusted data */
+				stateWorker4 = new StateWorker4();
 				stateWorker4.execute();	
-				//pcaCalc.run(imgData,regionOfInterest);
-				//pcaData = pcaCalc.getPcaData();
-				//changeState(5);
 				break;
 				
 			case 5:
@@ -174,15 +176,9 @@ public class BlotterCommand implements Command{
 				break;
 				
 			case 6:
-				/* State 6: Construct Feature Vector and results */
+				/* State 6: Render image from selected features */
+				stateWorker6 = new StateWorker6();
 				stateWorker6.execute();
-//				if(pcaRender == null)
-//					pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
-//		
-//				pcaRender.run(selectedFeatures);
-//				Img newImg = pcaRender.render();
-//				ui.show(newImg);
-//				changeState(5);
 				break;
 				
 			default:
@@ -201,7 +197,7 @@ public class BlotterCommand implements Command{
 	 * Show false RGB image for user manipulation
 	 * Changes to state 3 when done
 	 */
-	SwingWorker stateWorker2 = new SwingWorker() {
+	class StateWorker2 extends SwingWorker{
 
 		@Override
 		protected Object doInBackground() throws Exception {
@@ -224,14 +220,14 @@ public class BlotterCommand implements Command{
 			changeState(3);
 		}
 	
-	};
+	}
 	
 	/*
 	 * SwingWorker for State 4 
 	 * Runs PCA
 	 * Changes to state 5 when done
 	 */
-	SwingWorker stateWorker4 = new SwingWorker() {
+	class StateWorker4 extends SwingWorker {
 		@Override
 		protected Object doInBackground() throws Exception {
 			pcaCalc.run(imgData,regionOfInterest);
@@ -244,35 +240,37 @@ public class BlotterCommand implements Command{
 			changeState(5);
 		}
 		
-	};
+	}
 	
 	
 	/*
 	 * SwingWorker for State 6 
-	 * Calculate FinalData and renders it as a scatter plot and/or histogram
-	 * Changes to state 7 when done
+	 * Calculate FinalData from selectedFeatures and dataMeanAdjust
+	 * Renders it as an image
+	 * Changes to state 5 when done
 	 */
-	SwingWorker stateWorker6 = new SwingWorker() {
-		Img newImg;
-		
+	
+	class StateWorker6 extends SwingWorker{
+
 		@Override
 		protected Object doInBackground() throws Exception {
 			if(pcaRender == null)
 				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
-	
-			pcaRender.run(selectedFeatures);
-			newImg = pcaRender.render();
+			
+			Img newImg = pcaRender.render(selectedFeatures);
+			String name = "Component "+selectedFeatures.get(0).getIndex();
+			ui.show(name,newImg);
 			return null;
 		}
 			
 		@Override
-		protected void done(){
-			ui.show(newImg);
+		protected void done(){	
 			changeState(5);
-			//IJ.showMessage("Final data rendered, return to calling command successful.");
 		}
 		
-	};
+	}
+	
+	/* Following code governs how JDialogs interact with event-dispatcher thread */
 	
 	
 	/* 
@@ -365,8 +363,7 @@ public class BlotterCommand implements Command{
 						//Retrieve selected features
 						selectedFeatures = selectFeatureDialog.getSelected();
 						selectFeatureDialog.setNextState(false);
-						changeState(6);
-								
+						changeState(6);			
 					}					
 				}		
 			});
