@@ -110,17 +110,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	}
 	
 	public void prepareForDisplay() {
-		featureData.sort(new Comparator<PcaFeature>() {
-    		@Override
-    		public int compare(PcaFeature o1, PcaFeature o2) {
-    			
-    			double o1Value = o1.getValue();
-    			double o2Value = o2.getValue();
-    			
-    			return Double.compare(o2Value, o1Value);
-    			}
-    	});
-		
+		featureData.sort(new featureComparator());
 		featuresTableModel.addData(featureData);
 		featuresTableModel.fireTableDataChanged();
 		resizeColumnWidth();
@@ -128,6 +118,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	}
 	
 	public ArrayList<PcaFeature> getSelected() {
+		selectedFeatures.sort(new featureComparator());
 		return selectedFeatures;
 	}
 	
@@ -170,6 +161,18 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 				renderButton.setEnabled(true);
 			}
 				
+		}
+		
+	}
+	
+	class featureComparator implements Comparator<PcaFeature>{
+	
+		@Override
+		public int compare(PcaFeature o1, PcaFeature o2) {
+			double o1Value = o1.getValue();
+			double o2Value = o2.getValue();
+			
+			return Double.compare(o2Value, o1Value);
 		}
 		
 	}

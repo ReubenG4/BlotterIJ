@@ -158,6 +158,9 @@ public class BlotterCommand implements Command{
 			case 4:
 				/* State 4: Perform PCA */
 				stateWorker4.execute();	
+				//pcaCalc.run(imgData,regionOfInterest);
+				//pcaData = pcaCalc.getPcaData();
+				//changeState(5);
 				break;
 				
 			case 5:
@@ -172,19 +175,14 @@ public class BlotterCommand implements Command{
 				
 			case 6:
 				/* State 6: Construct Feature Vector and results */
-				//stateWorker6.execute();
-				if(pcaRender == null) {
-					pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
-					pcaData.disposeFlattenedData();
-				}
-				else {
-					pcaRender.setSelectedFeatures(selectedFeatures);
-				}
-					
-				pcaRender.run();
-				Img newImg = pcaRender.renderFinalData();
-				ui.show(newImg);
-				changeState(5);
+				stateWorker6.execute();
+//				if(pcaRender == null)
+//					pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
+//		
+//				pcaRender.run(selectedFeatures);
+//				Img newImg = pcaRender.render();
+//				ui.show(newImg);
+//				changeState(5);
 				break;
 				
 			default:
@@ -255,26 +253,23 @@ public class BlotterCommand implements Command{
 	 * Changes to state 7 when done
 	 */
 	SwingWorker stateWorker6 = new SwingWorker() {
+		Img newImg;
+		
 		@Override
 		protected Object doInBackground() throws Exception {
-			if(pcaRender == null) {
-				pcaRender = new BlotterPcaRender(pcaData,selectedFeatures,regionOfInterest);
-				pcaData.disposeFlattenedData();
-			}
-			else {
-				pcaRender.setSelectedFeatures(selectedFeatures);
-			}
-				
-			pcaRender.run();
-			Img newImg = pcaRender.renderFinalData();
-			ui.show(newImg);
-			return null;	
+			if(pcaRender == null)
+				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
+	
+			pcaRender.run(selectedFeatures);
+			newImg = pcaRender.render();
+			return null;
 		}
 			
 		@Override
 		protected void done(){
+			ui.show(newImg);
 			changeState(5);
-			IJ.showMessage("Final data calculated, return to calling command successful.");
+			//IJ.showMessage("Final data rendered, return to calling command successful.");
 		}
 		
 	};

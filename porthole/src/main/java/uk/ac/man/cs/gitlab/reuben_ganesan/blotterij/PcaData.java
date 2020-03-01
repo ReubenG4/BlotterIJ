@@ -1,6 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
@@ -22,6 +23,8 @@ public class PcaData{
 	private double[] mean = null;
 	private RealMatrix covariance = null;
 	private RealMatrix flattenedData = null;
+	private RealMatrix meanDataAdjust = null;
+	private RealMatrix featureVector = null;
 	
 	private int noOfWavelengths;
 	private int noOfPixels;
@@ -57,11 +60,11 @@ public class PcaData{
 				flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());		
 		}
 		
-		//Transpose to place data in row and each column holding a dimension
-		//IJ.showMessage("flattenedData =  Rows: "+flattenedData.getRowDimension()+" Columns: "+flattenedData.getColumnDimension());
-		
 		//Calculate the mean of each dataset
 		calcMean();
+		
+		//Calculate mean adjusted data
+		calcDataMeanAdjust();
 		
 		//Calculate the covariance of datasets
 		calcCovariance();
@@ -72,6 +75,57 @@ public class PcaData{
 		IJ.showStatus("Eigen decomposition calculated...");
 	
 				
+	}
+	
+	public RealMatrix calcFinalData(ArrayList<PcaFeature> selectedFeatures) {
+		
+		assembleRowFeatureVector(selectedFeatures);
+		return featureVector.multiply(meanDataAdjust);
+	}
+	
+	public void assembleRowFeatureVector(ArrayList<PcaFeature> selectedFeatures) {
+		
+		//Place vectors as columns of feature vector, in descending order of eigenvalue
+		featureVector = new Array2DRowRealMatrix(noOfWavelengths,selectedFeatures.size());
+		Iterator<PcaFeature> itr = selectedFeatures.iterator();
+		int index = 0;
+		while(itr.hasNext()) {
+			IJ.showStatus("Calculating Feature Vector...");
+			IJ.showProgress(index, selectedFeatures.size());
+			featureVector.setColumnVector(index++, itr.next().getVector());
+		}
+		IJ.showProgress(1,1);
+		//Transpose feature vector
+		featureVector = featureVector.transpose();
+		
+	}
+	
+	public void calcDataMeanAdjust() {
+		
+		//Adjust data to produce mean-adjusted data
+		meanDataAdjust = flattenedData;
+		
+		//Null pointer to flattenedData, it is no longer relevant
+		flattenedData = null;
+		
+		int noOfPixels = meanDataAdjust.getColumnDimension();
+		
+		for(int indexCol=0; indexCol < noOfWavelengths; indexCol++) {
+			IJ.showStatus("Calculating means-adjusted data");
+			IJ.showProgress(indexCol, noOfWavelengths);
+			
+			//Get row, subtract mean of the row from each pixel, set adjusted row back
+			RealMatrix dataAdjusted = meanDataAdjust.getColumnMatrix(indexCol);
+			
+			dataAdjusted.scalarAdd(-mean[indexCol]);
+			
+			meanDataAdjust.setColumnMatrix(indexCol, dataAdjusted);
+		}
+		
+		IJ.showProgress(1,1);
+		
+		//Transpose mean-adjusted data
+		meanDataAdjust = meanDataAdjust.transpose();
 	}
 	
 		
@@ -138,9 +192,9 @@ public class PcaData{
 				sumDim1Dim2 = 0;
 				
 				// sum[(dim1 pxl value - dim1 pxl mean)(dim2 pxl value - dim2 pxl mean)]
-				for(int xIndex=0; xIndex < noOfPixels; xIndex++) {
-					sumDim1Dim2 += ( flattenedData.getEntry(xIndex,dim1) - mean[dim1] ) *
-								   ( flattenedData.getEntry(xIndex,dim2) - mean[dim2] );
+				for(int yIndex=0; yIndex < noOfPixels; yIndex++) {
+					sumDim1Dim2 += ( meanDataAdjust.getEntry(dim1,yIndex) ) *
+								   ( meanDataAdjust.getEntry(dim2,yIndex) );
 				}
 				
 				//Divide by n-1
@@ -172,7 +226,6 @@ public class PcaData{
 		return;
 	}
 	
-	
 	public PcaFeature getFeature(int index) {
 		return new PcaFeature(getEigenvector(index),getEigenvalue(index));
 	}
@@ -187,10 +240,6 @@ public class PcaData{
 	
 	public RealMatrix getFlattenedData() {
 		return flattenedData;
-	}
-	
-	public void disposeFlattenedData() {
-		flattenedData = null;
 	}
 	
 	public double[] getMean() {
