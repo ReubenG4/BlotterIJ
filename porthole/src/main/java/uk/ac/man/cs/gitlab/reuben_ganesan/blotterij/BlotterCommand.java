@@ -385,6 +385,9 @@ public class BlotterCommand implements Command{
 		if(toolPanelDialog !=  null)
 			toolPanelDialog.dispose();
 	
+		if(selectFeatureDialog != null)
+			selectFeatureDialog.dispose();
+		
 	}
 }
 
