@@ -21,7 +21,6 @@ import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
-import ij.IJ;
 import ij.ImagePlus;
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
@@ -72,19 +71,15 @@ public class BlotterCommand implements Command{
 	private static BlotterSelectFeatureDialog selectFeatureDialog = null;
 		
 	/* Declare class variables */
-	private Hashtable<String,Service> services = new Hashtable<String,Service>();
-	
+	private Hashtable<String,Service> services;
+
 	private Img imageToRender;
 	private ImagePlus rgbImg;
 	Rectangle regionOfInterest;
 	private PcaData pcaData;
-	private ArrayList<ImgWrapper> imgData = new ArrayList<ImgWrapper>();
-	private ArrayList<PcaFeature> selectedFeatures = new ArrayList<PcaFeature>();
-	
-	int currentState = 1;
-	boolean running = true;
+	private ArrayList<ImgWrapper> imgData;
+	private ArrayList<PcaFeature> selectedFeatures;
 
-	
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPcaCalc pcaCalc = null;
 	private static BlotterPcaRender pcaRender = null;
@@ -96,7 +91,9 @@ public class BlotterCommand implements Command{
 	
 	public void run() {
 		
+		
 		/* Collate services with hashtable for easier initialisation of dialogs */
+		services = new Hashtable<String,Service>();
 		services.put("OpService", op);
 		services.put("LogService", log);
 		services.put("UIService", ui);
@@ -115,6 +112,10 @@ public class BlotterCommand implements Command{
 		/* Initialise BlotterPCA */
 		pcaCalc = new BlotterPcaCalc();
 		pcaCalc.setServices(services);
+		
+		/* Initialise remaining ArrayLists for holding data */
+		imgData = new ArrayList<ImgWrapper>();
+		selectedFeatures = new ArrayList<PcaFeature>();
 			
 		SwingUtilities.invokeLater(() -> {
 					
