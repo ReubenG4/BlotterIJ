@@ -42,6 +42,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	JLabel fileName;
 	JPanel fileButtons;
 	JButton renderButton;
+	JButton plotButton;
 	FeaturesTableModel featuresTableModel;
 	ListSelectionModel featuresListSelectionModel;
 	
@@ -59,6 +60,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		
 		
 		 renderButton = new JButton("Render");
+		 plotButton = new JButton("Plot");
 		 buttonPanel = new JPanel();
 		 infoPanel = new JPanel();
 		 featuresPanel = new JPanel();
@@ -87,8 +89,8 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		{
 			
 			/*
-			 * confirmButton configuration
-			 * confirms selected features
+			 * renderButton configuration
+			 * renders selected feature
 			 */
 		
 			renderButton.addActionListener(new ActionListener(){
@@ -97,6 +99,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					setNextState(true);
+					setNextStateIndex(6);
 					setVisible(false);
 				}
 				
@@ -105,6 +108,24 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 			buttonPanel.add(renderButton);
 			renderButton.setEnabled(false);
 			
+			
+			/*
+			 * plotButton configuration
+			 * plots selected features
+			 */
+			plotButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setNextState(true);
+					setNextStateIndex(7);
+					setVisible(false);
+				}
+				
+			});
+			
+			buttonPanel.add(plotButton);
+			plotButton.setEnabled(false);
 		}	
 		
 	}
@@ -163,6 +184,11 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 					renderButton.setEnabled(true);
 				else
 					renderButton.setEnabled(false);
+				
+				if(choices.length >= 1)
+					plotButton.setEnabled(true);
+				else
+					plotButton.setEnabled(false);
 			}
 				
 		}

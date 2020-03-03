@@ -182,6 +182,11 @@ public class BlotterCommand implements Command{
 				stateWorker6.execute();
 				break;
 				
+				
+			case 7:
+				/* State 7: Plot image from selected features */
+				changeState(5);
+				break;
 			default:
 				ui.showDialog("State out of bounds, value:"+nextState);
 				break;
@@ -364,7 +369,7 @@ public class BlotterCommand implements Command{
 						//Retrieve selected features
 						selectedFeatures = selectFeatureDialog.getSelected();
 						selectFeatureDialog.setNextState(false);
-						changeState(6);			
+						changeState(selectFeatureDialog.getNextStateIndex());			
 					}					
 				}		
 			});

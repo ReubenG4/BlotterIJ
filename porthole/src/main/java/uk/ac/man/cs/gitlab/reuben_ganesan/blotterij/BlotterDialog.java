@@ -38,6 +38,7 @@ public class BlotterDialog extends JDialog implements ActionListener{
 	private DatasetService ds; 
 	
 	private boolean nextState = false;
+	private int nextStateIndex = 0;
 	
 	
 	
@@ -62,6 +63,14 @@ public class BlotterDialog extends JDialog implements ActionListener{
 	public void setNextState(boolean input) {
 		this.nextState = input;
 	}
+	
+	public int getNextStateIndex() {
+		return nextStateIndex;
+	}
+
+	public void setNextStateIndex(int nextStateIndex) {
+		this.nextStateIndex = nextStateIndex;
+	}	
 				
 	/* Services */
 	public OpService getOpsService() {
@@ -165,6 +174,7 @@ public class BlotterDialog extends JDialog implements ActionListener{
 		catch (final Exception e) {
 			e.printStackTrace();
 		}
-	}	
+	}
+
 
 }
