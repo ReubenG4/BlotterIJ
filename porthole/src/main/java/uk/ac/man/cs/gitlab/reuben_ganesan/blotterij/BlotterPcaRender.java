@@ -2,10 +2,16 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.IntStream;
+
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.RealMatrix;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
@@ -44,38 +50,39 @@ public class BlotterPcaRender extends BlotterFunction{
 	
 		
 	
-	public void scatterPlot() {
+	public XYChart histogram(ArrayList<PcaFeature> selectedFeatures) {
+		
+		//Calculate data for plot
+		IJ.showStatus("Calculating final data");
+		finalData = pcaData.calcFinalData(selectedFeatures);
+		IJ.showStatus("Converting final data to plot...");
 		
 		//Prepare series data
-		double yData[] = finalData.getRow(0);
-		
-		List<Double> yDataList = new ArrayList<Double>();
-		
-		for(int index=0; index<finalData.getColumnDimension(); index++)
-			yDataList.add(yData[index]);
-		
-		
-		List<Integer> xDataList = new ArrayList<Integer>();
-		for(int index=0; index<finalData.getColumnDimension(); index++)
-			xDataList.add(index);
+		double[] yData = finalData.getRow(0);
 			
 		 // Create Chart
 		XYChart chart = new XYChartBuilder().width(800).height(600).build();
 		
 		// Customize Chart
-		chart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Scatter);
-	    chart.getStyler().setChartTitleVisible(false);
-	    chart.getStyler().setLegendPosition(LegendPosition.InsideSW);
-	    chart.getStyler().setMarkerSize(1);
-	    
+		 chart.getStyler().setChartTitleVisible(true);
+		 chart.getStyler().setLegendPosition(LegendPosition.InsideNW);
+		 chart.getStyler().setXAxisLabelRotation(45);
+	     chart.getStyler().setMarkerSize(1);
+		 
+		 
 	    //Add series to chart
-	    XYSeries series = chart.addSeries("Vector 0", xDataList, yDataList);
+	    XYSeries series = chart.addSeries("Vector 0", yData);
+	    
+	    chart.setYAxisTitle("Pixel Value");
+	    chart.setXAxisTitle("Location");
 		
 	    //Display chart
-		new SwingWrapper<XYChart>(chart).displayChart();
+	    new SwingWrapper<XYChart>(chart).displayChart();
+		
+		return chart;
 	}
 	
-	public Img render(ArrayList<PcaFeature> selectedFeatures) {
+	public Img renderImg(ArrayList<PcaFeature> selectedFeatures) {
 		
 		IJ.showStatus("Calculating final data");
 		finalData = pcaData.calcFinalData(selectedFeatures);

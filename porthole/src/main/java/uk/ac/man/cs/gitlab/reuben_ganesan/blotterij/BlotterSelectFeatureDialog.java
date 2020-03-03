@@ -180,15 +180,17 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 						selectedFeatures.add(featureData.get(choices[index]));
 				}
 				
-				if(choices.length == 1)
+				if(choices.length == 1) {
 					renderButton.setEnabled(true);
-				else
-					renderButton.setEnabled(false);
-				
-				if(choices.length >= 1)
 					plotButton.setEnabled(true);
-				else
+				}
+					
+				else {
+					renderButton.setEnabled(false);
 					plotButton.setEnabled(false);
+				}
+					
+					
 			}
 				
 		}

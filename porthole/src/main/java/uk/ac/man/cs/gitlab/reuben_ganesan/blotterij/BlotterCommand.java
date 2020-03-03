@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import org.knowm.xchart.XYChart;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -88,6 +89,7 @@ public class BlotterCommand implements Command{
 	StateWorker2 stateWorker2;
 	StateWorker4 stateWorker4;
 	StateWorker6 stateWorker6;
+	StateWorker7 stateWorker7;
 	
 	public void run() {
 		
@@ -185,8 +187,11 @@ public class BlotterCommand implements Command{
 				
 			case 7:
 				/* State 7: Plot image from selected features */
-				changeState(5);
+				stateWorker7 = new StateWorker7();
+				stateWorker7.execute();
+				
 				break;
+				
 			default:
 				ui.showDialog("State out of bounds, value:"+nextState);
 				break;
@@ -263,9 +268,35 @@ public class BlotterCommand implements Command{
 			if(pcaRender == null)
 				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
 			
-			Img newImg = pcaRender.render(selectedFeatures);
+			Img newImg = pcaRender.renderImg(selectedFeatures);
 			String name = "Component "+selectedFeatures.get(0).getIndex();
 			ui.show(name,newImg);
+			return null;
+		}
+			
+		@Override
+		protected void done(){	
+			changeState(5);
+		}
+		
+	}
+	
+	/*
+	 * SwingWorker for State 6 
+	 * Calculate FinalData from selectedFeatures and dataMeanAdjust
+	 * Renders it as an image
+	 * Changes to state 5 when done
+	 */
+	
+	class StateWorker7 extends SwingWorker{
+
+		@Override
+		protected Object doInBackground() throws Exception {
+			if(pcaRender == null)
+				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
+			
+			XYChart plot = pcaRender.histogram(selectedFeatures);
+			
 			return null;
 		}
 			
@@ -369,6 +400,8 @@ public class BlotterCommand implements Command{
 						//Retrieve selected features
 						selectedFeatures = selectFeatureDialog.getSelected();
 						selectFeatureDialog.setNextState(false);
+						
+						//Retrieve desired next state
 						changeState(selectFeatureDialog.getNextStateIndex());			
 					}					
 				}		
