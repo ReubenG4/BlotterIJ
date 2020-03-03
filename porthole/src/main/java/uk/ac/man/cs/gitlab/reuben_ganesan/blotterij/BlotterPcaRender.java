@@ -7,6 +7,7 @@ import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
 import org.knowm.xchart.style.Styler.LegendPosition;
 
 import ij.IJ;
@@ -42,13 +43,13 @@ public class BlotterPcaRender extends BlotterFunction{
 		
 	}
 	
-	public Histogram1d histogram(ArrayList<PcaFeature> selectedFeatures) {
+	public Img histogram(ArrayList<PcaFeature> selectedFeatures) {
 		
-		return getOpsService().image().histogram(renderImg(selectedFeatures),256);
+		return getOpsService().image().histogram(renderImg(selectedFeatures));
 	}
 	
 	
-	public XYChart plot(ArrayList<PcaFeature> selectedFeatures) {
+	public XYChart scatterPlot(ArrayList<PcaFeature> selectedFeatures) {
 		
 		//Calculate data for plot
 		IJ.showStatus("Calculating final data");
@@ -62,10 +63,11 @@ public class BlotterPcaRender extends BlotterFunction{
 		XYChart chart = new XYChartBuilder().width(800).height(600).build();
 		
 		// Customize Chart
-		 chart.getStyler().setChartTitleVisible(true);
-		 chart.getStyler().setLegendPosition(LegendPosition.InsideNW);
-		 chart.getStyler().setXAxisLabelRotation(45);
-	     chart.getStyler().setMarkerSize(1);
+		chart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Scatter);
+		chart.getStyler().setChartTitleVisible(true);
+		chart.getStyler().setLegendPosition(LegendPosition.InsideNW);
+		chart.getStyler().setXAxisLabelRotation(45);
+	    chart.getStyler().setMarkerSize(1);
 		 
 		 
 	    //Add series to chart
@@ -78,7 +80,7 @@ public class BlotterPcaRender extends BlotterFunction{
 	}
 	
 	
-	public Img renderImg(ArrayList<PcaFeature> selectedFeatures) {
+	public ArrayImg renderImg(ArrayList<PcaFeature> selectedFeatures) {
 		
 		IJ.showStatus("Calculating final data");
 		finalData = pcaData.calcFinalData(selectedFeatures);

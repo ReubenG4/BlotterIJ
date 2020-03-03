@@ -2,6 +2,8 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -30,6 +32,7 @@ import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
 import net.imglib2.histogram.Histogram1d;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
 
@@ -269,7 +272,7 @@ public class BlotterCommand implements Command{
 			if(pcaRender == null)
 				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
 			
-			Img newImg = pcaRender.renderImg(selectedFeatures);
+			ArrayImg newImg = pcaRender.renderImg(selectedFeatures);
 			String name = "Component "+selectedFeatures.get(0).getIndex();
 			ui.show(name,newImg);
 			return null;
@@ -283,9 +286,9 @@ public class BlotterCommand implements Command{
 	}
 	
 	/*
-	 * SwingWorker for State 6 
+	 * SwingWorker for State 7 
 	 * Calculate FinalData from selectedFeatures and dataMeanAdjust
-	 * Renders it as an image
+	 * Renders it as a scatter plot
 	 * Changes to state 5 when done
 	 */
 	
@@ -296,11 +299,14 @@ public class BlotterCommand implements Command{
 			if(pcaRender == null)
 				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
 			
-			XYChart chart = pcaRender.plot(selectedFeatures);
+			XYChart chart = pcaRender.scatterPlot(selectedFeatures);
 			
 			//Display chart
-		    new SwingWrapper<XYChart>(chart).displayChart();
-			
+		    JFrame chartWindow = new SwingWrapper<XYChart>(chart).displayChart();
+		    chartWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			chartWindow.setVisible(true);
+			chartWindow.toFront();
+		    
 			return null;
 		}
 			
