@@ -2,24 +2,16 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.IntStream;
-
-import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.RealMatrix;
-import org.knowm.xchart.CategoryChart;
-import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
-import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
 import org.knowm.xchart.style.Styler.LegendPosition;
+
 import ij.IJ;
 import net.imglib2.Cursor;
+import net.imglib2.histogram.Histogram1d;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
@@ -34,6 +26,7 @@ public class BlotterPcaRender extends BlotterFunction{
 	
 	int width;
 	int height;
+	int size;
 	
 	int noOfWavelengths;
 	int noOfFeatures;
@@ -45,12 +38,17 @@ public class BlotterPcaRender extends BlotterFunction{
 		this.pcaData = pcaData;
 		width = selection.width;
 		height = selection.height;
+		size = width * height;
 		
 	}
 	
+	public Histogram1d histogram(ArrayList<PcaFeature> selectedFeatures) {
 		
+		return getOpsService().image().histogram(renderImg(selectedFeatures),256);
+	}
 	
-	public XYChart histogram(ArrayList<PcaFeature> selectedFeatures) {
+	
+	public XYChart plot(ArrayList<PcaFeature> selectedFeatures) {
 		
 		//Calculate data for plot
 		IJ.showStatus("Calculating final data");
@@ -76,11 +74,9 @@ public class BlotterPcaRender extends BlotterFunction{
 	    chart.setYAxisTitle("Pixel Value");
 	    chart.setXAxisTitle("Location");
 		
-	    //Display chart
-	    new SwingWrapper<XYChart>(chart).displayChart();
-		
 		return chart;
 	}
+	
 	
 	public Img renderImg(ArrayList<PcaFeature> selectedFeatures) {
 		

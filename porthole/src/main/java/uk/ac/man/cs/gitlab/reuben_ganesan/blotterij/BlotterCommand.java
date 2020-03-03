@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
@@ -27,6 +28,7 @@ import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
+import net.imglib2.histogram.Histogram1d;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
@@ -189,7 +191,6 @@ public class BlotterCommand implements Command{
 				/* State 7: Plot image from selected features */
 				stateWorker7 = new StateWorker7();
 				stateWorker7.execute();
-				
 				break;
 				
 			default:
@@ -295,7 +296,10 @@ public class BlotterCommand implements Command{
 			if(pcaRender == null)
 				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
 			
-			XYChart plot = pcaRender.histogram(selectedFeatures);
+			XYChart chart = pcaRender.plot(selectedFeatures);
+			
+			//Display chart
+		    new SwingWrapper<XYChart>(chart).displayChart();
 			
 			return null;
 		}
