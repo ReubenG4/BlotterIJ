@@ -168,7 +168,9 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-								
+					//Clear any presently stored image data
+					imgData.clear();
+					
 					//Retrieve chosen files and store them in imgData
 					imgData.addAll(fileTableModel.getData());
 					

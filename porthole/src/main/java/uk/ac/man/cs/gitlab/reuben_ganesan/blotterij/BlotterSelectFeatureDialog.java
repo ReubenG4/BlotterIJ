@@ -131,6 +131,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	}
 	
 	public void prepareForDisplay() {
+		featuresTableModel.clear();
 		featureData.sort(new featureComparator());
 		featuresTableModel.addData(featureData);
 		featuresTableModel.fireTableDataChanged();

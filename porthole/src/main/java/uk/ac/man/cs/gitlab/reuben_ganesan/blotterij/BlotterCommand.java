@@ -175,10 +175,9 @@ public class BlotterCommand implements Command{
 				
 			case 5:
 				/* State 5: Display features found by PCA for selection */
-				if(selectFeatureDialog.getFeatureData().size() == 0) {
-					selectFeatureDialog.addFeatureData(pcaData.getFeatureList());
-					selectFeatureDialog.prepareForDisplay();
-				}
+				selectFeatureDialog.addFeatureData(pcaData.getFeatureList());
+				selectFeatureDialog.prepareForDisplay();
+				
 				selectFeatureDialog.setVisible(true);
 				selectFeatureDialog.toFront();
 				break;
@@ -339,6 +338,9 @@ public class BlotterCommand implements Command{
 					//On setVisible(false) of selectDialog, 
 					//if nextState is true, 
 					if(selectFileDialog.getNextState()) {
+						//Clear any previously chosen files
+						imgData.clear();
+						
 						//Add all chosen files to imgData
 						imgData.addAll(selectFileDialog.getImgData());
 						//Clear chosen files from dialog
