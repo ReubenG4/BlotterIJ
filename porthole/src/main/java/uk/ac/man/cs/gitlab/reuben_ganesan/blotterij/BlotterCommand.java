@@ -30,7 +30,6 @@ import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
-import net.imglib2.histogram.Histogram1d;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -85,6 +84,7 @@ public class BlotterCommand implements Command{
 	private PcaData pcaData;
 	private ArrayList<ImgWrapper> imgData;
 	private ArrayList<PcaFeature> selectedFeatures;
+	private boolean isNewData;
 
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPcaCalc pcaCalc = null;
@@ -123,6 +123,8 @@ public class BlotterCommand implements Command{
 		/* Initialise remaining ArrayLists for holding data */
 		imgData = new ArrayList<ImgWrapper>();
 		selectedFeatures = new ArrayList<PcaFeature>();
+		
+		isNewData = true;
 			
 		SwingUtilities.invokeLater(() -> {
 					
@@ -225,6 +227,8 @@ public class BlotterCommand implements Command{
 				rgbImg = ImageJFunctions.wrap(imgData.get(0).getImg(),"FalseRGB");
 				rgbImg.setTitle("FalseRGB");
 			}
+		 
+			
 			ui.show("FalseRGB",rgbImg);
 			return null;
 		}
@@ -268,8 +272,10 @@ public class BlotterCommand implements Command{
 
 		@Override
 		protected Object doInBackground() throws Exception {
-			if(pcaRender == null)
+			if(pcaRender == null || isNewData == true) {
 				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
+				isNewData = false;
+			}
 			
 			ArrayImg newImg = pcaRender.renderImg(selectedFeatures);
 			String name = "Component "+selectedFeatures.get(0).getIndex();
@@ -295,8 +301,10 @@ public class BlotterCommand implements Command{
 
 		@Override
 		protected Object doInBackground() throws Exception {
-			if(pcaRender == null)
+			if(pcaRender == null || isNewData == true) {
 				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
+				isNewData = false;
+			}
 			
 			XYChart chart = pcaRender.scatterPlot(selectedFeatures);
 			
@@ -348,6 +356,10 @@ public class BlotterCommand implements Command{
 						
 						//Reset nextState flag and state transition
 						selectFileDialog.setNextState(false);
+						
+						//Set isNewDataFlag
+						isNewData = true;
+						
 						changeState(2);
 					}					
 				}		

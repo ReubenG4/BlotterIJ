@@ -172,6 +172,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
 			if(lsm.isSelectionEmpty()) {
 				renderButton.setEnabled(false);
+				plotButton.setEnabled(false);
 			}
 			else {
 				selectedFeatures.clear();
