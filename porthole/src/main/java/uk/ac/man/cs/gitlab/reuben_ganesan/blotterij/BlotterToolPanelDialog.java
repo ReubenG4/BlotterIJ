@@ -1,11 +1,10 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -22,6 +21,7 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 	 */		
 	JPanel toolPanel;
 	JButton pcaButton;
+	JButton specButton;
 	
 	/*
 	 * Declare Class variables
@@ -30,13 +30,15 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 	
 	public < T extends RealType<T> & NativeType<T> > BlotterToolPanelDialog() {
 		setName("BlotterTools");
-		setSize(125, 300);
+		setSize(160, 300);
 		setLocationRelativeTo(null);
-		getContentPane().setLayout(new FlowLayout());
+		getContentPane().setLayout(new BoxLayout(getContentPane(),BoxLayout.PAGE_AXIS));
 		
 		toolPanel = new JPanel();
-		pcaButton = new JButton("PCA");
-		
+		pcaButton = new JButton("PC. Analysis");
+		pcaButton.setPreferredSize(new Dimension(125,30));
+		specButton = new JButton("Spec. Analysis");
+		specButton.setPreferredSize(new Dimension(125,30));
 		
 		getContentPane().add(toolPanel);
 		{
@@ -76,7 +78,45 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 				}
 				
 			});
+			
+			specButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					/* Retrieve region of interest from imageJ UI */
+					
+					//Declare and initalise variables
+					ImagePlus imp = IJ.getImage();
+					ImageProcessor ip = imp.getProcessor();
+					Roi roi = imp.getRoi();
+					
+					//Retrieve image title
+					String title = imp.getTitle();
+					
+					//Check if an area has been selected
+					if ((roi==null||!roi.isArea())) {
+						IJ.error("Area selection required");
+						return;
+					}
+					
+					//Check if the correct image has been selected
+					if(title.compareTo("FalseRGB") != 0) {
+						IJ.error("Please area select using FalseRGB image");
+						return;
+					}
+					
+					//With selection verified, get the rectangle
+					selection = roi.getBounds();
+					
+					//Set flag for next state
+					setNextState(true);
+					setVisible(false);
+				}
+				
+			});
 			toolPanel.add(pcaButton);
+			toolPanel.add(specButton);
 		}
 		
 	}

@@ -43,12 +43,6 @@ public class BlotterPcaRender extends BlotterFunction{
 		
 	}
 	
-	public Img histogram(ArrayList<PcaFeature> selectedFeatures) {
-		
-		return getOpsService().image().histogram(renderImg(selectedFeatures));
-	}
-	
-	
 	public XYChart scatterPlot(ArrayList<PcaFeature> selectedFeatures) {
 		
 		//Calculate data for plot

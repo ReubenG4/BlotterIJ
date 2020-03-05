@@ -22,7 +22,6 @@ public class PcaData{
 	private EigenDecomposition eigenData = null;
 	private double[] mean = null;
 	private RealMatrix covariance = null;
-	private RealMatrix flattenedData = null;
 	private RealMatrix meanDataAdjust = null;
 	private RealMatrix featureVector = null;
 	
@@ -43,13 +42,13 @@ public class PcaData{
 		mean = new double[noOfWavelengths];
 		
 		//Initialise Matrix to hold flattened pxlData
-		flattenedData = input.flatten();
+		RealMatrix flattenedData = input.flatten();
 	
 		//Calculate the mean of each dataset
-		calcMean();
+		calcMean(flattenedData);
 		
 		//Calculate mean adjusted data
-		calcDataMeanAdjust();
+		calcDataMeanAdjust(flattenedData);
 		
 		//Calculate the covariance of datasets
 		calcCovariance();
@@ -85,7 +84,7 @@ public class PcaData{
 		
 	}
 	
-	public void calcDataMeanAdjust() {
+	public void calcDataMeanAdjust(RealMatrix flattenedData) {
 		
 		//Adjust data to produce mean-adjusted data
 		meanDataAdjust = flattenedData;
@@ -112,7 +111,7 @@ public class PcaData{
 	}
 	
 		
-	public void calcMean() {	
+	public void calcMean(RealMatrix flattenedData) {	
 		
 		//Declare function variables
 		double pxlSum;
@@ -219,10 +218,6 @@ public class PcaData{
 	
 	public double getEigenvalue(int index){
 		return eigenData.getRealEigenvalue(index);
-	}
-	
-	public RealMatrix getFlattenedData() {
-		return flattenedData;
 	}
 	
 	public double[] getMean() {

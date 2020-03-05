@@ -23,6 +23,7 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 		private int height = 0;
 		private int depth = 0;
 		private double[][][] data;
+		private ArrayList<Integer> wavelengths;
 		
 		public PxlData(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 			
@@ -31,11 +32,20 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 			height = selection.height;
 			depth = inputData.size();
 			
+			//Retrive wavelengths associated with inputData
+			wavelengths = new ArrayList<Integer>();
+			
+			Iterator<ImgWrapper<T>> itr  = inputData.iterator();
+			
+			while(itr.hasNext())
+				wavelengths.add(itr.next().getWavelength());
+			
+			//Extract pixel data from the selected area
 			extract(inputData,selection);
 			
 		}
 		
-		
+		/* flatten data from 2D to 1D */
 		public RealMatrix flatten() {
 			
 			int noOfPixels = width*height;
@@ -55,7 +65,8 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 			
 		}
 	
-
+		
+		/* Extract data from selection */
 		public double[][][] extract(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 	
 		//Initialise Interval 
@@ -157,4 +168,7 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 		return depth;
 	}
 
+	public ArrayList<Integer> getWavelengths(){
+		return wavelengths;
+	}
 }

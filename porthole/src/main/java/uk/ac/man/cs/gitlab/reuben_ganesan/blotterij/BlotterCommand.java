@@ -30,13 +30,12 @@ import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
 
 /* Invoked when user selects plugin from menu */
-@Plugin(type = Command.class, headless = false,menuPath = "Plugins>Blotter>Load Images")
+@Plugin(type = Command.class, headless = false,menuPath = "Plugins>Analyze>BlotterIJ")
 public class BlotterCommand implements Command{
 
 	/* Ask context for access to services */
@@ -78,7 +77,6 @@ public class BlotterCommand implements Command{
 	/* Declare class variables */
 	private Hashtable<String,Service> services;
 
-	private Img imageToRender;
 	private ImagePlus rgbImg;
 	Rectangle regionOfInterest;
 	private PcaData pcaData;
