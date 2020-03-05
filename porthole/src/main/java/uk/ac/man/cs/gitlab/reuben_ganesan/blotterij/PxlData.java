@@ -24,6 +24,7 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 		private int depth = 0;
 		private double[][][] data;
 		private ArrayList<Integer> wavelengths;
+		private Rectangle roi;
 		
 		public PxlData(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 			
@@ -31,6 +32,7 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 			width = selection.width;
 			height = selection.height;
 			depth = inputData.size();
+			this.roi = selection;
 			
 			//Retrive wavelengths associated with inputData
 			wavelengths = new ArrayList<Integer>();
@@ -41,7 +43,7 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 				wavelengths.add(itr.next().getWavelength());
 			
 			//Extract pixel data from the selected area
-			extract(inputData,selection);
+			extract(inputData);
 			
 		}
 		
@@ -67,11 +69,11 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 	
 		
 		/* Extract data from selection */
-		public double[][][] extract(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
+		private double[][][] extract(ArrayList<ImgWrapper<T>> inputData) {
 	
 		//Initialise Interval 
-		FinalInterval region = FinalInterval.createMinSize(selection.x,selection.y,
-														   selection.width,selection.height);
+		FinalInterval region = FinalInterval.createMinSize(roi.x,roi.y,
+														   roi.width,roi.height);
 				
 		//Initialise Iterator
 		Iterator<ImgWrapper<T>> itr = inputData.iterator();
@@ -84,8 +86,8 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 		//Initialise initial values for cursor and array indexer
 		int xIndex = 0;
 		int yIndex = 0;
-		int xCursor = selection.x;
-		int yCursor = selection.y;
+		int xCursor = roi.x;
+		int yCursor = roi.y;
 		
 		int zIndex = 0;
 		
@@ -109,8 +111,8 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 			//Reset cursor and array indexer values
 			xIndex = 0;
 			yIndex = 0;
-			xCursor = selection.x;
-			yCursor = selection.y;
+			xCursor = roi.x;
+			yCursor = roi.y;
 			
 			//Iterate through y-axis of image
 			while(yIndex < height) {
@@ -133,7 +135,7 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 				}
 
 				//Reset x position
-				xCursor = selection.x;
+				xCursor = roi.x;
 				xIndex = 0;
 				
 				//Increment y-position
@@ -166,6 +168,10 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 	
 	public int getDepth(){
 		return depth;
+	}
+	
+	public Rectangle getSelection() {
+		return roi;
 	}
 
 	public ArrayList<Integer> getWavelengths(){
