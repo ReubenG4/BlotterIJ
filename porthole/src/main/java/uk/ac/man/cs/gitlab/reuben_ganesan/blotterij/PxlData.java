@@ -3,6 +3,11 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
+
+import org.apache.commons.math4.linear.BlockRealMatrix;
+import org.apache.commons.math4.linear.RealMatrix;
 
 import ij.IJ;
 import net.imglib2.FinalInterval;
@@ -27,6 +32,26 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 			depth = inputData.size();
 			
 			extract(inputData,selection);
+			
+		}
+		
+		
+		public RealMatrix flatten() {
+			
+			int noOfPixels = width*height;
+			int noOfWavelengths = depth;
+			
+			//Initialise Matrix to hold flattened pxlData
+			RealMatrix flattenedData = new BlockRealMatrix(noOfPixels, noOfWavelengths);
+			
+			/*
+			 * Flatten pxlData[z][y][x] to produce flattenedData[z][p] 
+			 */
+			for (int index=0; index < noOfWavelengths; index++) {
+					flattenedData.setColumn(index, Stream.of(data[index]).flatMapToDouble(DoubleStream::of).toArray());		
+			}
+						
+			return flattenedData;
 			
 		}
 	

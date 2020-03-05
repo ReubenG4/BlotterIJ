@@ -30,18 +30,11 @@ public class PcaData{
 	private int noOfPixels;
 	
 	PcaData(PxlData input){
-		this(input.getData(),input.getWidth(),input.getHeight(), input.getDepth());
-	}
-	
-	PcaData(double[][][] input, int width, int height, int noOfWavelengths){
 		
 		//Find out number of pixels in a single dataset
-		this.noOfPixels = width * height;
+		this.noOfPixels = input.getWidth() * input.getHeight();
 		
-		this.noOfWavelengths = noOfWavelengths;
-		
-		//Initialise Matrix to hold flattened pxlData
-		flattenedData = new BlockRealMatrix(noOfPixels, noOfWavelengths);
+		this.noOfWavelengths = input.getDepth();	
 		
 		//Initialise Matrix to hold covariance
 		covariance = new Array2DRowRealMatrix(noOfWavelengths,noOfWavelengths);
@@ -49,17 +42,9 @@ public class PcaData{
 		//Initialise array to hold mean for each dataset
 		mean = new double[noOfWavelengths];
 		
-		IJ.showStatus("Flattening pixel data...");
-		
-		boolean isReverse = false;
-		double[] reversed;
-		/*
-		 * Flatten pxlData[z][y][x] to produce flattenedData[z][p] 
-		 */
-		for (int index=0; index < noOfWavelengths; index++) {
-				flattenedData.setColumn(index, Stream.of(input[index]).flatMapToDouble(DoubleStream::of).toArray());		
-		}
-		
+		//Initialise Matrix to hold flattened pxlData
+		flattenedData = input.flatten();
+	
 		//Calculate the mean of each dataset
 		calcMean();
 		
@@ -107,8 +92,6 @@ public class PcaData{
 		
 		//Null pointer to flattenedData, it is no longer relevant
 		flattenedData = null;
-		
-		int noOfPixels = meanDataAdjust.getColumnDimension();
 		
 		for(int indexCol=0; indexCol < noOfWavelengths; indexCol++) {
 			IJ.showStatus("Calculating means-adjusted data");
