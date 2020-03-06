@@ -1,13 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
-import org.apache.commons.math4.linear.BlockRealMatrix;
 import org.apache.commons.math4.linear.EigenDecomposition;
 import org.apache.commons.math4.linear.RealMatrix;
 import org.apache.commons.math4.linear.RealVector;

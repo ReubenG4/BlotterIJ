@@ -78,8 +78,7 @@ public class BlotterCommand implements Command{
 	Rectangle regionOfInterest;
 	private ArrayList<ImgWrapper> imgData;
 	private PcaFeature selectedFeature;
-	private boolean isNewData;
-
+	
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPcaMain pcaMain = null;
 	
@@ -116,8 +115,6 @@ public class BlotterCommand implements Command{
 		/* Initialise remaining ArrayLists for holding data */
 		imgData = new ArrayList<ImgWrapper>();
 		
-		isNewData = true;
-			
 		SwingUtilities.invokeLater(() -> {
 					
 			//Initialise JDialogs
@@ -129,8 +126,7 @@ public class BlotterCommand implements Command{
 			changeState(1);	
 			
 		});	
-				
-		
+					
 	}
 	
 	/*
@@ -333,9 +329,6 @@ public class BlotterCommand implements Command{
 						
 						//Reset nextState flag and state transition
 						selectFileDialog.setNextState(false);
-						
-						//Set isNewDataFlag
-						isNewData = true;
 						
 						changeState(2);
 					}					

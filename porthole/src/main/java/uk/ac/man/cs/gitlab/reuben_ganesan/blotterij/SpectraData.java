@@ -33,7 +33,6 @@ public class SpectraData{
 		
 		//Calculate the mean of pixel data at each wavelength
 		calcMean(flattenedData);
-		
 				
 	}
 	
