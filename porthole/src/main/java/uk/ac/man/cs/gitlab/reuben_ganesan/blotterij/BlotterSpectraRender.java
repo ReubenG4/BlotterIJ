@@ -1,6 +1,13 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.style.Styler.LegendPosition;
+
+import ij.IJ;
 
 public class BlotterSpectraRender extends BlotterFunction{
 	
@@ -24,5 +31,33 @@ public class BlotterSpectraRender extends BlotterFunction{
 		this.spectra.add(spectra);
 	}
 	
+	public XYChart plot() {
+		
+		IJ.showStatus("Converting spectra data to plot...");
+			
+		 // Create Chart
+		XYChart chart = new XYChartBuilder().width(800).height(600).build();
+		
+		// Customize Chart
+		chart.getStyler().setChartTitleVisible(true);
+		chart.getStyler().setLegendPosition(LegendPosition.InsideNW);
+		chart.getStyler().setXAxisLabelRotation(45);
+	    chart.getStyler().setMarkerSize(1);
+		 
+		 
+	    //Add series to chart
+	    Iterator<SpectraData> itr = spectra.iterator();
+	    
+	    while(itr.hasNext()) {
+	    	
+	    	SpectraData thisSpectra = itr.next();
+	    	chart.addSeries(thisSpectra.getName(), wavelengths, thisSpectra.getVector());
+	    }
+	    
+	    chart.setYAxisTitle("Pixel Value");
+	    chart.setXAxisTitle("Wavelength");
+		
+		return chart;
+	}
 	
 }

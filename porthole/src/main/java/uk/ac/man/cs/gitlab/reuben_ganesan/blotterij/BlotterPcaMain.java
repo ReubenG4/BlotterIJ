@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class BlotterPcaCalc <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
+/* Assembles pxlData and pcaData */
+public class BlotterPcaMain <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
 	//Declare class variables
 	private PxlData pxlData;

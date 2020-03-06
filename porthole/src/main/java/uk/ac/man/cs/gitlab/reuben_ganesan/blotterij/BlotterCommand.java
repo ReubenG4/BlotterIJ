@@ -85,7 +85,7 @@ public class BlotterCommand implements Command{
 	private boolean isNewData;
 
 	private static FalseRGBConverter rgbConverter = null;
-	private static BlotterPcaCalc pcaCalc = null;
+	private static BlotterPcaMain pcaMain = null;
 	private static BlotterPcaRender pcaRender = null;
 	
 	/* Declare SwingWorker objects */
@@ -115,8 +115,8 @@ public class BlotterCommand implements Command{
 		rgbConverter.setServices(services);
 		
 		/* Initialise BlotterPCA */
-		pcaCalc = new BlotterPcaCalc();
-		pcaCalc.setServices(services);
+		pcaMain = new BlotterPcaMain();
+		pcaMain.setServices(services);
 		
 		/* Initialise remaining ArrayLists for holding data */
 		imgData = new ArrayList<ImgWrapper>();
@@ -246,8 +246,8 @@ public class BlotterCommand implements Command{
 	class StateWorker4 extends SwingWorker {
 		@Override
 		protected Object doInBackground() throws Exception {
-			pcaCalc.run(imgData,regionOfInterest);
-			pcaData = pcaCalc.getPcaData();
+			pcaMain.run(imgData,regionOfInterest);
+			pcaData = pcaMain.getPcaData();
 			return null;
 		}
 			
