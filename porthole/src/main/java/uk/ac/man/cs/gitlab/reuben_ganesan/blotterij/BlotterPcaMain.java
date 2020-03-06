@@ -9,8 +9,8 @@ import net.imglib2.type.numeric.RealType;
 public class BlotterPcaMain <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
 	//Declare class variables
-	private PxlData pxlData;
 	private PcaData pcaData;
+	private PcaRender pcaRender;
 	private int width;
 	private int height;
 	private int depth;
@@ -24,7 +24,7 @@ public class BlotterPcaMain <T extends RealType<T> & NativeType<T>>extends Blott
 		setDepth(inputData.size());
 		
 		//Extract pixel data
-		pxlData = new PxlData(inputData, selection);
+		PxlData pxlData = new PxlData(inputData, selection);
 		
 		//Calculate eigenvectors and eigenvalues
 		pcaData = new PcaData(pxlData);
@@ -32,10 +32,6 @@ public class BlotterPcaMain <T extends RealType<T> & NativeType<T>>extends Blott
 		//Null pixel data for garbage collection
 		pxlData = null;
 	
-	}
-	
-	public PxlData getPxlData() {
-		return pxlData;
 	}
 	
 	public PcaData getPcaData() {

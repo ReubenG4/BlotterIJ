@@ -86,7 +86,7 @@ public class BlotterCommand implements Command{
 
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPcaMain pcaMain = null;
-	private static BlotterPcaRender pcaRender = null;
+	private static PcaRender pcaRender = null;
 	
 	/* Declare SwingWorker objects */
 	StateWorker2 stateWorker2;
@@ -261,7 +261,6 @@ public class BlotterCommand implements Command{
 	
 	/*
 	 * SwingWorker for State 6 
-	 * Calculate FinalData from selectedFeatures and dataMeanAdjust
 	 * Renders it as an image
 	 * Changes to state 5 when done
 	 */
@@ -271,7 +270,7 @@ public class BlotterCommand implements Command{
 		@Override
 		protected Object doInBackground() throws Exception {
 			if(pcaRender == null || isNewData == true) {
-				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
+				pcaRender = new PcaRender(pcaData,regionOfInterest);
 				isNewData = false;
 			}
 			
@@ -299,20 +298,8 @@ public class BlotterCommand implements Command{
 
 		@Override
 		protected Object doInBackground() throws Exception {
-			if(pcaRender == null || isNewData == true) {
-				pcaRender = new BlotterPcaRender(pcaData,regionOfInterest);
-				isNewData = false;
-			}
+			return cmd;
 			
-			XYChart chart = pcaRender.scatterPlot(selectedFeatures);
-			
-			//Display chart
-		    JFrame chartWindow = new SwingWrapper<XYChart>(chart).displayChart();
-		    chartWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			chartWindow.setVisible(true);
-			chartWindow.toFront();
-		    
-			return null;
 		}
 			
 		@Override

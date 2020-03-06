@@ -20,7 +20,6 @@ import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.math4.linear.RealVector;
 
-import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -107,25 +106,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 			
 			buttonPanel.add(renderButton);
 			renderButton.setEnabled(false);
-			
-			
-			/*
-			 * plotButton configuration
-			 * plots selected features
-			 */
-			plotButton.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					setNextState(true);
-					setNextStateIndex(7);
-					setVisible(false);
-				}
-				
-			});
-			
-			buttonPanel.add(plotButton);
-			plotButton.setEnabled(false);
+	
 		}	
 		
 	}
