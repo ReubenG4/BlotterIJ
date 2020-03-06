@@ -1,7 +1,6 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import org.apache.commons.math4.linear.RealMatrix;
 import ij.IJ;
 import net.imglib2.Cursor;
@@ -34,12 +33,12 @@ public class PcaRender extends BlotterFunction{
 		
 	}
 	
-	public ArrayImg renderImg(ArrayList<PcaFeature> selectedFeatures) {
+	/*Renders an Image after calculating final data*/
+	public ArrayImg renderImg(PcaFeature selectedFeature) {
 		
 		IJ.showStatus("Calculating final data");
-		finalData = pcaData.calcFinalData(selectedFeatures);
+		finalData = pcaData.calcFinalData(selectedFeature);
 		IJ.showStatus("Converting final data to image...");
-		
 		
 		ArrayImg<DoubleType,DoubleArray> newImg = ArrayImgs.doubles(width,height); 
 		Cursor<DoubleType> curs = newImg.cursor();

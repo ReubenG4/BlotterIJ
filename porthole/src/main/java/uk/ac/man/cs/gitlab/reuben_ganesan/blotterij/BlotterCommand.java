@@ -3,7 +3,6 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -12,8 +11,6 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -79,20 +76,18 @@ public class BlotterCommand implements Command{
 
 	private ImagePlus rgbImg;
 	Rectangle regionOfInterest;
-	private PcaData pcaData;
 	private ArrayList<ImgWrapper> imgData;
-	private ArrayList<PcaFeature> selectedFeatures;
+	private PcaFeature selectedFeature;
 	private boolean isNewData;
 
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPcaMain pcaMain = null;
-	private static PcaRender pcaRender = null;
 	
 	/* Declare SwingWorker objects */
 	StateWorker2 stateWorker2;
 	StateWorker4 stateWorker4;
 	StateWorker6 stateWorker6;
-	StateWorker7 stateWorker7;
+	StateWorker8 stateWorker8;
 	
 	public void run() {
 		
@@ -120,7 +115,6 @@ public class BlotterCommand implements Command{
 		
 		/* Initialise remaining ArrayLists for holding data */
 		imgData = new ArrayList<ImgWrapper>();
-		selectedFeatures = new ArrayList<PcaFeature>();
 		
 		isNewData = true;
 			
@@ -175,7 +169,7 @@ public class BlotterCommand implements Command{
 				
 			case 5:
 				/* State 5: Display features found by PCA for selection */
-				selectFeatureDialog.addFeatureData(pcaData.getFeatureList());
+				selectFeatureDialog.addFeatureData(pcaMain.getPcaData().getFeatureList());
 				selectFeatureDialog.prepareForDisplay();
 				
 				selectFeatureDialog.setVisible(true);
@@ -187,12 +181,14 @@ public class BlotterCommand implements Command{
 				stateWorker6 = new StateWorker6();
 				stateWorker6.execute();
 				break;
-				
-				
+					
 			case 7:
-				/* State 7: Plot image from selected features */
-				stateWorker7 = new StateWorker7();
-				stateWorker7.execute();
+				break;
+					
+			case 8:
+				/* State 8: Plot of the region of interest */
+				stateWorker8 = new StateWorker8();
+				stateWorker8.execute();
 				break;
 				
 			default:
@@ -246,9 +242,10 @@ public class BlotterCommand implements Command{
 	class StateWorker4 extends SwingWorker {
 		@Override
 		protected Object doInBackground() throws Exception {
+			
 			pcaMain.run(imgData,regionOfInterest);
-			pcaData = pcaMain.getPcaData();
 			return null;
+			
 		}
 			
 		@Override
@@ -269,15 +266,12 @@ public class BlotterCommand implements Command{
 
 		@Override
 		protected Object doInBackground() throws Exception {
-			if(pcaRender == null || isNewData == true) {
-				pcaRender = new PcaRender(pcaData,regionOfInterest);
-				isNewData = false;
-			}
 			
-			ArrayImg newImg = pcaRender.renderImg(selectedFeatures);
-			String name = "Component "+selectedFeatures.get(0).getIndex();
+			ArrayImg newImg = pcaMain.renderImg(selectedFeature);
+			String name = "Component "+selectedFeature.getIndex();
 			ui.show(name,newImg);
 			return null;
+			
 		}
 			
 		@Override
@@ -288,13 +282,11 @@ public class BlotterCommand implements Command{
 	}
 	
 	/*
-	 * SwingWorker for State 7 
-	 * Calculate FinalData from selectedFeatures and dataMeanAdjust
-	 * Renders it as a scatter plot
+	 * SwingWorker for State 8 
 	 * Changes to state 5 when done
 	 */
 	
-	class StateWorker7 extends SwingWorker{
+	class StateWorker8 extends SwingWorker{
 
 		@Override
 		protected Object doInBackground() throws Exception {
@@ -407,7 +399,7 @@ public class BlotterCommand implements Command{
 					//if nextState is true, 
 					if(selectFeatureDialog.getNextState()) {
 						//Retrieve selected features
-						selectedFeatures = selectFeatureDialog.getSelected();
+						selectedFeature = selectFeatureDialog.getSelected();
 						selectFeatureDialog.setNextState(false);
 						
 						//Retrieve desired next state

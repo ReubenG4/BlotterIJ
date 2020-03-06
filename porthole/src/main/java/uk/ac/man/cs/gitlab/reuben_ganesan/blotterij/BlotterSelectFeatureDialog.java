@@ -28,7 +28,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	/*
 	 * Declare and initialise class variables
 	 */
-	ArrayList<PcaFeature> selectedFeatures = new ArrayList<PcaFeature>();
+	PcaFeature selectedFeature;
 	
 	/*
 	 * Declare JComponents
@@ -45,8 +45,6 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	FeaturesTableModel featuresTableModel;
 	ListSelectionModel featuresListSelectionModel;
 	
-	
-	
 	/*
 	 * Dialog used to select feature to display 
 	 */
@@ -57,21 +55,20 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		
-		
-		 renderButton = new JButton("Render");
-		 plotButton = new JButton("Plot");
-		 buttonPanel = new JPanel();
-		 infoPanel = new JPanel();
-		 featuresPanel = new JPanel();
-		 featuresTableModel = new FeaturesTableModel();
-		 featuresTable = new JTable(featuresTableModel);
-		 featuresListSelectionModel =  featuresTable.getSelectionModel();
+		renderButton = new JButton("Render");
+		plotButton = new JButton("Plot");
+		buttonPanel = new JPanel();
+		infoPanel = new JPanel();
+		featuresPanel = new JPanel();
+		featuresTableModel = new FeaturesTableModel();
+		featuresTable = new JTable(featuresTableModel);
+		featuresListSelectionModel =  featuresTable.getSelectionModel();
 		 
-		 featureData = new ArrayList<PcaFeature>();
+		featureData = new ArrayList<PcaFeature>();
 		 
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			
-			featuresTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			featuresTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		    featuresTable.setRowSelectionAllowed(true);
 		    featuresTable.setColumnSelectionAllowed(false);
 		    featuresTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -120,9 +117,8 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		pack();
 	}
 	
-	public ArrayList<PcaFeature> getSelected() {
-		selectedFeatures.sort(new featureComparator());
-		return selectedFeatures;
+	public PcaFeature getSelected() {
+		return selectedFeature;
 	}
 	
 	
@@ -156,19 +152,16 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 				plotButton.setEnabled(false);
 			}
 			else {
-				selectedFeatures.clear();
-				int[] choices = featuresTable.getSelectedRows();
-				if(choices.length > 0) {
-					for(int index=0; index < choices.length; index++)
-						selectedFeatures.add(featureData.get(choices[index]));
-				}
-				
-				if(choices.length == 1) {
+				int choice = featuresTable.getSelectedRow();
+
+				if(choice != -1) {
+					selectedFeature = featureData.get(choice);
 					renderButton.setEnabled(true);
 					plotButton.setEnabled(true);
 				}
 					
 				else {
+					selectedFeature = null;
 					renderButton.setEnabled(false);
 					plotButton.setEnabled(false);
 				}

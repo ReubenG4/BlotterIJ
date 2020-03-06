@@ -61,23 +61,18 @@ public class PcaData{
 				
 	}
 	
-	public RealMatrix calcFinalData(ArrayList<PcaFeature> selectedFeatures) {
+	public RealMatrix calcFinalData(PcaFeature selectedFeature) {
 		
-		assembleRowFeatureVector(selectedFeatures);
+		assembleRowFeatureVector(selectedFeature);
 		return featureVector.multiply(meanDataAdjust);
 	}
 	
-	public void assembleRowFeatureVector(ArrayList<PcaFeature> selectedFeatures) {
+	public void assembleRowFeatureVector(PcaFeature selectedFeature) {
 		
 		//Place vectors as columns of feature vector, in descending order of eigenvalue
-		featureVector = new Array2DRowRealMatrix(noOfWavelengths,selectedFeatures.size());
-		Iterator<PcaFeature> itr = selectedFeatures.iterator();
-		int index = 0;
-		while(itr.hasNext()) {
-			IJ.showStatus("Calculating Feature Vector...");
-			IJ.showProgress(index, selectedFeatures.size());
-			featureVector.setColumnVector(index++, itr.next().getVector());
-		}
+		featureVector = new Array2DRowRealMatrix(noOfWavelengths,1);
+		featureVector.setColumnVector(0, selectedFeature.getVector());
+		
 		IJ.showProgress(1,1);
 		//Transpose feature vector
 		featureVector = featureVector.transpose();
