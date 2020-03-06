@@ -1,5 +1,6 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
+import java.io.File;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
@@ -62,5 +63,10 @@ class SpectraTableModel extends AbstractTableModel {
     public Class<? extends Object> getColumnClass(int c) {
         return getValueAt(0,c).getClass();      
     }
+
+	public void addRow(File fileToAdd, int wavelength, char type) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

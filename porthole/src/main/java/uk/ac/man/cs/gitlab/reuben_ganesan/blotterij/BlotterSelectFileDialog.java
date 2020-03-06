@@ -51,7 +51,7 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 	 */
 	
 	public < T extends RealType<T> & NativeType<T> > BlotterSelectFileDialog() {
-		setName("BlotterSelect");
+		setName("BlotterSelectFile");
 		setSize(500, 450);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());

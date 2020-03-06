@@ -35,11 +35,8 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	 */		
 	JPanel buttonPanel;
 	JPanel infoPanel;
-	JPanel featuresPanel;	
 	JScrollPane tableScroller;
 	JTable featuresTable;
-	JLabel fileName;
-	JPanel fileButtons;
 	JButton renderButton;
 	JButton plotButton;
 	FeaturesTableModel featuresTableModel;
@@ -50,7 +47,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	 */
 	
 	public < T extends RealType<T> & NativeType<T> > BlotterSelectFeatureDialog() {
-		setName("BlotterFeatures");
+		setName("BlotterSelectFeatures");
 		setSize(500, 450);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -59,7 +56,6 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		plotButton = new JButton("Plot");
 		buttonPanel = new JPanel();
 		infoPanel = new JPanel();
-		featuresPanel = new JPanel();
 		featuresTableModel = new FeaturesTableModel();
 		featuresTable = new JTable(featuresTableModel);
 		featuresListSelectionModel =  featuresTable.getSelectionModel();
