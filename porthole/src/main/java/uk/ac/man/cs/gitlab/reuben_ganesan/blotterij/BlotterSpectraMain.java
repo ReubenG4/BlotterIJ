@@ -7,7 +7,7 @@ import org.knowm.xchart.XYChart;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-/* Assembles pxlData and pcaData */
+/* Assemble SpectraData from PxlData and collate it for plotting */
 public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
 	//Declare class variables
@@ -19,10 +19,11 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		
 		//Initialise ArrayLists for holding spectra and wavelengths
 		spectraList = new ArrayList<SpectraData>();
-		setWavelengths(new ArrayList<Integer>());
+		wavelengths = new ArrayList<Integer>();
 		
 	}
 	
+	//Retrieves SpectraData from PxlData and add it to spectraList
 	public void addSpectra(PxlData inputData) {
 		spectraList.add(new SpectraData(inputData));
 	}

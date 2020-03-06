@@ -7,7 +7,7 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-/* Assembles pxlData and pcaData */
+/* Assembles PcaData from PxlData and renders an Img from the result */
 public class BlotterPcaMain <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
 	//Declare class variables
@@ -18,8 +18,8 @@ public class BlotterPcaMain <T extends RealType<T> & NativeType<T>>extends Blott
 	private int depth;
 	Rectangle roi;
 	
-	/* Main Function */
-	public void run(ArrayList<ImgWrapper<T>> inputData, Rectangle roi) {
+	/* Runs pca on inputData in region of interest */
+	public void pca(ArrayList<ImgWrapper<T>> inputData, Rectangle roi) {
 		
 		//Retrieve dimensions
 		setWidth(roi.width);

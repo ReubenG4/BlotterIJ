@@ -239,7 +239,7 @@ public class BlotterCommand implements Command{
 		@Override
 		protected Object doInBackground() throws Exception {
 			
-			pcaMain.run(imgData,regionOfInterest);
+			pcaMain.pca(imgData,regionOfInterest);
 			return null;
 			
 		}

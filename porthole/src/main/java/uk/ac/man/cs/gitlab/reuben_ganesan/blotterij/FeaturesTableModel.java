@@ -1,15 +1,9 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Vector;
-
 import javax.swing.table.AbstractTableModel;
-
-import org.apache.commons.math4.linear.RealVector;
-import org.apache.commons.math4.linear.RealVectorFormat;
 
 /*
  * Table Model for PCASelectDialog fileTable
@@ -18,7 +12,7 @@ class FeaturesTableModel extends AbstractTableModel {
     private String[] columnNames = {"N","Eigenvector",
                                     "Eigenalue",};
     
-    //Vector of FileWaveType objects
+    //ArrayList of PcaFeature objects
     private ArrayList<PcaFeature> data = new ArrayList<PcaFeature>(); 
     
     public FeaturesTableModel() {
