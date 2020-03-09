@@ -1,6 +1,5 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
-import java.io.File;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
@@ -8,17 +7,17 @@ import javax.swing.table.AbstractTableModel;
  * Table Model for SelectSpectraDialog fileTable
  */
 class SpectraTableModel extends AbstractTableModel {
-    private String[] columnNames = {"Name","Location",
-                                    "Size",};
+    private String[] columnNames = {"Name", "Location", "Size", "Wavelengths"};
     
     //ArrayList of SpectraData objects
     private ArrayList<SpectraData> data = new ArrayList<SpectraData>(); 
+    
+    int noOfRows = 0;
     
     public SpectraTableModel() {
     	
     }
     
-    //Sorts the table in ascending order of eigenvaluevalue
     public void sortTable() {
     	
     }
@@ -27,11 +26,10 @@ class SpectraTableModel extends AbstractTableModel {
     	return data;
     }
     
-    public void addData(ArrayList<PcaFeature> data){
-    	
-    }
-    
     public void addRow(SpectraData input) {
+  
+    	input.setName("Region "+ (++noOfRows) );
+    	
     	data.add(input);
     }
     
@@ -64,9 +62,5 @@ class SpectraTableModel extends AbstractTableModel {
         return getValueAt(0,c).getClass();      
     }
 
-	public void addRow(File fileToAdd, int wavelength, char type) {
-		// TODO Auto-generated method stub
-		
-	}
     
 }

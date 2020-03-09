@@ -1,17 +1,20 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
+
+import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.RealMatrix;
 
 import ij.IJ;
 
-public class SpectraData{
+public class SpectraData implements Serializable{
 	
 	private String name;
 	private int noOfPixels;
 	private int noOfWavelengths;
-	private ArrayList<Double> mean;
+	private Array2DRowRealMatrix data;
 	private Rectangle selection;
 	
 	SpectraData(PxlData input){
@@ -22,21 +25,31 @@ public class SpectraData{
 		//Get number of wavelengths
 		this.noOfWavelengths = input.getDepth();
 		
-		//Initialise array to hold mean
-		mean = new ArrayList<Double>();
+		//Initialise array to hold data
+		data = new Array2DRowRealMatrix(2,noOfWavelengths);
 		
 		//Initialise selection
 		selection = input.getSelection();
 		
+		//Initialise name
+		name = "Region";
+		
 		//Initialise Matrix to hold flattened pxlData
 		RealMatrix flattenedData = input.flatten();	
 		
+		//Initialise arraylist to hold wavelengths
+		ArrayList<Integer> wavelengths = input.getWavelengths();
+		
 		//Calculate the mean of pixel data at each wavelength
-		calcMean(flattenedData);
+		calc(flattenedData, wavelengths);
 				
 	}
 	
-	public void calcMean(RealMatrix flattenedData) {	
+	SpectraData(ArrayList<ImgWrapper> imgData, Rectangle selection){
+		this(new PxlData(imgData,selection));
+	}
+	
+	public void calc(RealMatrix flattenedData, ArrayList<Integer> wavelengths) {	
 		
 		//Declare function variables
 		double pxlSum;
@@ -47,7 +60,7 @@ public class SpectraData{
 		 */
 		
 		//Initialise progress bar
-		IJ.showStatus("Calculating Mean of Datasets...");
+		IJ.showStatus("Calculating mean of Spectra...");
 		IJ.showProgress(0, noOfWavelengths);
 		
 		/* Calculate Mean
@@ -60,16 +73,16 @@ public class SpectraData{
 			for(int xIndex = 0; xIndex > noOfPixels; xIndex++) {
 				pxlSum += flattenedData.getEntry(xIndex, yIndex);
 			}
-			mean.add( pxlSum / noOfPixels);	
+			data.setRow(yIndex, new double[]{wavelengths.get(yIndex),pxlSum});
 		}
 			
 		//Reset progress bar
 		IJ.showProgress(1,1);
-		IJ.showStatus("Mean calculation done...");
+		IJ.showStatus("Spectra calculation done...");
 	}
 	
-	public ArrayList<Double> getVector() {
-		return mean;
+	public RealMatrix getData(int row) {
+		return data.getRowMatrix(row);
 	}
 
 	public String getName() {
@@ -86,6 +99,14 @@ public class SpectraData{
 
 	public void setSelection(Rectangle selection) {
 		this.selection = selection;
+	}
+
+	public RealMatrix getData() {
+		return data;
+	}
+
+	public void setData(Array2DRowRealMatrix data) {
+		this.data = data;
 	}
 	
 }

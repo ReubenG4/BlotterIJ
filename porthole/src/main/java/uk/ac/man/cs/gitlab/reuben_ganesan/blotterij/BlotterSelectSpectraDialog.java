@@ -42,6 +42,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	JButton removeButton;
 	JButton confirmButton;
 	SpectraTableModel spectraTableModel;
+	Rectangle selection;
 	
 	/*
 	 * Dialog used to select files to load 
@@ -112,20 +113,12 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 					}
 					
 					//With selection verified, get the rectangle
-					Rectangle selection = roi.getBounds();
+					selection = roi.getBounds();
 					
 					//Set flag for next state
 					setNextState(true);
 					setNextStateIndex(10);
 					setVisible(false);
-					
-					spectraTableModel.sortTable();
-					spectraTableModel.fireTableDataChanged();
-					resizeColumnWidth();
-					
-					//If there's more than one row available, enable the confirm button
-					if(spectraTableModel.getRowCount() > 2)
-						confirmButton.setEnabled(true);			
 					
 				}
 				
@@ -200,6 +193,22 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		
 	}
 	
+	
+	public void addData(SpectraData input){
+		
+		spectraTableModel.addRow(input);
+		spectraTableModel.sortTable();
+		spectraTableModel.fireTableDataChanged();
+		resizeColumnWidth();
+		
+		//If there's more than one row available, enable the confirm button
+		if(spectraTableModel.getRowCount() > 2)
+			confirmButton.setEnabled(true);			
+	}
+	
+	public ArrayList<SpectraData> getData() {
+		return spectraTableModel.getData();
+	}
 	
 	/*
 	 * Fits columns to width of data
