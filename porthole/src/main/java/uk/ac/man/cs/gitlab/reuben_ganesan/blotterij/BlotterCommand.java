@@ -22,6 +22,7 @@ import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.ui.UIService;
 
+import ij.IJ;
 import ij.ImagePlus;
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
@@ -70,6 +71,7 @@ public class BlotterCommand implements Command{
 	private static BlotterSelectFileDialog selectFileDialog = null;
 	private static BlotterToolPanelDialog toolPanelDialog = null;
 	private static BlotterSelectFeatureDialog selectFeatureDialog = null;
+	private static BlotterSelectSpectraDialog selectSpectraDialog = null;
 		
 	/* Declare class variables */
 	private Hashtable<String,Service> services;
@@ -121,6 +123,7 @@ public class BlotterCommand implements Command{
 			initSelectFileDialog();
 			initToolPanelDialog();
 			initSelectFeatureDialog();
+			initSelectSpectraDialog();
 			
 			//Place FSM in first state
 			changeState(1);	
@@ -179,6 +182,9 @@ public class BlotterCommand implements Command{
 				break;
 					
 			case 7:
+				/* State 7: Display selected Spectra */
+				selectSpectraDialog.setVisible(true);
+				selectSpectraDialog.toFront();
 				break;
 					
 			case 8:
@@ -353,15 +359,32 @@ public class BlotterCommand implements Command{
 					//On setVisible(false) of toolPanelDialog, 
 					//if nextState is true, 
 					if(toolPanelDialog.getNextState()) {
-						//If Selection has been chosen
-						if(toolPanelDialog.getSelection() != null) {
-							//Retrieve selection
-							regionOfInterest = toolPanelDialog.getSelection();
-							
-							//Reset nextState flag and state transition
-							toolPanelDialog.setNextState(false);
-							changeState(4);
+						
+						//retrieve nextStateIndex
+						int nextStateIndex = toolPanelDialog.getNextStateIndex();					
+						
+						//Switch block to handle toolPanel buttons
+						switch(nextStateIndex) {
+
+							case 4:
+								/* Handles pcaButton and changes state to 4 if successful */
+								//Retrieve selection and clear it
+								regionOfInterest = toolPanelDialog.getSelection();
+								toolPanelDialog.clearSelection();
+
+								//Reset nextState flag and state transition
+								toolPanelDialog.setNextState(false);
+								changeState(4);
+								break;
+
+							case 7:
+								/* Handles spectraButton and changes state to 7 is successful */
+								toolPanelDialog.setNextState(false);
+								changeState(7);
+								break;
+
 						}
+						
 					}		
 				}
 			});		
@@ -406,6 +429,22 @@ public class BlotterCommand implements Command{
 		}//if selectFileDialog == null	
 	}
 	
+	
+	/*
+	 * Initialises selectSpectraDialog
+	 */
+	public void initSelectSpectraDialog() {
+		
+		//Initialise selectSpectraDialog
+		selectSpectraDialog = new BlotterSelectSpectraDialog();
+		
+		//Register services for selectSpectraDialog
+		selectSpectraDialog.setServices(services);
+		
+		//Set title
+		selectSpectraDialog.setTitle("Blotter - Select Spectra");
+		
+	}
 	
 	/*
 	 * Cleans up all Java Swing components

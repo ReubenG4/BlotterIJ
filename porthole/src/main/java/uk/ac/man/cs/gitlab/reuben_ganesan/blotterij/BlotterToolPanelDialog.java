@@ -74,6 +74,7 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 					
 					//Set flag for next state
 					setNextState(true);
+					setNextStateIndex(4);
 					setVisible(false);
 				}
 				
@@ -84,33 +85,9 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					/* Retrieve region of interest from imageJ UI */
-					
-					//Declare and initalise variables
-					ImagePlus imp = IJ.getImage();
-					ImageProcessor ip = imp.getProcessor();
-					Roi roi = imp.getRoi();
-					
-					//Retrieve image title
-					String title = imp.getTitle();
-					
-					//Check if an area has been selected
-					if ((roi==null||!roi.isArea())) {
-						IJ.error("Area selection required");
-						return;
-					}
-					
-					//Check if the correct image has been selected
-					if(title.compareTo("FalseRGB") != 0) {
-						IJ.error("Please area select using FalseRGB image");
-						return;
-					}
-					
-					//With selection verified, get the rectangle
-					selection = roi.getBounds();
-					
 					//Set flag for next state
 					setNextState(true);
+					setNextStateIndex(7);
 					setVisible(false);
 				}
 				
@@ -123,6 +100,10 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 	
 	public Rectangle getSelection() {
 		return selection;
+	}
+
+	public void clearSelection() {
+		selection = null;	
 	}
 	
 }
