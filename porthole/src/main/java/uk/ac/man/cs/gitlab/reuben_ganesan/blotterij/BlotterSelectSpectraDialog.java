@@ -117,7 +117,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 					
 					//Set flag for next state
 					setNextState(true);
-					setNextStateIndex(10);
+					setNextStateIndex(8);
 					setVisible(false);
 					
 				}
@@ -202,7 +202,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		resizeColumnWidth();
 		
 		//If there's more than one row available, enable the confirm button
-		if(spectraTableModel.getRowCount() > 2)
+		if(spectraTableModel.getRowCount() > 0)
 			confirmButton.setEnabled(true);			
 	}
 	

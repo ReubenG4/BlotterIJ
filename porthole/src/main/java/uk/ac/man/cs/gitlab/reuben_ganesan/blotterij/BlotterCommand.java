@@ -292,13 +292,13 @@ public class BlotterCommand implements Command{
 
 		@Override
 		protected Object doInBackground() throws Exception {
-			return cmd;
+			return null;
 			
 		}
 			
 		@Override
 		protected void done(){	
-			changeState(5);
+			changeState(7);
 		}
 		
 	}
@@ -355,7 +355,9 @@ public class BlotterCommand implements Command{
 			toolPanelDialog = new BlotterToolPanelDialog();
 			toolPanelDialog.setTitle("Blotter");
 			toolPanelDialog.addComponentListener(new ComponentAdapter() {		
+				
 				public void componentHidden(ComponentEvent e){
+					
 					//On setVisible(false) of toolPanelDialog, 
 					//if nextState is true, 
 					if(toolPanelDialog.getNextState()) {
