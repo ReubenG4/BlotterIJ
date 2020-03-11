@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
+import org.apache.commons.math4.ml.distance.EuclideanDistance;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
@@ -72,8 +73,35 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	
 	public double euclideanDistance(SpectraData spectra1, SpectraData spectra2) {
 		
+		//Check to see if both spectras have an equal amount of datapoints
+		if(spectra1.getNoOfWavelengths() != spectra2.getNoOfWavelengths()) {
+			IJ.showMessage("Spectras chosen must have an equal amount of wavelengths!");
+			return -1;
+		}
 		
-		return 0;
+		Array2DRowRealMatrix data1 = spectra1.getData();
+		Array2DRowRealMatrix data2 = spectra2.getData();
+	
+		int rowIndex = data1.getRowDimension();
+		double distance = 0;
+		
+		for(int index = 0; index < rowIndex; index++) {
+			
+			if(data1.getRow(index)[0] != data2.getRow(index)[0]) {
+				IJ.showMessage("Wavelengths recorded for Spectra do not match!");
+				return -1;
+			}
+				
+			//Get xy coordinates
+			double y1 = data1.getRow(index)[1];
+			double y2 = data2.getRow(index)[1];
+			
+			//sum up euclidean distance
+			distance += Math.pow(y1 - y2, 2); 
+		}
+		
+		
+		return distance;
 		
 	}
 	
