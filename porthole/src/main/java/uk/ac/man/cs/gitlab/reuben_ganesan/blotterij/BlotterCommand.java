@@ -83,6 +83,7 @@ public class BlotterCommand implements Command{
 	
 	private static FalseRGBConverter rgbConverter = null;
 	private static BlotterPcaMain pcaMain = null;
+	private static BlotterSpectraMain spectraMain = null;
 	
 	/* Declare SwingWorker objects */
 	StateWorker2 stateWorker2;
@@ -113,6 +114,10 @@ public class BlotterCommand implements Command{
 		/* Initialise BlotterPCA */
 		pcaMain = new BlotterPcaMain();
 		pcaMain.setServices(services);
+		
+		/* Initialise BlotterSpectra */
+		spectraMain = new BlotterSpectraMain();
+		spectraMain.setServices(services);
 		
 		/* Initialise remaining ArrayLists for holding data */
 		imgData = new ArrayList<ImgWrapper>();
@@ -189,8 +194,12 @@ public class BlotterCommand implements Command{
 					
 			case 8:
 				/* State 8: Plot of the region of interest */
-				stateWorker8 = new StateWorker8();
-				stateWorker8.execute();
+				//stateWorker8 = new StateWorker8();
+				//stateWorker8.execute();
+				Rectangle selection = selectSpectraDialog.getSelection();
+				SpectraData spectraData = spectraMain.calcSpectra(imgData, selection);
+				selectSpectraDialog.addData(spectraData);
+				changeState(7);
 				break;
 				
 			default:
@@ -445,6 +454,21 @@ public class BlotterCommand implements Command{
 		
 		//Set title
 		selectSpectraDialog.setTitle("Blotter - Select Spectra");
+		
+		//Add listener for closing of selectFeatureDialog
+		selectSpectraDialog.addComponentListener(new ComponentAdapter() {		
+			public void componentHidden(ComponentEvent e){
+				//On setVisible(false) of selectFeatureDialog, 
+				//if nextState is true, 
+				if(selectSpectraDialog.getNextState()) {
+					//Reset nextState flag
+					selectSpectraDialog.setNextState(false);
+					
+					//Retrieve desired next state
+					changeState(selectSpectraDialog.getNextStateIndex());			
+				}					
+			}		
+		});
 		
 	}
 	

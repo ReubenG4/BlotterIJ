@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,6 +20,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
+
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -208,6 +210,10 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	
 	public ArrayList<SpectraData> getData() {
 		return spectraTableModel.getData();
+	}
+	
+	public Rectangle getSelection() {
+		return selection;
 	}
 	
 	/*
