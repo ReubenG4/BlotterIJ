@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.Styler.ChartTheme;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import ij.IJ;
 import net.imglib2.type.NativeType;
@@ -27,10 +32,16 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	}
 	
 	
-	public void plotSpectra(ArrayList<SpectraData> input) {
+	public XYChart plotSpectra(ArrayList<SpectraData> input) {
 		spectraList = input;
 		
 		Iterator<SpectraData> itr = input.iterator();
+		
+		//Prepare chart
+		XYChart chart = new XYChartBuilder().width(800).height(600).theme(ChartTheme.Matlab).build();
+		chart.setTitle("");
+		chart.setXAxisTitle("Wavelength");
+		chart.setYAxisTitle("Mean Pixel Value");
 		
 		//Iterate through ArrayList input
 		while(itr.hasNext()) {
@@ -50,8 +61,12 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 				xData[index] = currData.getRow(index)[0];
 				yData[index] = currData.getRow(index)[1];
 			}
-						
+				
+			XYSeries series = chart.addSeries(curr.getName(), xData, yData);
+		    series.setMarker(SeriesMarkers.NONE);
 		}
+		
+		return chart;
 	}
 	
 	public void setSpectraList(ArrayList<SpectraData> input) {

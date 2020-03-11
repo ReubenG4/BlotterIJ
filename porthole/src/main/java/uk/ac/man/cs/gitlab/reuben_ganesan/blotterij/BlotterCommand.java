@@ -11,6 +11,8 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
@@ -90,6 +92,7 @@ public class BlotterCommand implements Command{
 	StateWorker4 stateWorker4;
 	StateWorker6 stateWorker6;
 	StateWorker8 stateWorker8;
+	StateWorker9 stateWorker9;
 	
 	public void run() {
 		
@@ -193,18 +196,15 @@ public class BlotterCommand implements Command{
 				break;
 					
 			case 8:
-				/* State 8: Add spectra data of the selected region of interest */
-				Rectangle selection = selectSpectraDialog.getSelection();
-				SpectraData spectraData = spectraMain.calcSpectra(imgData, selection);
-				selectSpectraDialog.addData(spectraData);
-				changeState(7);
+				/* State 8: Retrieves spectra data of the selected region of interest */
+				stateWorker8 = new StateWorker8();
+				stateWorker8.execute();
 				break;
 				
 			case 9:
 				/* State 9: Plot the spectraData */
-				ArrayList<SpectraData> spectraList = selectSpectraDialog.getData();
-				spectraMain.plotSpectra(spectraList);
-				changeState(7);
+				stateWorker9 = new StateWorker9();
+				stateWorker9.execute();
 				break;
 				
 			default:
@@ -274,7 +274,7 @@ public class BlotterCommand implements Command{
 	
 	/*
 	 * SwingWorker for State 6 
-	 * Renders it as an image
+	 * Renders a feature as an image
 	 * Changes to state 5 when done
 	 */
 	
@@ -299,13 +299,40 @@ public class BlotterCommand implements Command{
 	
 	/*
 	 * SwingWorker for State 8 
-	 * Changes to state 5 when done
+	 * Produces a plot of selected spectra
+	 * Changes to state 7 when done
 	 */
 	
 	class StateWorker8 extends SwingWorker{
 
 		@Override
 		protected Object doInBackground() throws Exception {
+			Rectangle selection = selectSpectraDialog.getSelection();
+			SpectraData spectraData = spectraMain.calcSpectra(imgData, selection);
+			selectSpectraDialog.addData(spectraData);
+			return null;			
+		}
+			
+		@Override
+		protected void done(){	
+			changeState(7);
+		}
+		
+	}
+	
+	
+	/*
+	 * SwingWorker for State 9
+	 * Changes to state 7 when done
+	 */
+	class StateWorker9 extends SwingWorker{
+
+		@Override
+		protected Object doInBackground() throws Exception {
+			
+			ArrayList<SpectraData> spectraList = selectSpectraDialog.getData();
+			XYChart chart = spectraMain.plotSpectra(spectraList);
+			new SwingWrapper<XYChart>(chart).displayChart().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			return null;
 			
 		}
