@@ -70,7 +70,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		    featuresTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		    featuresTable.setSize(800,600);
 		    featuresTable.setDefaultRenderer(RealVector.class, new FeaturesTableCellRenderer());
-		    featuresListSelectionModel.addListSelectionListener(new featuresListSelectionHandler());
+		    featuresListSelectionModel.addListSelectionListener(new FeaturesListSelectionListener());
 		    
 			tableScroller = new JScrollPane(featuresTable);
 			featuresTable.setFillsViewportHeight(true);
@@ -106,7 +106,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	
 	public void prepareForDisplay() {
 		featuresTableModel.clear();
-		featureData.sort(new featureComparator());
+		featureData.sort(new FeatureComparator());
 		featuresTableModel.addData(featureData);
 		featuresTableModel.fireTableDataChanged();
 		resizeColumnWidth();
@@ -138,7 +138,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	    }
 	}
 
-	class featuresListSelectionHandler implements ListSelectionListener{
+	class FeaturesListSelectionListener implements ListSelectionListener{
 		
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
@@ -169,7 +169,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		
 	}
 	
-	class featureComparator implements Comparator<PcaFeature>{
+	class FeatureComparator implements Comparator<PcaFeature>{
 	
 		@Override
 		public int compare(PcaFeature o1, PcaFeature o2) {

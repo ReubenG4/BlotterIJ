@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
@@ -29,6 +31,7 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 	/*
 	 * Declare and initialise class variables
 	 */
+	ListSelectionModel fileListSelectionModel;
 	
 	
 	/*
@@ -65,6 +68,8 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 		 filePanel = new JPanel();
 		 fileTableModel = new FileTableModel();
 		 fileTable = new JTable(fileTableModel);
+		 fileListSelectionModel = fileTable.getSelectionModel();
+		 fileListSelectionModel.addListSelectionListener(new FileListSelectionListener());
 		 
 		 imgData = new ArrayList<ImgWrapper>();
 				
@@ -149,6 +154,7 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 				}
 				
 			});
+			removeButton.setEnabled(false);
 			
 			fileButtons.add(removeButton);
 			filePanel.add(fileButtons);
@@ -191,6 +197,31 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 			confirmButton.setEnabled(false);
 			
 		}	
+		
+	}
+	
+	class FileListSelectionListener implements ListSelectionListener{
+		
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+			if(lsm.isSelectionEmpty()) {
+				removeButton.setEnabled(false);
+			}
+			else {
+				int choice = fileTable.getSelectedRow();
+
+				if(choice != -1) {	
+					removeButton.setEnabled(true);
+				}			
+				else {
+					removeButton.setEnabled(false);
+				}
+					
+					
+			}
+				
+		}
 		
 	}
 	

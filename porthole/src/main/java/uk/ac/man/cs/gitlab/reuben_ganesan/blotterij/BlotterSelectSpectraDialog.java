@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
@@ -30,6 +32,8 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	 * Declare and initialise class variables
 	 */
 	ArrayList<SpectraData> spectraData;
+	SpectraData selectedSpectra;
+	ListSelectionModel spectraListSelectionModel;
 	
 	/*
 	 * Declare JComponents
@@ -42,7 +46,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	JPanel spectraButtons;
 	JButton addButton;
 	JButton removeButton;
-	JButton confirmButton;
+	JButton plotButton;
 	SpectraTableModel spectraTableModel;
 	Rectangle selection;
 	
@@ -59,12 +63,13 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		 spectraButtons = new JPanel();
 		 addButton = new JButton("Add");
 		 removeButton = new JButton("Remove");
-		 confirmButton = new JButton("Confirm");
+		 plotButton = new JButton("Confirm");
 		 confirmPanel = new JPanel();
 		 infoPanel = new JPanel();
 		 spectraPanel = new JPanel();
 		 spectraTableModel = new SpectraTableModel();
 		 spectraTable = new JTable(spectraTableModel);
+		 spectraListSelectionModel = spectraTable.getSelectionModel();
 		 
 		 spectraData = new ArrayList<SpectraData>();
 				
@@ -75,6 +80,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		    spectraTable.setColumnSelectionAllowed(false);
 	
 		    spectraTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
+		    spectraListSelectionModel.addListSelectionListener(new SpectraListSelectionListener());
 			
 			tableScroller = new JScrollPane(spectraTable);
 			spectraTable.setFillsViewportHeight(true);
@@ -150,13 +156,15 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 					spectraTableModel.fireTableDataChanged();
 					resizeColumnWidth();
 					
-					//If there's less than one row available, disable the confirm button
+					//If there's less than one row available, disable the plot button
 					if(spectraTableModel.getRowCount() < 1)
-						confirmButton.setEnabled(false);
+						plotButton.setEnabled(false);
 									
 				}
 				
 			});
+			
+			removeButton.setEnabled(false);
 			
 			spectraButtons.add(removeButton);
 			spectraPanel.add(spectraButtons);
@@ -172,7 +180,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			 * confirms the selection of spectra
 			 */
 		
-			confirmButton.addActionListener(new ActionListener(){
+			plotButton.addActionListener(new ActionListener(){
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
@@ -190,8 +198,8 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 				
 			});
 			
-			confirmPanel.add(confirmButton);
-			confirmButton.setEnabled(false);
+			confirmPanel.add(plotButton);
+			plotButton.setEnabled(false);
 			
 		}	
 		
@@ -207,7 +215,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		
 		//If there's there's at least one row available, enable the confirm button
 		if(spectraTableModel.getRowCount() > 0)
-			confirmButton.setEnabled(true);			
+			plotButton.setEnabled(true);			
 	}
 	
 	public ArrayList<SpectraData> getData() {
@@ -216,6 +224,31 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	
 	public Rectangle getSelection() {
 		return selection;
+	}
+	
+	class SpectraListSelectionListener implements ListSelectionListener{
+		
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+			if(lsm.isSelectionEmpty()) {
+				removeButton.setEnabled(false);
+			}
+			else {
+				int choice = spectraTable.getSelectedRow();
+
+				if(choice != -1) {	
+					removeButton.setEnabled(true);
+				}			
+				else {
+					removeButton.setEnabled(false);
+				}
+					
+					
+			}
+				
+		}
+		
 	}
 	
 	/*

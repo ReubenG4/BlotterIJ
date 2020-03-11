@@ -62,6 +62,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 				yData[index] = currData.getRow(index)[1];
 			}
 				
+			//Add series to chart
 			XYSeries series = chart.addSeries(curr.getName(), xData, yData);
 		    series.setMarker(SeriesMarkers.NONE);
 		}
