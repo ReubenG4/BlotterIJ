@@ -26,7 +26,7 @@ public class SpectraData implements Serializable{
 		this.noOfWavelengths = input.getDepth();
 		
 		//Initialise array to hold data
-		data = new Array2DRowRealMatrix(2,noOfWavelengths);
+		data = new Array2DRowRealMatrix(noOfWavelengths,2);
 		
 		//Initialise selection
 		selection = input.getSelection();
@@ -67,13 +67,19 @@ public class SpectraData implements Serializable{
 		 *	Mean of pixels across a dimension
 		 */
 		
-		for(int yIndex = 0; yIndex > noOfWavelengths; yIndex++) {
+		for(int yIndex = 0; yIndex < noOfWavelengths; yIndex++) {
 			
 			pxlSum = 0;
-			for(int xIndex = 0; xIndex > noOfPixels; xIndex++) {
+			for(int xIndex = 0; xIndex < noOfPixels; xIndex++) {
 				pxlSum += flattenedData.getEntry(xIndex, yIndex);
 			}
-			data.setRow(yIndex, new double[]{wavelengths.get(yIndex),pxlSum});
+			
+			//Prepare data for row
+			double[] newData = new double[2];
+			newData[0] = wavelengths.get(yIndex);
+			newData[1] = pxlSum / noOfPixels;
+			
+			data.setRow(yIndex, newData);
 		}
 			
 		//Reset progress bar
@@ -110,7 +116,7 @@ public class SpectraData implements Serializable{
 		this.selection = selection;
 	}
 
-	public RealMatrix getData() {
+	public Array2DRowRealMatrix getData() {
 		return data;
 	}
 

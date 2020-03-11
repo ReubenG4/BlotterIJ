@@ -2,7 +2,11 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import org.apache.commons.math4.linear.Array2DRowRealMatrix;
+
+import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -14,15 +18,40 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	
 	/* Constructor */
 	public BlotterSpectraMain() {
-		
-		//Initialise ArrayLists for holding spectra and wavelengths
-		spectraList = new ArrayList<SpectraData>();
-		
+	
 	}
 	
 	//Assembles SpectraData from PxlData
 	public SpectraData calcSpectra(ArrayList<ImgWrapper> imgData, Rectangle selection) {
 		return new SpectraData(imgData,selection);
+	}
+	
+	
+	public void plotSpectra(ArrayList<SpectraData> input) {
+		spectraList = input;
+		
+		Iterator<SpectraData> itr = input.iterator();
+		
+		//Iterate through ArrayList input
+		while(itr.hasNext()) {
+			
+			//Retrieve data and place it in arrays
+			SpectraData curr = itr.next();
+			
+			Array2DRowRealMatrix currData = curr.getData();
+			
+			int rowIndex = currData.getRowDimension();
+			
+			//Prepare series for plotting
+			double[] xData = new double[rowIndex];
+			double[] yData = new double[rowIndex];
+			
+			for(int index=0; index < rowIndex; index++) {
+				xData[index] = currData.getRow(index)[0];
+				yData[index] = currData.getRow(index)[1];
+			}
+						
+		}
 	}
 	
 	public void setSpectraList(ArrayList<SpectraData> input) {

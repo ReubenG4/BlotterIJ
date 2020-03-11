@@ -8,12 +8,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -153,7 +151,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 					resizeColumnWidth();
 					
 					//If there's less than one row available, disable the confirm button
-					if(spectraTableModel.getRowCount() < 3)
+					if(spectraTableModel.getRowCount() < 1)
 						confirmButton.setEnabled(false);
 									
 				}
@@ -178,17 +176,12 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-					//Clear any presently stored image data
-					spectraData.clear();
-					
-					//Retrieve chosen files and store them in spectraData
-					spectraData.addAll(spectraTableModel.getData());
-					
-					//Clear SpectraTableModel of list entries
-					spectraTableModel.clear();
 					
 					//Flag for next state
 					setNextState(true);
+					
+					//Set nextStateIndex
+					setNextStateIndex(9);
 					
 					//SelectDialog set to be no longer visible 
 					setVisible(false);
@@ -212,7 +205,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		spectraTableModel.fireTableDataChanged();
 		resizeColumnWidth();
 		
-		//If there's more than one row available, enable the confirm button
+		//If there's there's at least one row available, enable the confirm button
 		if(spectraTableModel.getRowCount() > 0)
 			confirmButton.setEnabled(true);			
 	}

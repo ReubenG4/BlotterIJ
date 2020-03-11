@@ -94,7 +94,7 @@ public class BlotterCommand implements Command{
 	public void run() {
 		
 		
-		/* Collate services with hashtable for easier initialisation of dialogs */
+		/* Collate services with hashtable for easier initialisation of dialogs and functions */
 		services = new Hashtable<String,Service>();
 		services.put("OpService", op);
 		services.put("LogService", log);
@@ -193,12 +193,17 @@ public class BlotterCommand implements Command{
 				break;
 					
 			case 8:
-				/* State 8: Plot of the region of interest */
-				//stateWorker8 = new StateWorker8();
-				//stateWorker8.execute();
+				/* State 8: Add spectra data of the selected region of interest */
 				Rectangle selection = selectSpectraDialog.getSelection();
 				SpectraData spectraData = spectraMain.calcSpectra(imgData, selection);
 				selectSpectraDialog.addData(spectraData);
+				changeState(7);
+				break;
+				
+			case 9:
+				/* State 9: Plot the spectraData */
+				ArrayList<SpectraData> spectraList = selectSpectraDialog.getData();
+				spectraMain.plotSpectra(spectraList);
 				changeState(7);
 				break;
 				
@@ -390,6 +395,8 @@ public class BlotterCommand implements Command{
 
 							case 7:
 								/* Handles spectraButton and changes state to 7 is successful */
+								
+								//Reset nextState flag and state transition
 								toolPanelDialog.setNextState(false);
 								changeState(7);
 								break;

@@ -5,8 +5,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
-import ij.IJ;
-
 /*
  * Table Model for SelectSpectraDialog fileTable
  */
@@ -78,8 +76,7 @@ class SpectraTableModel extends AbstractTableModel {
     	
     	return null;          
     }
-
-    
+ 
     public boolean isCellEditable(int row, int col) {
        
         if (col == 0) 
@@ -87,15 +84,13 @@ class SpectraTableModel extends AbstractTableModel {
        
         return false;
     }
-    
-    
+      
     public void setValueAt(Object value, int row, int col) {
        
     	switch(col) {
     	
     	case 0:
     		data.get(row).setName((String) value);
-    		IJ.showMessage(data.get(row).getName());
     		break;
     	
     	case 1:
@@ -116,10 +111,7 @@ class SpectraTableModel extends AbstractTableModel {
 
        
     }
-    
-   
-    
-    
+      
     public Class<? extends Object> getColumnClass(int c) {
         return getValueAt(0,c).getClass();      
     }
