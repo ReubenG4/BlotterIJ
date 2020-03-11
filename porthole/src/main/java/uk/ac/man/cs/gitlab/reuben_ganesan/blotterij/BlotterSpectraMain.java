@@ -69,6 +69,13 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		return chart;
 	}
 	
+	public double euclideanDistance(SpectraData spectra1, SpectraData spectra2) {
+		
+		
+		return 0;
+		
+	}
+	
 	public void setSpectraList(ArrayList<SpectraData> input) {
 		spectraList = input;
 	}
