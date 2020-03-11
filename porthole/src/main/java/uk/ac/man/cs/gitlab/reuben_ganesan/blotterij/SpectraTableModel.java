@@ -1,5 +1,7 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
@@ -55,6 +57,21 @@ class SpectraTableModel extends AbstractTableModel {
 
     public Object getValueAt(int row, int col) {
     		
+    	if(col == 0)
+    		return data.get(row).getName();
+    	
+    	if(col == 1) {
+    		Point xy = data.get(row).getSelection().getLocation();
+    		return "X: " + xy.x + "Y: "+xy.y;
+    	}
+    	
+    	if(col == 2)
+    		return data.get(row).getNoOfPixels();
+    	
+    	if(col == 3)
+    		return data.get(row).getNoOfWavelengths();
+    		
+    	
     	return null;          
     }
 

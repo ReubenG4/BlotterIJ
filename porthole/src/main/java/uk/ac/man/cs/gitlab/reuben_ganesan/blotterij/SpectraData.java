@@ -92,7 +92,16 @@ public class SpectraData implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	public int getNoOfWavelengths() {
+		return this.noOfWavelengths;
+	}
+	
+	public int getNoOfPixels() {
+		return this.noOfPixels;
+	}
+	
+	
 	public Rectangle getSelection() {
 		return selection;
 	}
