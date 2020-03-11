@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-/* Assemble SpectraData from PxlData */
+/* Assembles SpectraData from PxlData and plot SpectraData */
 public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
 	//Declare class variables
@@ -20,7 +20,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		
 	}
 	
-	//Retrieves SpectraData from PxlData and add it to spectraList
+	//Assembles SpectraData from PxlData
 	public SpectraData calcSpectra(ArrayList<ImgWrapper> imgData, Rectangle selection) {
 		return new SpectraData(imgData,selection);
 	}

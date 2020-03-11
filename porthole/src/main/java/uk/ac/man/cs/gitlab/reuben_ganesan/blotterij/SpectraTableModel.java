@@ -5,6 +5,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
+import ij.IJ;
+
 /*
  * Table Model for SelectSpectraDialog fileTable
  */
@@ -57,24 +59,67 @@ class SpectraTableModel extends AbstractTableModel {
 
     public Object getValueAt(int row, int col) {
     		
-    	if(col == 0)
+    	switch(col) {
+    	  	
+    	case 0:
     		return data.get(row).getName();
     	
-    	if(col == 1) {
+    	case 1:
     		Point xy = data.get(row).getSelection().getLocation();
-    		return "X: " + xy.x + "Y: "+xy.y;
-    	}
+    		return "X: " + xy.x + " Y: "+xy.y;
     	
-    	if(col == 2)
+    	case 2:
     		return data.get(row).getNoOfPixels();
     	
-    	if(col == 3)
+    	case 3:
     		return data.get(row).getNoOfWavelengths();
     		
+    	}
     	
     	return null;          
     }
 
+    
+    public boolean isCellEditable(int row, int col) {
+       
+        if (col == 0) 
+            return true;
+       
+        return false;
+    }
+    
+    
+    public void setValueAt(Object value, int row, int col) {
+       
+    	switch(col) {
+    	
+    	case 0:
+    		data.get(row).setName((String) value);
+    		IJ.showMessage(data.get(row).getName());
+    		break;
+    	
+    	case 1:
+    		data.get(row).setSelection((Rectangle) value);
+    		break;
+    		
+    	case 2:
+    		data.get(row).setNoOfPixels((int) value);
+    		break;
+    		
+    	case 3:
+    		data.get(row).setNoOfWavelengths((int) value);
+    		break;
+    	
+    	}
+    	
+        fireTableCellUpdated(row, col);
+
+       
+    }
+    
+   
+    
+    
     public Class<? extends Object> getColumnClass(int c) {
         return getValueAt(0,c).getClass();      
     }

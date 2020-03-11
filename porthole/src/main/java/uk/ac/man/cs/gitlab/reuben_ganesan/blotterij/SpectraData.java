@@ -117,5 +117,13 @@ public class SpectraData implements Serializable{
 	public void setData(Array2DRowRealMatrix data) {
 		this.data = data;
 	}
+
+	public void setNoOfPixels(int value) {
+		this.noOfPixels = value;
+	}
+	
+	public void setNoOfWavelengths(int value) {
+		this.noOfWavelengths = value;
+	}
 	
 }

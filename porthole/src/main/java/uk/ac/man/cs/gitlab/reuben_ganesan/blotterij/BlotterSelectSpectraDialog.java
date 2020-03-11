@@ -8,10 +8,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -73,7 +75,8 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			spectraTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		    spectraTable.setRowSelectionAllowed(true);
 		    spectraTable.setColumnSelectionAllowed(false);
-			spectraTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
+	
+		    spectraTable.setDefaultRenderer(File.class, new FileTableCellRenderer());
 			
 			tableScroller = new JScrollPane(spectraTable);
 			spectraTable.setFillsViewportHeight(true);
@@ -138,6 +141,12 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
 					int index = spectraTable.getSelectedRow();
+					
+					if(index == -1) {
+						IJ.showMessage("Please select a row to delete");
+						return;
+					}
+					
 					spectraTableModel.removeRow(index);	
 					spectraTableModel.sortTable();
 					spectraTableModel.fireTableDataChanged();
