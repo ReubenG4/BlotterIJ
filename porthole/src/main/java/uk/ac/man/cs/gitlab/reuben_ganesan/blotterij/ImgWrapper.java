@@ -38,7 +38,7 @@ class ImgWrapper < T extends RealType< T > & NativeType< T > >{
 	public  void initImg() {
 		ImgOpener imgOpener = new ImgOpener();
 		SCIFIOConfig config = new SCIFIOConfig();
-		config.imgOpenerSetImgModes( ImgMode.CELL );
+		config.imgOpenerSetImgModes( ImgMode.AUTO );
 		img =  (Img<T>) imgOpener.openImgs(file.getAbsolutePath(),config).get(0);		
 	}
 	
