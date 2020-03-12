@@ -207,6 +207,21 @@ public class BlotterCommand implements Command{
 				stateWorker9.execute();
 				break;
 				
+			case 10:
+				/* State 10: Calculate euclidean distance */
+				ArrayList<SpectraData> selectedSpectra = selectSpectraDialog.getSelectedSpectra();
+				
+				if(selectedSpectra.size() == 2) {
+					double eucD = spectraMain.euclideanDistance(selectedSpectra.get(0), selectedSpectra.get(1));
+					IJ.showMessage(Double.toString(eucD));
+				}
+				else {
+					IJ.showMessage("Choose only 2 spectra!");
+				}
+				
+				changeState(7);
+				break;
+				
 			default:
 				ui.showDialog("State out of bounds, value:"+nextState);
 				break;
@@ -307,7 +322,7 @@ public class BlotterCommand implements Command{
 
 		@Override
 		protected Object doInBackground() throws Exception {
-			Rectangle selection = selectSpectraDialog.getSelection();
+			Rectangle selection = selectSpectraDialog.getSelectedRegion();
 			SpectraData spectraData = spectraMain.calcSpectra(imgData, selection);
 			selectSpectraDialog.addData(spectraData);
 			return null;			
@@ -330,7 +345,7 @@ public class BlotterCommand implements Command{
 		@Override
 		protected Object doInBackground() throws Exception {
 			
-			ArrayList<SpectraData> spectraList = selectSpectraDialog.getData();
+			ArrayList<SpectraData> spectraList = selectSpectraDialog.getSelectedSpectra();
 			XYChart chart = spectraMain.plotSpectra(spectraList);
 			new SwingWrapper<XYChart>(chart).displayChart().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			return null;

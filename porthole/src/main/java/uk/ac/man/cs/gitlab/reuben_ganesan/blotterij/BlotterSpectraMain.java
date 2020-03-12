@@ -19,8 +19,6 @@ import net.imglib2.type.numeric.RealType;
 /* Assembles SpectraData from PxlData and plot SpectraData */
 public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
-	//Declare class variables
-	private ArrayList<SpectraData> spectraList;
 	
 	/* Constructor */
 	public BlotterSpectraMain() {
@@ -34,7 +32,6 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	
 	
 	public XYChart plotSpectra(ArrayList<SpectraData> input) {
-		spectraList = input;
 		
 		Iterator<SpectraData> itr = input.iterator();
 		
@@ -100,21 +97,8 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 			distance += Math.pow(y1 - y2, 2); 
 		}
 		
+		return Math.sqrt(distance);
 		
-		return distance;
-		
-	}
-	
-	public void setSpectraList(ArrayList<SpectraData> input) {
-		spectraList = input;
-	}
-	
-	public ArrayList<SpectraData> getSpectraList() {
-		return spectraList;
-	}
-	
-	public int getNumberOfSpectra() {
-		return spectraList.size();
 	}
 
 	

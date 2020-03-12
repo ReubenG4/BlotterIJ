@@ -67,17 +67,15 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 			
 		}
 	
-		
 		/* Extract data from selection */
 		private double[][][] extract(ArrayList<ImgWrapper<T>> inputData) {
 	
 		//Initialise Interval 
 		FinalInterval region = FinalInterval.createMinSize(roi.x,roi.y,
 														   roi.width,roi.height);
-				
+		
 		//Initialise Iterator
 		Iterator<ImgWrapper<T>> itr = inputData.iterator();
-
 
 		//Initialise target array to hold pixel data
 		data = new double[depth][height][width];

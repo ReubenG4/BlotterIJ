@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,8 +30,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	/*
 	 * Declare and initialise class variables
 	 */
-	ArrayList<SpectraData> spectraData;
-	SpectraData selectedSpectra;
+	ArrayList<SpectraData> selectedSpectra;
 	ListSelectionModel spectraListSelectionModel;
 	
 	/*
@@ -47,6 +45,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	JButton addButton;
 	JButton removeButton;
 	JButton plotButton;
+	JButton eucdButton;
 	SpectraTableModel spectraTableModel;
 	Rectangle selection;
 	
@@ -63,7 +62,8 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		 spectraButtons = new JPanel();
 		 addButton = new JButton("Add");
 		 removeButton = new JButton("Remove");
-		 plotButton = new JButton("Confirm");
+		 plotButton = new JButton("Plot");
+		 eucdButton = new JButton("Eucd.D");
 		 confirmPanel = new JPanel();
 		 infoPanel = new JPanel();
 		 spectraPanel = new JPanel();
@@ -75,7 +75,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 				
 		getContentPane().add(infoPanel,BorderLayout.CENTER);
 		{			
-			spectraTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			spectraTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		    spectraTable.setRowSelectionAllowed(true);
 		    spectraTable.setColumnSelectionAllowed(false);
 	
@@ -176,8 +176,8 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		{
 			
 			/*
-			 * confirmButton configuration
-			 * confirms the selection of spectra
+			 * plotButton configuration
+			 * plots the selection of spectra
 			 */
 		
 			plotButton.addActionListener(new ActionListener(){
@@ -201,6 +201,40 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			confirmPanel.add(plotButton);
 			plotButton.setEnabled(false);
 			
+			
+			/*
+			 * eucdButton configuration
+			 * calculates euclidean distance between two spectra
+			 */
+			eucdButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(final ActionEvent arg0) {
+					
+					//Flag for next state
+					setNextState(true);
+					
+					//Set nextStateIndex
+					setNextStateIndex(10);
+					
+					if(selectedSpectra == null)
+						selectedSpectra = new ArrayList<SpectraData>();
+					else
+						selectedSpectra.clear();
+					
+					//Retrieve chosen files and store them in imgData
+					selectedSpectra.addAll(spectraTableModel.getData());
+							
+					//SelectDialog set to be no longer visible 
+					setVisible(false);
+									
+				}
+				
+			});
+			
+			confirmPanel.add(eucdButton);
+			eucdButton.setEnabled(false);
+			
 		}	
 		
 	}
@@ -218,33 +252,48 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			plotButton.setEnabled(true);			
 	}
 	
-	public ArrayList<SpectraData> getData() {
+	public ArrayList<SpectraData> getSelectedSpectra() {
 		return spectraTableModel.getData();
 	}
 	
-	public Rectangle getSelection() {
+	public Rectangle getSelectedRegion() {
 		return selection;
 	}
 	
+	
+	/* Listens to changes in spectraTable */
 	class SpectraListSelectionListener implements ListSelectionListener{
 		
+		//Called when value of selection changes
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
+			
 			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+			
 			if(lsm.isSelectionEmpty()) {
 				removeButton.setEnabled(false);
+				eucdButton.setEnabled(false);
 			}
 			else {
-				int choice = spectraTable.getSelectedRow();
-
-				if(choice != -1) {	
-					removeButton.setEnabled(true);
-				}			
-				else {
-					removeButton.setEnabled(false);
+				int noOfChoices = spectraTable.getSelectedRows().length;
+		
+				switch(noOfChoices) {
+					case 1:
+						eucdButton.setEnabled(false);
+						removeButton.setEnabled(true);
+						break;
+					
+					case 2:
+						eucdButton.setEnabled(true);
+						removeButton.setEnabled(false);
+						break;
+				
+					default:
+						removeButton.setEnabled(false);
+						eucdButton.setEnabled(false);
+						break;
 				}
-					
-					
+								
 			}
 				
 		}
