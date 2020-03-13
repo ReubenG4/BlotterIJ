@@ -3,12 +3,12 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 import java.io.File;
 import java.io.FileFilter;
 
-public class ImageFileFilter implements FileFilter
+public class SpectraFileFilter implements FileFilter
 {
 	
  
-  private final String[] okFileExtensions = new String[] {"tiff","tif"};
-  private String description= ".tif, .tiff";
+  private final String[] okFileExtensions = new String[] {"spec"};
+  private String description= ".spec";
 
   public boolean accept(File file)
   {

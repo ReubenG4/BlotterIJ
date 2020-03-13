@@ -159,6 +159,9 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 					//If there's less than one row available, disable the plot button
 					if(spectraTableModel.getRowCount() < 1)
 						plotButton.setEnabled(false);
+					
+					if(spectraTableModel.getRowCount() < 2)
+						eucdButton.setEnabled(false);
 									
 				}
 				
@@ -233,7 +236,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			});
 			
 			confirmPanel.add(eucdButton);
-			eucdButton.setEnabled(true);
+			eucdButton.setEnabled(false);
 			
 		}	
 		
@@ -249,7 +252,10 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		
 		//If there's there's at least one row available, enable the confirm button
 		if(spectraTableModel.getRowCount() > 0)
-			plotButton.setEnabled(true);			
+			plotButton.setEnabled(true);
+		
+		if(spectraTableModel.getRowCount() > 1)
+			eucdButton.setEnabled(true);
 	}
 	
 	public ArrayList<SpectraData> getSelectedSpectra() {
@@ -282,7 +288,6 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 						removeButton.setEnabled(true);
 						break;
 					
-				
 					default:
 						removeButton.setEnabled(false);
 						break;

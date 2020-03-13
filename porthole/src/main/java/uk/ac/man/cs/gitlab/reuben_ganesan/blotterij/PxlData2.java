@@ -12,7 +12,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 
-/* Specific implementation of PxlData that does not null accessed Img pointer
+/* Implementation of PxlData that does not null accessed Img pointer
  * Used when ImgWrapper should retain Img for quicker sequential access
  */
 public class PxlData2<T extends RealType<T> & NativeType<T>> extends PxlData<T>{

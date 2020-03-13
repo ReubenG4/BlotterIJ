@@ -250,7 +250,6 @@ public class BlotterCommand implements Command{
 				
 				displayEucdDialog.setVisible(true);
 				
-				IJ.showMessage("Entered State 10");
 				changeState(7);
 				break;
 				
@@ -566,6 +565,8 @@ public class BlotterCommand implements Command{
 		
 		//Set title
 		displayEucdDialog.setTitle("Euclidean distance between spectra");
+		
+		displayEucdDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
 	}
 	

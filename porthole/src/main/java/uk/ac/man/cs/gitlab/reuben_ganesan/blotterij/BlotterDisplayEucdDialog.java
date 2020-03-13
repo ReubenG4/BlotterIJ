@@ -1,7 +1,8 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
-import java.awt.BorderLayout;
+
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -30,20 +31,21 @@ public class BlotterDisplayEucdDialog extends BlotterDialog{
 		setName("BlotterShowEucd");
 		setSize(500, 450);
 		setLocationRelativeTo(null);
-		getContentPane().setLayout(new BorderLayout());
+		getContentPane().setLayout(new FlowLayout());
 		
 		eucdTableModel = new EucdTableModel(rowColNames,data);
 		eucdTable = new JTable(eucdTableModel);
 		infoPanel = new JPanel();
 		
-		getContentPane().add(infoPanel,BorderLayout.CENTER);
+		getContentPane().add(infoPanel);
 		{			
-		    eucdTable.setRowSelectionAllowed(false);
-		    eucdTable.setColumnSelectionAllowed(false);
+		    eucdTable.setCellSelectionEnabled(true);
 			tableScroller = new JScrollPane(eucdTable);
 			eucdTable.setFillsViewportHeight(true);
 			infoPanel.add(tableScroller);
 		}
+		
+		resizeColumnWidth();
 	}
 	
 	/*

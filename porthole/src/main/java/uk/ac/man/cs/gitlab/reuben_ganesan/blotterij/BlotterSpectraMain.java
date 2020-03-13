@@ -1,8 +1,19 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.Rectangle;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.knowm.xchart.XYChart;
@@ -10,6 +21,7 @@ import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler.ChartTheme;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+import org.scijava.widget.FileWidget;
 
 import ij.IJ;
 import net.imglib2.type.NativeType;
@@ -28,6 +40,52 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	public SpectraData calcSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
 		return new SpectraData(imgData,selection);
 	}
+	
+	public void saveSpectra(SpectraData<T> toBeSaved) {
+		
+		try {
+			FileOutputStream f = new FileOutputStream(new File(toBeSaved.getName()+".spec"));
+			ObjectOutputStream o = new ObjectOutputStream(f);
+
+			// Write object to file
+			o.writeObject(toBeSaved);
+
+			o.close();
+			f.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found");
+		} catch (IOException e) {
+			System.out.println("Error initializing stream");
+		}
+	}
+	
+	public ArrayList<SpectraData<T>> loadSpectra() throws IOException, ClassNotFoundException {
+		//Declare function variables
+		FileInputStream fi = null;
+		ObjectInputStream oi;
+		
+		
+		//Initialise data structures
+		ArrayList<SpectraData<T>> chosenFiles = new ArrayList<SpectraData<T>>();
+		List<File>initialValue = new LinkedList<File>();
+		
+		//Retrieve chosen files
+		List<File>inputList = getUIService().chooseFiles(null , initialValue, new SpectraFileFilter(), FileWidget.OPEN_STYLE);
+		Iterator<File> fileItr = inputList.iterator();
+		
+		//Open files and cast to spectra data
+		while(fileItr.hasNext()) {
+			fi = new FileInputStream(fileItr.next());
+			oi = new ObjectInputStream(fi);
+			
+			SpectraData<T> inputSpectra = (SpectraData<T>) oi.readObject();
+			
+			chosenFiles.add(inputSpectra);
+		}
+
+		return chosenFiles;
+	}
+	
 	
 	public XYChart plotSpectra(ArrayList<SpectraData<T>> input) {
 		
