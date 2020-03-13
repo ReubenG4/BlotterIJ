@@ -233,7 +233,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			});
 			
 			confirmPanel.add(eucdButton);
-			eucdButton.setEnabled(false);
+			eucdButton.setEnabled(true);
 			
 		}	
 		
@@ -272,25 +272,19 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			
 			if(lsm.isSelectionEmpty()) {
 				removeButton.setEnabled(false);
-				eucdButton.setEnabled(false);
+				
 			}
 			else {
 				int noOfChoices = spectraTable.getSelectedRows().length;
 		
 				switch(noOfChoices) {
 					case 1:
-						eucdButton.setEnabled(false);
 						removeButton.setEnabled(true);
 						break;
 					
-					case 2:
-						eucdButton.setEnabled(true);
-						removeButton.setEnabled(false);
-						break;
 				
 					default:
 						removeButton.setEnabled(false);
-						eucdButton.setEnabled(false);
 						break;
 				}
 								

@@ -13,14 +13,12 @@ import net.imglib2.type.numeric.RealType;
 
 
 /* Specific implementation of PxlData that does not null accessed Img pointer
- * Used when ImgWrapper should retain Img
- * 
+ * Used when ImgWrapper should retain Img for quicker sequential access
  */
 public class PxlData2<T extends RealType<T> & NativeType<T>> extends PxlData<T>{
 
 	public PxlData2(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 		super(inputData, selection);
-
 	}
 	
 	/* Extract data from selection */

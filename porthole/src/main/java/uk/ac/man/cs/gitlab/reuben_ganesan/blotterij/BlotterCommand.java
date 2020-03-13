@@ -74,6 +74,7 @@ public class BlotterCommand implements Command{
 	private static BlotterToolPanelDialog toolPanelDialog = null;
 	private static BlotterSelectFeatureDialog selectFeatureDialog = null;
 	private static BlotterSelectSpectraDialog selectSpectraDialog = null;
+	private static BlotterDisplayEucdDialog displayEucdDialog = null;
 		
 	/* Declare class variables */
 	private Hashtable<String,Service> services;
@@ -210,15 +211,46 @@ public class BlotterCommand implements Command{
 			case 10:
 				/* State 10: Calculate euclidean distance */
 				ArrayList<SpectraData> selectedSpectra = selectSpectraDialog.getSelectedSpectra();
+				ArrayList<String> rowColNames = new ArrayList<String>();
+				ArrayList<double[]> data = new ArrayList<double[]>(); 
 				
-				if(selectedSpectra.size() == 2) {
-					double eucD = spectraMain.euclideanDistance(selectedSpectra.get(0), selectedSpectra.get(1));
-					IJ.showMessage(Double.toString(eucD));
-				}
-				else {
-					IJ.showMessage("Choose only 2 spectra!");
+				//Index tracks which value to omit
+				int zeroIndex = 0;
+				int noOfSpectra = selectedSpectra.size();
+				
+				//Iterate through selected spectra and calculate eucldiean distance between it and other spectra
+				while(zeroIndex < noOfSpectra) {
+					
+					int index = 0;
+					double[] calculatedEucd = new double[noOfSpectra];
+					
+					while(index < noOfSpectra) {
+						
+						if(index != zeroIndex)
+							calculatedEucd[index] = spectraMain.euclideanDistance(selectedSpectra.get(zeroIndex), selectedSpectra.get(index));
+						else
+							calculatedEucd[index] = 0;
+							
+						index++;
+					}
+					
+					data.add(calculatedEucd);
+					
+					zeroIndex++;
 				}
 				
+				//Iterate through selected spectra and retrieve names
+				
+				rowColNames.add("X");
+				
+				for(SpectraData thisData: selectedSpectra)
+					rowColNames.add(thisData.getName());
+			
+				initDisplayEucdDialog(rowColNames,data);
+				
+				displayEucdDialog.setVisible(true);
+				
+				IJ.showMessage("Entered State 10");
 				changeState(7);
 				break;
 				
@@ -520,6 +552,23 @@ public class BlotterCommand implements Command{
 		});
 		
 	}
+	
+	/*
+	 * Initialises displayEucdDialog
+	 */
+	public void initDisplayEucdDialog(ArrayList<String> rowColNames, ArrayList<double[]> data) {
+		
+		//Initialise displayEucdDialog
+		displayEucdDialog = new BlotterDisplayEucdDialog(rowColNames, data);
+		
+		//Set services
+		displayEucdDialog.setServices(services);
+		
+		//Set title
+		displayEucdDialog.setTitle("Euclidean distance between spectra");
+		
+	}
+	
 	
 	/*
 	 * Cleans up all Java Swing components
