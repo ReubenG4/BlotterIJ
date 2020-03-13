@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
-import org.apache.commons.math4.ml.distance.EuclideanDistance;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
@@ -26,14 +25,13 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	}
 	
 	//Assembles SpectraData from PxlData
-	public SpectraData calcSpectra(ArrayList<ImgWrapper> imgData, Rectangle selection) {
+	public SpectraData calcSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
 		return new SpectraData(imgData,selection);
 	}
 	
-	
-	public XYChart plotSpectra(ArrayList<SpectraData> input) {
+	public XYChart plotSpectra(ArrayList<SpectraData<T>> input) {
 		
-		Iterator<SpectraData> itr = input.iterator();
+		Iterator<SpectraData<T>> itr = input.iterator();
 		
 		//Prepare chart
 		XYChart chart = new XYChartBuilder().width(800).height(600).theme(ChartTheme.Matlab).build();
@@ -45,7 +43,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		while(itr.hasNext()) {
 			
 			//Retrieve data and place it in arrays
-			SpectraData curr = itr.next();
+			SpectraData<T> curr = itr.next();
 			
 			Array2DRowRealMatrix currData = curr.getData();
 			
@@ -68,7 +66,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		return chart;
 	}
 	
-	public double euclideanDistance(SpectraData spectra1, SpectraData spectra2) {
+	public double euclideanDistance(SpectraData<T> spectra1, SpectraData<T> spectra2) {
 		
 		//Check to see if both spectras have an equal amount of datapoints
 		if(spectra1.getNoOfWavelengths() != spectra2.getNoOfWavelengths()) {

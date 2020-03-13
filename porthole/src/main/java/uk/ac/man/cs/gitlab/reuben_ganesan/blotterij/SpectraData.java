@@ -8,8 +8,10 @@ import org.apache.commons.math4.linear.Array2DRowRealMatrix;
 import org.apache.commons.math4.linear.RealMatrix;
 
 import ij.IJ;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
-public class SpectraData implements Serializable{
+public class SpectraData<T extends RealType<T> & NativeType<T>> implements Serializable{
 	
 	private String name;
 	private int noOfPixels;
@@ -17,7 +19,7 @@ public class SpectraData implements Serializable{
 	private Array2DRowRealMatrix data;
 	private Rectangle selection;
 	
-	SpectraData(PxlData input){
+	SpectraData(PxlData2<T> input){
 		
 		//Find out number of pixels in a single dataset
 		this.noOfPixels = input.getWidth() * input.getHeight();
@@ -45,8 +47,8 @@ public class SpectraData implements Serializable{
 				
 	}
 	
-	SpectraData(ArrayList<ImgWrapper> imgData, Rectangle selection){
-		this(new PxlData(imgData,selection));
+	SpectraData(ArrayList<ImgWrapper<T>> imgData, Rectangle selection){
+		this(new PxlData2(imgData,selection));
 	}
 	
 	public void calc(RealMatrix flattenedData, ArrayList<Integer> wavelengths) {	

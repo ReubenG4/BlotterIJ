@@ -19,12 +19,12 @@ import net.imglib2.type.numeric.RealType;
  * Retrieves and represents pixel data of region selected  
  */
 public class PxlData<T extends RealType<T> & NativeType<T>>{
-		private int width = 0;
-		private int height = 0;
-		private int depth = 0;
-		private double[][][] data;
+		protected int width = 0;
+		protected int height = 0;
+		protected int depth = 0;
+		protected double[][][] data;
 		private ArrayList<Integer> wavelengths;
-		private Rectangle roi;
+		protected Rectangle roi;
 		
 		public PxlData(ArrayList<ImgWrapper<T>> inputData, Rectangle selection) {
 			
@@ -68,7 +68,7 @@ public class PxlData<T extends RealType<T> & NativeType<T>>{
 		}
 	
 		/* Extract data from selection */
-		private double[][][] extract(ArrayList<ImgWrapper<T>> inputData) {
+		protected double[][][] extract(ArrayList<ImgWrapper<T>> inputData) {
 	
 		//Initialise Interval 
 		FinalInterval region = FinalInterval.createMinSize(roi.x,roi.y,
