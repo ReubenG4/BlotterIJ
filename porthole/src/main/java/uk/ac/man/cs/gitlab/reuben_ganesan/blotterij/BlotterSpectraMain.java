@@ -13,9 +13,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.math4.linear.Array2DRowRealMatrix;
+
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
@@ -41,14 +45,35 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		return new SpectraData(imgData,selection);
 	}
 	
-	public void saveSpectra(SpectraData<T> toBeSaved) {
+	//Saves the chosen spectra
+	public void saveSpectra(SpectraData<T> output) {
+	
+		//Declare variables
+		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("BlotterIJ Spectra Files", "spec");
+		jfc.addChoosableFileFilter(filter);
 		
+		//Show save dialog
+		int returnValue = jfc.showSaveDialog(null);
+		File selectedFile;
+		
+		//If no value given, return
+		//Else pass on selectedFile
+		if (returnValue == JFileChooser.APPROVE_OPTION) 
+			selectedFile = jfc.getSelectedFile();
+		else 
+			return;
+		
+		//If extension is not 'spec', append it
+		if (!FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase("spec")) 
+		    selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+".spec"); 
+		
+		// Write object to file
 		try {
-			FileOutputStream f = new FileOutputStream(new File(toBeSaved.getName()+".spec"));
+			FileOutputStream f = new FileOutputStream(selectedFile);
 			ObjectOutputStream o = new ObjectOutputStream(f);
 
-			// Write object to file
-			o.writeObject(toBeSaved);
+			o.writeObject(output);
 
 			o.close();
 			f.close();
@@ -63,7 +88,6 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		//Declare function variables
 		FileInputStream fi = null;
 		ObjectInputStream oi;
-		
 		
 		//Initialise data structures
 		ArrayList<SpectraData<T>> chosenFiles = new ArrayList<SpectraData<T>>();
@@ -85,6 +109,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 
 		return chosenFiles;
 	}
+
 	
 	
 	public XYChart plotSpectra(ArrayList<SpectraData<T>> input) {

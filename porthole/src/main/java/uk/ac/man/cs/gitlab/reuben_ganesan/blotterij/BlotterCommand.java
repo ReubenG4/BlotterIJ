@@ -94,6 +94,7 @@ public class BlotterCommand implements Command{
 	StateWorker6 stateWorker6;
 	StateWorker8 stateWorker8;
 	StateWorker9 stateWorker9;
+	StateWorker10 stateWorker10;
 	
 	public void run() {
 		
@@ -159,6 +160,7 @@ public class BlotterCommand implements Command{
 				/* State 2: Produce and show FalseRGB for user view */
 				stateWorker2 = new StateWorker2();
 				stateWorker2.execute();
+				/* --> State 3 */
 				break;
 				
 				
@@ -173,6 +175,7 @@ public class BlotterCommand implements Command{
 				/* State 4: Perform PCA, produce eigenvectors and eigenvalues, save mean adjusted data */
 				stateWorker4 = new StateWorker4();
 				stateWorker4.execute();	
+				/* --> State 5 */
 				break;
 				
 			case 5:
@@ -188,6 +191,7 @@ public class BlotterCommand implements Command{
 				/* State 6: Render image from selected features */
 				stateWorker6 = new StateWorker6();
 				stateWorker6.execute();
+				/* --> State 5 */
 				break;
 					
 			case 7:
@@ -200,57 +204,21 @@ public class BlotterCommand implements Command{
 				/* State 8: Retrieves spectra data of the selected region of interest */
 				stateWorker8 = new StateWorker8();
 				stateWorker8.execute();
+				/* --> State 7 */
 				break;
 				
 			case 9:
 				/* State 9: Plot the spectraData */
 				stateWorker9 = new StateWorker9();
 				stateWorker9.execute();
+				/* --> State 7 */
 				break;
 				
 			case 10:
-				/* State 10: Calculate euclidean distance */
-				ArrayList<SpectraData> selectedSpectra = selectSpectraDialog.getSelectedSpectra();
-				ArrayList<String> rowColNames = new ArrayList<String>();
-				ArrayList<double[]> data = new ArrayList<double[]>(); 
-				
-				//Index tracks which value to omit
-				int zeroIndex = 0;
-				int noOfSpectra = selectedSpectra.size();
-				
-				//Iterate through selected spectra and calculate eucldiean distance between it and other spectra
-				while(zeroIndex < noOfSpectra) {
-					
-					int index = 0;
-					double[] calculatedEucd = new double[noOfSpectra];
-					
-					while(index < noOfSpectra) {
-						
-						if(index != zeroIndex)
-							calculatedEucd[index] = spectraMain.euclideanDistance(selectedSpectra.get(zeroIndex), selectedSpectra.get(index));
-						else
-							calculatedEucd[index] = 0;
-							
-						index++;
-					}
-					
-					data.add(calculatedEucd);
-					
-					zeroIndex++;
-				}
-				
-				//Iterate through selected spectra and retrieve names
-				
-				rowColNames.add("X");
-				
-				for(SpectraData thisData: selectedSpectra)
-					rowColNames.add(thisData.getName());
-			
-				initDisplayEucdDialog(rowColNames,data);
-				
-				displayEucdDialog.setVisible(true);
-				
-				changeState(7);
+				/* State 10: Calculate Euclidean distance between spectra*/
+				stateWorker10 = new StateWorker10();
+				stateWorker10.execute();
+				/* --> State 7 */
 				break;
 				
 			default:
@@ -389,6 +357,67 @@ public class BlotterCommand implements Command{
 		}
 		
 	}
+	
+	/*
+	 * SwingWorker for State 10
+	 * Changes to state 7 when done
+	 */
+	class StateWorker10 extends SwingWorker{
+
+		@Override
+		protected Object doInBackground() throws Exception {
+			
+			/* State 10: Calculate euclidean distance */
+			ArrayList<SpectraData> selectedSpectra = selectSpectraDialog.getSelectedSpectra();
+			ArrayList<String> rowColNames = new ArrayList<String>();
+			ArrayList<double[]> data = new ArrayList<double[]>(); 
+			
+			//Index tracks which value to omit
+			int zeroIndex = 0;
+			int noOfSpectra = selectedSpectra.size();
+			
+			//Iterate through selected spectra and calculate eucldiean distance between it and other spectra
+			while(zeroIndex < noOfSpectra) {
+				
+				int index = 0;
+				double[] calculatedEucd = new double[noOfSpectra];
+				
+				while(index < noOfSpectra) {
+					
+					if(index != zeroIndex)
+						calculatedEucd[index] = spectraMain.euclideanDistance(selectedSpectra.get(zeroIndex), selectedSpectra.get(index));
+					else
+						calculatedEucd[index] = 0;
+						
+					index++;
+				}
+				
+				data.add(calculatedEucd);
+				
+				zeroIndex++;
+			}
+			
+			//Iterate through selected spectra and retrieve names
+			
+			rowColNames.add("X");
+			
+			for(SpectraData thisData: selectedSpectra)
+				rowColNames.add(thisData.getName());
+		
+			initDisplayEucdDialog(rowColNames,data);
+			
+			displayEucdDialog.setVisible(true);
+			return null;
+			
+		}
+			
+		@Override
+		protected void done(){	
+			changeState(7);
+		}
+		
+	}
+	
 	
 	/* Following code governs how JDialogs interact with event-dispatcher thread */
 	
@@ -569,8 +598,7 @@ public class BlotterCommand implements Command{
 		displayEucdDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
 	}
-	
-	
+
 	/*
 	 * Cleans up all Java Swing components
 	 */

@@ -8,7 +8,6 @@ public class SpectraFileFilter implements FileFilter
 	
  
   private final String[] okFileExtensions = new String[] {"spec"};
-  private String description= ".spec";
 
   public boolean accept(File file)
   {
@@ -21,10 +20,5 @@ public class SpectraFileFilter implements FileFilter
     }
     return false;
   }
-  
-  public String getDescription() {
-	    return description;
- }
-
 
 }
