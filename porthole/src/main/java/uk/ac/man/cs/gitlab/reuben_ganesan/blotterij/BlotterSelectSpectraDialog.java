@@ -36,9 +36,9 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	/*
 	 * Declare JComponents
 	 */		
-	JPanel confirmPanel;
-	JPanel infoPanel;
-	JPanel spectraPanel;	
+	JPanel bottomButtonPanel;
+	JPanel centerPanel;
+	JPanel topButtonPanel;	
 	JScrollPane tableScroller;
 	JTable spectraTable;
 	JPanel spectraButtons;
@@ -46,6 +46,8 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	JButton removeButton;
 	JButton plotButton;
 	JButton eucdButton;
+	JButton loadButton;
+	JButton saveButton;
 	SpectraTableModel spectraTableModel;
 	Rectangle selection;
 	
@@ -64,16 +66,18 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		 removeButton = new JButton("Remove");
 		 plotButton = new JButton("Plot");
 		 eucdButton = new JButton("Eucd.D");
-		 confirmPanel = new JPanel();
-		 infoPanel = new JPanel();
-		 spectraPanel = new JPanel();
+		 loadButton = new JButton("Load");
+		 saveButton = new JButton("Save");
+		 bottomButtonPanel = new JPanel();
+		 centerPanel = new JPanel();
+		 topButtonPanel = new JPanel();
 		 spectraTableModel = new SpectraTableModel();
 		 spectraTable = new JTable(spectraTableModel);
 		 spectraListSelectionModel = spectraTable.getSelectionModel();
 		 
 		 spectraData = new ArrayList<SpectraData>();
 				
-		getContentPane().add(infoPanel,BorderLayout.CENTER);
+		getContentPane().add(centerPanel,BorderLayout.CENTER);
 		{			
 			spectraTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		    spectraTable.setRowSelectionAllowed(true);
@@ -84,10 +88,10 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			
 			tableScroller = new JScrollPane(spectraTable);
 			spectraTable.setFillsViewportHeight(true);
-			infoPanel.add(tableScroller);
+			centerPanel.add(tableScroller);
 		}
 		
-		getContentPane().add(spectraPanel, BorderLayout.PAGE_START);
+		getContentPane().add(topButtonPanel, BorderLayout.PAGE_START);
 		{
 			/*
 			 * addButton configuration
@@ -170,12 +174,12 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			removeButton.setEnabled(false);
 			
 			spectraButtons.add(removeButton);
-			spectraPanel.add(spectraButtons);
+			topButtonPanel.add(spectraButtons);
 		
 			
 		}
 		
-		getContentPane().add(confirmPanel,BorderLayout.PAGE_END);
+		getContentPane().add(bottomButtonPanel,BorderLayout.PAGE_END);
 		{
 			
 			/*
@@ -201,7 +205,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 				
 			});
 			
-			confirmPanel.add(plotButton);
+			bottomButtonPanel.add(plotButton);
 			plotButton.setEnabled(false);
 			
 			
@@ -235,8 +239,39 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 				
 			});
 			
-			confirmPanel.add(eucdButton);
+			bottomButtonPanel.add(eucdButton);
 			eucdButton.setEnabled(false);
+			
+			/*
+			 * loadButton configuration
+			 * calculates euclidean distance between two spectra
+			 */
+			loadButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(final ActionEvent arg0) {
+									
+				}
+				
+			});
+			
+			bottomButtonPanel.add(loadButton);
+			loadButton.setEnabled(false);
+			
+			/*
+			 * saveButton configuration
+			 */
+			saveButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(final ActionEvent arg0) {
+									
+				}
+				
+			});
+			
+			bottomButtonPanel.add(saveButton);
+			saveButton.setEnabled(true);
 			
 		}	
 		

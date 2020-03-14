@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -34,7 +33,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 	 * Declare JComponents
 	 */		
 	JPanel buttonPanel;
-	JPanel infoPanel;
+	JPanel centerPanel;
 	JScrollPane tableScroller;
 	JTable featuresTable;
 	JButton renderButton;
@@ -55,14 +54,14 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		renderButton = new JButton("Render");
 		plotButton = new JButton("Plot");
 		buttonPanel = new JPanel();
-		infoPanel = new JPanel();
+		centerPanel = new JPanel();
 		featuresTableModel = new FeaturesTableModel();
 		featuresTable = new JTable(featuresTableModel);
 		featuresListSelectionModel =  featuresTable.getSelectionModel();
 		 
 		featureData = new ArrayList<PcaFeature>();
 		 
-		getContentPane().add(infoPanel,BorderLayout.CENTER);
+		getContentPane().add(centerPanel,BorderLayout.CENTER);
 		{			
 			featuresTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		    featuresTable.setRowSelectionAllowed(true);
@@ -74,7 +73,7 @@ public class  BlotterSelectFeatureDialog extends BlotterFeatureDialog {
 		    
 			tableScroller = new JScrollPane(featuresTable);
 			featuresTable.setFillsViewportHeight(true);
-			infoPanel.add(tableScroller);
+			centerPanel.add(tableScroller);
 		}
 		
 		getContentPane().add(buttonPanel,BorderLayout.PAGE_END);

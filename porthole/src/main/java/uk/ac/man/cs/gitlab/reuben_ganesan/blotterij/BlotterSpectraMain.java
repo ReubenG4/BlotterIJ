@@ -41,7 +41,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	}
 	
 	//Assembles SpectraData from PxlData
-	public SpectraData calcSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
+	public SpectraData<T> calcSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
 		return new SpectraData(imgData,selection);
 	}
 	

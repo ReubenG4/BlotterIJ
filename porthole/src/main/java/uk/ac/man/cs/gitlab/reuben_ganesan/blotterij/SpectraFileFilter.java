@@ -6,7 +6,6 @@ import java.io.FileFilter;
 public class SpectraFileFilter implements FileFilter
 {
 	
- 
   private final String[] okFileExtensions = new String[] {"spec"};
 
   public boolean accept(File file)

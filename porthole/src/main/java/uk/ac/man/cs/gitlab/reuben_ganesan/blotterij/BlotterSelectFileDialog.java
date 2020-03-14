@@ -37,9 +37,9 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 	/*
 	 * Declare JComponents
 	 */		
-	JPanel confirmPanel;
-	JPanel infoPanel;
-	JPanel filePanel;	
+	JPanel bottomButtonPanel;
+	JPanel centerPanel;
+	JPanel topButtonPanel;	
 	JScrollPane tableScroller;
 	JTable fileTable;
 	JLabel fileName;
@@ -63,9 +63,9 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 		 addButton = new JButton("Add");
 		 removeButton = new JButton("Remove");
 		 confirmButton = new JButton("Confirm");
-		 confirmPanel = new JPanel();
-		 infoPanel = new JPanel();
-		 filePanel = new JPanel();
+		 bottomButtonPanel = new JPanel();
+		 centerPanel = new JPanel();
+		 topButtonPanel = new JPanel();
 		 fileTableModel = new FileTableModel();
 		 fileTable = new JTable(fileTableModel);
 		 fileListSelectionModel = fileTable.getSelectionModel();
@@ -73,7 +73,7 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 		 
 		 imgData = new ArrayList<ImgWrapper>();
 				
-		getContentPane().add(infoPanel,BorderLayout.CENTER);
+		getContentPane().add(centerPanel,BorderLayout.CENTER);
 		{			
 			fileTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		    fileTable.setRowSelectionAllowed(true);
@@ -82,10 +82,10 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 			
 			tableScroller = new JScrollPane(fileTable);
 			fileTable.setFillsViewportHeight(true);
-			infoPanel.add(tableScroller);
+			centerPanel.add(tableScroller);
 		}
 		
-		getContentPane().add(filePanel, BorderLayout.PAGE_START);
+		getContentPane().add(topButtonPanel, BorderLayout.PAGE_START);
 		{
 			/*
 			 * addButton configuration
@@ -99,17 +99,17 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 				public void actionPerformed(final ActionEvent arg0) {
 					
 					//Retrieve value from ui chooseFiles
-				    List<File>initialValue = new LinkedList<File>();
+					List<File>initialValue = new LinkedList<File>();
 					List<File>inputList = getUIService().chooseFiles(null , initialValue, new ImageFileFilter(), FileWidget.OPEN_STYLE);
 					if(inputList == null) {
 						return;
 					}
-					
+
 					//Iterate through list of chosen files
 					Iterator<File> fileItr = inputList.iterator();						
 					MetadataExtractor fileHelper = new MetadataExtractor();
 					File fileToAdd;
-									
+
 					//While iterator hasNext, add it as a row to table
 					while (fileItr.hasNext()) {
 						fileToAdd = fileItr.next();
@@ -121,11 +121,11 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 					fileTableModel.sortTable();
 					fileTableModel.fireTableDataChanged();
 					resizeColumnWidth();
-					
+
 					//If there's more than one row available, enable the confirm button
 					if(fileTableModel.getRowCount() > 2)
 						confirmButton.setEnabled(true);			
-					
+
 				}
 				
 			});
@@ -157,12 +157,12 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 			removeButton.setEnabled(false);
 			
 			fileButtons.add(removeButton);
-			filePanel.add(fileButtons);
+			topButtonPanel.add(fileButtons);
 		
 			
 		}
 		
-		getContentPane().add(confirmPanel,BorderLayout.PAGE_END);
+		getContentPane().add(bottomButtonPanel,BorderLayout.PAGE_END);
 		{
 			
 			/*
@@ -193,7 +193,7 @@ public class  BlotterSelectFileDialog extends BlotterImgDialog {
 				
 			});
 			
-			confirmPanel.add(confirmButton);
+			bottomButtonPanel.add(confirmButton);
 			confirmButton.setEnabled(false);
 			
 		}	
