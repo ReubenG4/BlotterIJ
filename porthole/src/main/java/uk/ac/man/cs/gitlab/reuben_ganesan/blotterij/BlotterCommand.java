@@ -221,6 +221,16 @@ public class BlotterCommand implements Command{
 				/* --> State 7 */
 				break;
 				
+			case 11:
+				/* State 11: Load Spectra */
+				changeState(7);
+				break;
+				
+			case 12:
+				/* State 12: Save Spectra */
+				changeState(7);
+				break;
+				
 			default:
 				ui.showDialog("State out of bounds, value:"+nextState);
 				break;

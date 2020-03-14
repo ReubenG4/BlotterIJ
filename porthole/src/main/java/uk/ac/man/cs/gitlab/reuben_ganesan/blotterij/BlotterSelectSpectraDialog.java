@@ -155,18 +155,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 						return;
 					}
 					
-					spectraTableModel.removeRow(index);	
-					spectraTableModel.sortTable();
-					spectraTableModel.fireTableDataChanged();
-					resizeColumnWidth();
-					
-					//If there's less than one row available, disable the plot button
-					if(spectraTableModel.getRowCount() < 1)
-						plotButton.setEnabled(false);
-					
-					if(spectraTableModel.getRowCount() < 2)
-						eucdButton.setEnabled(false);
-									
+					removeData(index);					
 				}
 				
 			});
@@ -250,13 +239,21 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-									
+					//Flag for next state
+					setNextState(true);
+					
+					//Set nextStateIndex
+					setNextStateIndex(11);
+							
+					//SelectDialog set to be no longer visible 
+					setVisible(false);
+													
 				}
 				
 			});
 			
 			bottomButtonPanel.add(loadButton);
-			loadButton.setEnabled(false);
+			loadButton.setEnabled(true);
 			
 			/*
 			 * saveButton configuration
@@ -265,13 +262,22 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 
 				@Override
 				public void actionPerformed(final ActionEvent arg0) {
-									
+					
+					//Flag for next state
+					setNextState(true);
+					
+					//Set nextStateIndex
+					setNextStateIndex(12);
+							
+					//SelectDialog set to be no longer visible 
+					setVisible(false);
+																			
 				}
 				
 			});
 			
 			bottomButtonPanel.add(saveButton);
-			saveButton.setEnabled(true);
+			saveButton.setEnabled(false);
 			
 		}	
 		
@@ -289,8 +295,24 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		if(spectraTableModel.getRowCount() > 0)
 			plotButton.setEnabled(true);
 		
+		//If there's at least two rows available, enable eucdButton
 		if(spectraTableModel.getRowCount() > 1)
 			eucdButton.setEnabled(true);
+	}
+	
+	public void removeData(int index){
+		
+		spectraTableModel.removeRow(index);	
+		spectraTableModel.sortTable();
+		spectraTableModel.fireTableDataChanged();
+		resizeColumnWidth();
+		
+		//If there's less than one row available, disable the plot button
+		if(spectraTableModel.getRowCount() < 1)
+			plotButton.setEnabled(false);
+		
+		if(spectraTableModel.getRowCount() < 2)
+			eucdButton.setEnabled(false);
 	}
 	
 	public ArrayList<SpectraData> getSelectedSpectra() {
@@ -313,17 +335,19 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			
 			if(lsm.isSelectionEmpty()) {
 				removeButton.setEnabled(false);
-				
+				saveButton.setEnabled(false);
 			}
 			else {
 				int noOfChoices = spectraTable.getSelectedRows().length;
 		
 				switch(noOfChoices) {
 					case 1:
+						saveButton.setEnabled(true);
 						removeButton.setEnabled(true);
 						break;
 					
 					default:
+						saveButton.setEnabled(false);
 						removeButton.setEnabled(false);
 						break;
 				}
