@@ -212,14 +212,6 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 					
 					//Set nextStateIndex
 					setNextStateIndex(10);
-					
-					if(selectedSpectra == null)
-						selectedSpectra = new ArrayList<SpectraData>();
-					else
-						selectedSpectra.clear();
-					
-					//Retrieve chosen files and store them in imgData
-					selectedSpectra.addAll(spectraTableModel.getData());
 							
 					//SelectDialog set to be no longer visible 
 					setVisible(false);
@@ -315,8 +307,17 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			eucdButton.setEnabled(false);
 	}
 	
-	public ArrayList<SpectraData> getSelectedSpectra() {
+	public ArrayList<SpectraData> getData() {
 		return spectraTableModel.getData();
+	}
+	
+	public SpectraData getSelectedData() {
+		int index = spectraTable.getSelectedRow();
+		
+		if(index != -1)
+			return getData().get(index);
+		else
+			return null;
 	}
 	
 	public Rectangle getSelectedRegion() {

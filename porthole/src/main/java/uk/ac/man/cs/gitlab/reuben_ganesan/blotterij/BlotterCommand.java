@@ -2,6 +2,7 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -10,6 +11,7 @@ import javax.swing.WindowConstants;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.IOException;
 
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
@@ -223,11 +225,33 @@ public class BlotterCommand implements Command{
 				
 			case 11:
 				/* State 11: Load Spectra */
+				//Declare variables
+				ArrayList<SpectraData> input = null;
+				
+				try {
+					input = spectraMain.loadSpectra();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				if(input != null) {
+				
+					Iterator<SpectraData> inputItr = input.iterator();
+
+					while(inputItr.hasNext())
+						selectSpectraDialog.addData(inputItr.next());
+				}
+				
 				changeState(7);
 				break;
 				
 			case 12:
 				/* State 12: Save Spectra */
+				SpectraData toBeSaved = selectSpectraDialog.getSelectedData();
+				if(toBeSaved != null)
+					spectraMain.saveSpectra(toBeSaved);
 				changeState(7);
 				break;
 				
@@ -354,7 +378,7 @@ public class BlotterCommand implements Command{
 		@Override
 		protected Object doInBackground() throws Exception {
 			
-			ArrayList<SpectraData> spectraList = selectSpectraDialog.getSelectedSpectra();
+			ArrayList<SpectraData> spectraList = selectSpectraDialog.getData();
 			XYChart chart = spectraMain.plotSpectra(spectraList);
 			new SwingWrapper<XYChart>(chart).displayChart().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			return null;
@@ -378,7 +402,7 @@ public class BlotterCommand implements Command{
 		protected Object doInBackground() throws Exception {
 			
 			/* State 10: Calculate euclidean distance */
-			ArrayList<SpectraData> selectedSpectra = selectSpectraDialog.getSelectedSpectra();
+			ArrayList<SpectraData> selectedSpectra = selectSpectraDialog.getData();
 			ArrayList<String> rowColNames = new ArrayList<String>();
 			ArrayList<double[]> data = new ArrayList<double[]>(); 
 			

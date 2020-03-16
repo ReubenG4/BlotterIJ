@@ -30,7 +30,8 @@ class SpectraTableModel extends AbstractTableModel {
     
     public void addRow(SpectraData input) {
   
-    	input.setName("Region "+ (++noOfRows) );
+    	if(input.getName() == null)
+    		input.setName("Region "+ (++noOfRows) );
     	
     	data.add(input);
     }

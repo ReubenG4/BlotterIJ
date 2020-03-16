@@ -16,7 +16,12 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 	private String name;
 	private int noOfPixels;
 	private int noOfWavelengths;
+	
+	//Hardcoded for now
+	private double normalisationRatio = 1;
+	
 	private Array2DRowRealMatrix data;
+	private Array2DRowRealMatrix normalisationData;
 	private Rectangle selection;
 	
 	SpectraData(PxlData2<T> input){
@@ -34,7 +39,7 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 		selection = input.getSelection();
 		
 		//Initialise name
-		name = "Region";
+		name = null;
 		
 		//Initialise Matrix to hold flattened pxlData
 		RealMatrix flattenedData = input.flatten();	
@@ -45,6 +50,11 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 		//Calculate the mean of pixel data at each wavelength
 		calc(flattenedData, wavelengths);
 				
+	}
+	
+	SpectraData(PxlData2<T> input, Array2DRowRealMatrix calibrationData){
+		this(input);
+		this.normalisationData = calibrationData;
 	}
 	
 	SpectraData(ArrayList<ImgWrapper<T>> imgData, Rectangle selection){
@@ -89,10 +99,30 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 		IJ.showStatus("Spectra calculation done...");
 	}
 	
-	public RealMatrix getData(int row) {
-		return data.getRowMatrix(row);
-	}
+	//Return value after calibration
+	public RealMatrix getCalibratedData() {
+		
+		//declare variables
+		double dataVal;
+		double calibrateVal;
+		double finalVal;
+	
+		//final value = (recorded data value / recorded calibration value) * calibration ratio
+		RealMatrix returnObj = data.copy();
+		
+		//iterate through data and 
+		for(int rowIndex=0; rowIndex < noOfWavelengths; rowIndex++) {
 
+			dataVal = data.getRow(rowIndex)[1];
+			calibrateVal = normalisationData.getRow(rowIndex)[1];
+			finalVal = (dataVal / calibrateVal) * normalisationRatio;
+
+			returnObj.setEntry(rowIndex, 1, finalVal);
+		}
+
+		return returnObj;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -118,11 +148,11 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 		this.selection = selection;
 	}
 
-	public Array2DRowRealMatrix getData() {
+	public Array2DRowRealMatrix getRawData() {
 		return data;
 	}
 
-	public void setData(Array2DRowRealMatrix data) {
+	public void setRawData(Array2DRowRealMatrix data) {
 		this.data = data;
 	}
 

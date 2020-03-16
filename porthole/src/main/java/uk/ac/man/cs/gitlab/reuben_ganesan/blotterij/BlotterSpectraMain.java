@@ -10,9 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -25,8 +22,6 @@ import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler.ChartTheme;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import org.scijava.widget.FileWidget;
-
 import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -34,6 +29,9 @@ import net.imglib2.type.numeric.RealType;
 /* Assembles SpectraData from PxlData and plot SpectraData */
 public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends BlotterFunction{
 	
+	String lastOpenDirectory = null;
+	
+	Array2DRowRealMatrix normalisationData;
 	
 	/* Constructor */
 	public BlotterSpectraMain() {
@@ -45,13 +43,30 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		return new SpectraData(imgData,selection);
 	}
 	
+	public void calcNormalisationSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
+		normalisationData = new SpectraData(imgData,selection).getRawData();
+	}
+	
+	
 	//Saves the chosen spectra
 	public void saveSpectra(SpectraData<T> output) {
 	
 		//Declare variables
-		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("BlotterIJ Spectra Files", "spec");
-		jfc.addChoosableFileFilter(filter);
+		JFileChooser jfc;
+		
+		//Initialise fileChooser and filefilter
+		//If no last open directory, use default directory
+		if(lastOpenDirectory == null)
+			jfc = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
+		else
+			jfc = new JFileChooser(lastOpenDirectory);
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(".spec", "spec");
+		jfc.setFileFilter(filter);
+		
+		//Set filename to default
+		String defaultFilename = output.getName() + ".spec";
+		jfc.setSelectedFile(new File(defaultFilename));
 		
 		//Show save dialog
 		int returnValue = jfc.showSaveDialog(null);
@@ -82,32 +97,63 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		} catch (IOException e) {
 			System.out.println("Error initializing stream");
 		}
+		
+		//Set last open directory
+		lastOpenDirectory = selectedFile.getPath();
 	}
 	
 	public ArrayList<SpectraData<T>> loadSpectra() throws IOException, ClassNotFoundException {
 		//Declare function variables
 		FileInputStream fi = null;
 		ObjectInputStream oi;
+		JFileChooser jfc;
 		
 		//Initialise data structures
-		ArrayList<SpectraData<T>> chosenFiles = new ArrayList<SpectraData<T>>();
-		List<File>initialValue = new LinkedList<File>();
+		File[] selectedFiles = null;
+		ArrayList<SpectraData<T>> inputData = new ArrayList<SpectraData<T>>();
 		
 		//Retrieve chosen files
-		List<File>inputList = getUIService().chooseFiles(null , initialValue, new SpectraFileFilter(), FileWidget.OPEN_STYLE);
-		Iterator<File> fileItr = inputList.iterator();
 		
-		//Open files and cast to spectra data
-		while(fileItr.hasNext()) {
-			fi = new FileInputStream(fileItr.next());
+		//Initalise file chooser and file filter
+		//If no last open directory, use default directory
+		if(lastOpenDirectory == null)
+			jfc = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
+		else
+			jfc = new JFileChooser(lastOpenDirectory);
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(".spec", "spec");
+		jfc.setFileFilter(filter);
+		jfc.setMultiSelectionEnabled(true);
+				
+		//Show load dialog
+		int returnValue = jfc.showOpenDialog(null);
+		
+		//If no value given, return
+		//Else pass on selectedFile
+		if (returnValue == JFileChooser.APPROVE_OPTION) 
+			selectedFiles = jfc.getSelectedFiles();
+		else 
+			return null;
+
+		int noOfFiles = selectedFiles.length;
+		
+		//Iterate through selected files and cast them to Spectra
+		for(int index=0; index < noOfFiles; index++) {
+		
+		
+			fi = new FileInputStream(selectedFiles[index]);
 			oi = new ObjectInputStream(fi);
 			
 			SpectraData<T> inputSpectra = (SpectraData<T>) oi.readObject();
-			
-			chosenFiles.add(inputSpectra);
+			inputData.add(inputSpectra);
 		}
-
-		return chosenFiles;
+		
+		//set last open directory
+		if(noOfFiles > 0)
+			lastOpenDirectory = selectedFiles[0].getPath();
+		
+		//Return spectra
+		return inputData;
 	}
 
 	
@@ -128,7 +174,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 			//Retrieve data and place it in arrays
 			SpectraData<T> curr = itr.next();
 			
-			Array2DRowRealMatrix currData = curr.getData();
+			Array2DRowRealMatrix currData = curr.getRawData();
 			
 			int rowIndex = currData.getRowDimension();
 			
@@ -157,8 +203,8 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 			return -1;
 		}
 		
-		Array2DRowRealMatrix data1 = spectra1.getData();
-		Array2DRowRealMatrix data2 = spectra2.getData();
+		Array2DRowRealMatrix data1 = spectra1.getRawData();
+		Array2DRowRealMatrix data2 = spectra2.getRawData();
 	
 		int rowIndex = data1.getRowDimension();
 		double distance = 0;
