@@ -255,6 +255,16 @@ public class BlotterCommand implements Command{
 				changeState(7);
 				break;
 				
+			case 13:
+				/* State 13: Retrieve normalisation Spectra for calibration */
+				Rectangle selection = selectSpectraDialog.getSelectedRegion();
+				spectraMain.calcNormalisationSpectra(imgData, selection);
+				
+				//Enable adding of Spectra
+				selectSpectraDialog.addButton.setEnabled(true);
+				changeState(7);
+				break;
+				
 			default:
 				ui.showDialog("State out of bounds, value:"+nextState);
 				break;

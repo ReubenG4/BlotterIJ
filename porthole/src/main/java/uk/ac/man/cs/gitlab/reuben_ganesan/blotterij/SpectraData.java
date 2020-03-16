@@ -11,20 +11,22 @@ import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+/* Spectra's pixel values at each recorded wavelength */
 public class SpectraData<T extends RealType<T> & NativeType<T>> implements Serializable{
 	
+	//Declare class variables
 	private String name;
 	private int noOfPixels;
 	private int noOfWavelengths;
-	
 	//Hardcoded for now
-	private double normalisationRatio = 1;
+	private double calibrationRatio = 1;
 	
+	//Declare datastructures
 	private Array2DRowRealMatrix data;
 	private Array2DRowRealMatrix normalisationData;
 	private Rectangle selection;
 	
-	SpectraData(PxlData2<T> input){
+	public SpectraData(PxlData2<T> input){
 		
 		//Find out number of pixels in a single dataset
 		this.noOfPixels = input.getWidth() * input.getHeight();
@@ -52,14 +54,15 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 				
 	}
 	
-	SpectraData(PxlData2<T> input, Array2DRowRealMatrix calibrationData){
-		this(input);
-		this.normalisationData = calibrationData;
-	}
-	
-	SpectraData(ArrayList<ImgWrapper<T>> imgData, Rectangle selection){
+	public SpectraData(ArrayList<ImgWrapper<T>> imgData, Rectangle selection){
 		this(new PxlData2(imgData,selection));
 	}
+	
+	public SpectraData(ArrayList<ImgWrapper<T>> imgData, Rectangle selection, Array2DRowRealMatrix normalisationData){
+		this(new PxlData2(imgData,selection));
+		this.normalisationData = normalisationData;
+	}
+	
 	
 	public void calc(RealMatrix flattenedData, ArrayList<Integer> wavelengths) {	
 		
@@ -100,27 +103,32 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 	}
 	
 	//Return value after calibration
-	public RealMatrix getCalibratedData() {
+	public Array2DRowRealMatrix getNormalisedData() {
 		
 		//declare variables
 		double dataVal;
-		double calibrateVal;
+		double normalisationVal;
 		double finalVal;
 	
-		//final value = (recorded data value / recorded calibration value) * calibration ratio
-		RealMatrix returnObj = data.copy();
 		
-		//iterate through data and 
+		Array2DRowRealMatrix returnMatrix = new Array2DRowRealMatrix(noOfWavelengths,2);
+		
+		//iterate through data
 		for(int rowIndex=0; rowIndex < noOfWavelengths; rowIndex++) {
+			
+			//normalised data value = (recorded data value / recorded normalisation value) * calibration ratio
+			double[] normalData = new double[2];
 
 			dataVal = data.getRow(rowIndex)[1];
-			calibrateVal = normalisationData.getRow(rowIndex)[1];
-			finalVal = (dataVal / calibrateVal) * normalisationRatio;
-
-			returnObj.setEntry(rowIndex, 1, finalVal);
+			normalisationVal = normalisationData.getRow(rowIndex)[1];
+			
+			normalData[0] = data.getRow(rowIndex)[0];
+			normalData[1] = (dataVal / normalisationVal) * calibrationRatio;
+			
+			returnMatrix.setRow(rowIndex, normalData);
 		}
 
-		return returnObj;
+		return returnMatrix;
 	}
 	
 	public String getName() {

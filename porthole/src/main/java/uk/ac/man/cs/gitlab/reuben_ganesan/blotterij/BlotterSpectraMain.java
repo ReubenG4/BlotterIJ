@@ -31,7 +31,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	
 	String lastOpenDirectory = null;
 	
-	Array2DRowRealMatrix normalisationData;
+	Array2DRowRealMatrix normalisationData = null;
 	
 	/* Constructor */
 	public BlotterSpectraMain() {
@@ -40,13 +40,16 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	
 	//Assembles SpectraData from PxlData
 	public SpectraData<T> calcSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
-		return new SpectraData(imgData,selection);
+		
+		if(normalisationData == null)
+			return new SpectraData(imgData,selection);
+		else
+			return new SpectraData(imgData, selection, normalisationData);
 	}
 	
 	public void calcNormalisationSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
 		normalisationData = new SpectraData(imgData,selection).getRawData();
 	}
-	
 	
 	//Saves the chosen spectra
 	public void saveSpectra(SpectraData<T> output) {
@@ -203,8 +206,8 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 			return -1;
 		}
 		
-		Array2DRowRealMatrix data1 = spectra1.getRawData();
-		Array2DRowRealMatrix data2 = spectra2.getRawData();
+		Array2DRowRealMatrix data1 = spectra1.getNormalisedData();
+		Array2DRowRealMatrix data2 = spectra2.getNormalisedData();
 	
 		int rowIndex = data1.getRowDimension();
 		double distance = 0;

@@ -48,6 +48,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 	JButton eucdButton;
 	JButton loadButton;
 	JButton saveButton;
+	JButton calibrationButton;
 	SpectraTableModel spectraTableModel;
 	Rectangle selection;
 	
@@ -68,6 +69,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 		 eucdButton = new JButton("Eucd.D");
 		 loadButton = new JButton("Load");
 		 saveButton = new JButton("Save");
+		 calibrationButton = new JButton("Calibrate");
 		 bottomButtonPanel = new JPanel();
 		 centerPanel = new JPanel();
 		 topButtonPanel = new JPanel();
@@ -138,6 +140,7 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			});
 			
 			spectraButtons.add(addButton);
+			addButton.setEnabled(false);
 			
 			/*
 			 * removeButton configuration
@@ -270,6 +273,53 @@ public class  BlotterSelectSpectraDialog extends BlotterSpectraDialog {
 			
 			bottomButtonPanel.add(saveButton);
 			saveButton.setEnabled(false);
+			
+			/*
+			 * calibrationButton configuration
+			 */
+			
+			calibrationButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(final ActionEvent arg0) {
+					
+					/* Retrieve region of interest from imageJ UI */
+					
+					//Declare and initalise variables
+					ImagePlus imp = IJ.getImage();
+					ImageProcessor ip = imp.getProcessor();
+					Roi roi = imp.getRoi();
+					
+					//Retrieve image title
+					String title = imp.getTitle();
+					
+					//Check if an area has been selected
+					if ((roi==null||!roi.isArea())) {
+						IJ.error("Area selection required");
+						return;
+					}
+					
+					//Check if the correct image has been selected
+					if(title.compareTo("FalseRGB") != 0) {
+						IJ.error("Please area select using FalseRGB image");
+						return;
+					}
+					
+					//With selection verified, get the rectangle
+					selection = roi.getBounds();
+					
+					//Set flag for next state
+					setNextState(true);
+					setNextStateIndex(13);
+					setVisible(false);
+					
+				}
+				
+			});
+			
+			
+			bottomButtonPanel.add(calibrationButton);
+			calibrationButton.setEnabled(true);
 			
 		}	
 		
