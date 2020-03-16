@@ -97,6 +97,9 @@ public class BlotterCommand implements Command{
 	StateWorker8 stateWorker8;
 	StateWorker9 stateWorker9;
 	StateWorker10 stateWorker10;
+	StateWorker11 stateWorker11;
+	StateWorker12 stateWorker12;
+	StateWorker13 stateWorker13;
 	
 	public void run() {
 		
@@ -225,44 +228,20 @@ public class BlotterCommand implements Command{
 				
 			case 11:
 				/* State 11: Load Spectra */
-				//Declare variables
-				ArrayList<SpectraData> input = null;
-				
-				try {
-					input = spectraMain.loadSpectra();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				if(input != null) {
-				
-					Iterator<SpectraData> inputItr = input.iterator();
-
-					while(inputItr.hasNext())
-						selectSpectraDialog.addData(inputItr.next());
-				}
-				
-				changeState(7);
+				stateWorker11 = new StateWorker11();
+				stateWorker11.execute();
 				break;
 				
 			case 12:
 				/* State 12: Save Spectra */
-				SpectraData toBeSaved = selectSpectraDialog.getSelectedData();
-				if(toBeSaved != null)
-					spectraMain.saveSpectra(toBeSaved);
-				changeState(7);
+				stateWorker12 = new StateWorker12();
+				stateWorker12.execute();
 				break;
 				
 			case 13:
 				/* State 13: Retrieve normalisation Spectra for calibration */
-				Rectangle selection = selectSpectraDialog.getSelectedRegion();
-				spectraMain.calcNormalisationSpectra(imgData, selection);
-				
-				//Enable adding of Spectra
-				selectSpectraDialog.addButton.setEnabled(true);
-				changeState(7);
+				stateWorker13 = new StateWorker13();
+				stateWorker13.execute();
 				break;
 				
 			default:
@@ -462,7 +441,85 @@ public class BlotterCommand implements Command{
 		
 	}
 	
+	/*
+	 * SwingWorker for State 11
+	 * Changes to state 7 when done
+	 */
+	class StateWorker11 extends SwingWorker{
+
+		/* Load Spectra and add it to selectSpectraDialog */
+		@Override
+		protected Object doInBackground() throws Exception {
+			ArrayList<SpectraData> input = null;
+			
+			try {
+				input = spectraMain.loadSpectra();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if(input != null) {
+			
+				Iterator<SpectraData> inputItr = input.iterator();
+
+				while(inputItr.hasNext())
+					selectSpectraDialog.addData(inputItr.next());
+			}
+			
+			return null;
+		}
+
+		@Override
+		protected void done(){	
+			changeState(7);
+		}
+	}
 	
+	/*
+	 * SwingWorker for State 12
+	 * Changes to state 7 when done
+	 */
+	class StateWorker12 extends SwingWorker{
+
+		/* Save selected Spectra from selectSpectraDialog */
+		@Override
+		protected Object doInBackground() throws Exception {
+			SpectraData toBeSaved = selectSpectraDialog.getSelectedData();
+			if(toBeSaved != null)
+				spectraMain.saveSpectra(toBeSaved);
+			return null;
+		}
+
+		@Override
+		protected void done(){	
+			changeState(7);
+		}
+	}
+	
+	/*
+	 * SwingWorker for State 13
+	 * Changes to state 7 when done
+	 */
+	class StateWorker13 extends SwingWorker{
+
+		/* Retrieve selected region and extra Spectra Data for use as normalisation data */
+		@Override
+		protected Object doInBackground() throws Exception {
+			Rectangle selection = selectSpectraDialog.getSelectedRegion();
+			spectraMain.calcNormalisationSpectra(imgData, selection);
+			
+			//Enable adding of Spectra
+			selectSpectraDialog.addButton.setEnabled(true);
+			return null;
+		}
+
+		@Override
+		protected void done(){	
+			changeState(7);
+		}
+	}
 	/* Following code governs how JDialogs interact with event-dispatcher thread */
 	
 	

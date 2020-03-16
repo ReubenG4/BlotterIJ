@@ -22,6 +22,8 @@ import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler.ChartTheme;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+import org.scijava.ui.DialogPrompt;
+
 import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -49,6 +51,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	
 	public void calcNormalisationSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
 		normalisationData = new SpectraData(imgData,selection).getRawData();
+	
 	}
 	
 	//Saves the chosen spectra

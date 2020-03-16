@@ -3,7 +3,9 @@ package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -13,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
+import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -52,8 +55,27 @@ public class BlotterDisplayEucdDialog extends BlotterDialog{
 		}
 		
 		getContentPane().add(buttonPanel, BorderLayout.PAGE_END);{
+			
+			printButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+
+						boolean complete = eucdTable.print();
+						if(!complete)
+							IJ.showMessage("Printing failed!");
+
+					}catch(PrinterException pe){
+						IJ.showMessage("Printing failed!");
+					}
+				}
+			});
+
 			buttonPanel.add(printButton);
 		}
+		
+		
 		
 		resizeColumnWidth();
 	}
