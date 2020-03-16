@@ -169,7 +169,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		XYChart chart = new XYChartBuilder().width(800).height(600).theme(ChartTheme.Matlab).build();
 		chart.setTitle("");
 		chart.setXAxisTitle("Wavelength");
-		chart.setYAxisTitle("Mean Pixel Value");
+		chart.setYAxisTitle("Spectral Reflectance");
 		
 		//Iterate through ArrayList input
 		while(itr.hasNext()) {
@@ -177,7 +177,7 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 			//Retrieve data and place it in arrays
 			SpectraData<T> curr = itr.next();
 			
-			Array2DRowRealMatrix currData = curr.getRawData();
+			Array2DRowRealMatrix currData = curr.getNormalisedData();
 			
 			int rowIndex = currData.getRowDimension();
 			
