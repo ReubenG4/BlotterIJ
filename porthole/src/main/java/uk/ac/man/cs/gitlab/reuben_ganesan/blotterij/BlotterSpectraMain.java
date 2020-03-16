@@ -22,8 +22,6 @@ import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler.ChartTheme;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import org.scijava.ui.DialogPrompt;
-
 import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -35,6 +33,8 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	
 	Array2DRowRealMatrix normalisationData = null;
 	
+	double calibRatio = 1;
+	
 	/* Constructor */
 	public BlotterSpectraMain() {
 	
@@ -43,15 +43,16 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 	//Assembles SpectraData from PxlData
 	public SpectraData<T> calcSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
 		
+		//If no normalisation data available, use constructor that omits normalisationData and calibration ratio
 		if(normalisationData == null)
 			return new SpectraData(imgData,selection);
 		else
-			return new SpectraData(imgData, selection, normalisationData);
+			return new SpectraData(imgData, selection, normalisationData, calibRatio);
 	}
 	
-	public void calcNormalisationSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection) {
+	public void calcNormalisationSpectra(ArrayList<ImgWrapper<T>> imgData, Rectangle selection, double calibRatio) {
 		normalisationData = new SpectraData(imgData,selection).getRawData();
-	
+		this.calibRatio = calibRatio;
 	}
 	
 	//Saves the chosen spectra
@@ -233,6 +234,5 @@ public class BlotterSpectraMain <T extends RealType<T> & NativeType<T>>extends B
 		return Math.sqrt(distance);
 		
 	}
-
 	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -13,6 +14,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.scijava.app.StatusService;
@@ -172,7 +174,8 @@ public class BlotterCommand implements Command{
 			case 3:
 				/* State 3: Make tool panel visible */
 				toolPanelDialog.setVisible(true);
-				toolPanelDialog.toFront();			
+				toolPanelDialog.toFront();		
+				/* --> State 4,7 */
 				break;
 				
 				
@@ -190,6 +193,7 @@ public class BlotterCommand implements Command{
 				
 				selectFeatureDialog.setVisible(true);
 				selectFeatureDialog.toFront();
+				/* --> State 6 */
 				break;
 				
 			case 6:
@@ -203,6 +207,7 @@ public class BlotterCommand implements Command{
 				/* State 7: Display selected Spectra */
 				selectSpectraDialog.setVisible(true);
 				selectSpectraDialog.toFront();
+				/* --> State 8,9,10,11,12,13 */
 				break;
 					
 			case 8:
@@ -230,22 +235,25 @@ public class BlotterCommand implements Command{
 				/* State 11: Load Spectra */
 				stateWorker11 = new StateWorker11();
 				stateWorker11.execute();
+				/* --> State 7 */
 				break;
 				
 			case 12:
 				/* State 12: Save Spectra */
 				stateWorker12 = new StateWorker12();
 				stateWorker12.execute();
+				/* --> State 7 */
 				break;
 				
 			case 13:
 				/* State 13: Retrieve normalisation Spectra for calibration */
 				stateWorker13 = new StateWorker13();
 				stateWorker13.execute();
+				/* --> State 7 */
 				break;
 				
 			default:
-				ui.showDialog("State out of bounds, value:"+nextState);
+				ui.showDialog("State index out of bounds, value:"+nextState);
 				break;
 
 		}
@@ -507,11 +515,25 @@ public class BlotterCommand implements Command{
 		/* Retrieve selected region and extra Spectra Data for use as normalisation data */
 		@Override
 		protected Object doInBackground() throws Exception {
-			Rectangle selection = selectSpectraDialog.getSelectedRegion();
-			spectraMain.calcNormalisationSpectra(imgData, selection);
 			
-			//Enable adding of Spectra
-			selectSpectraDialog.addButton.setEnabled(true);
+			//Retrieve selected region
+			Rectangle selection = selectSpectraDialog.getSelectedRegion();
+			
+			//Retrieve calibration ratio
+			String input = JOptionPane.showInputDialog("Set calibration ratio", 1.00);
+			
+			//If input is valid number
+			if(NumberUtils.isCreatable(input)) {
+				
+				//Retrieve normalisation data
+				spectraMain.calcNormalisationSpectra(imgData, selection, Double.parseDouble(input));
+				
+				//Enable adding of Spectra
+				selectSpectraDialog.addButton.setEnabled(true);
+			} else {
+				ui.showDialog("Invalid input, please enter a number!");
+			}	
+			
 			return null;
 		}
 
@@ -520,8 +542,8 @@ public class BlotterCommand implements Command{
 			changeState(7);
 		}
 	}
-	/* Following code governs how JDialogs interact with event-dispatcher thread */
 	
+	/* Following code governs how JDialogs interact with event-dispatcher thread */
 	
 	/* 
 	 * Initialises selectFileDialog 

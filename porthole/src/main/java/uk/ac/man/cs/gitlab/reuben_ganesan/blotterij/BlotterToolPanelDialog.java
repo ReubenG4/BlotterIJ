@@ -54,18 +54,20 @@ public class BlotterToolPanelDialog extends BlotterDialog{
 					ImageProcessor ip = imp.getProcessor();
 					Roi roi = imp.getRoi();
 					
+					String errorMsg = "Rectangular area selection of FalseRGB required";
+					
 					//Retrieve image title
 					String title = imp.getTitle();
 					
 					//Check if an area has been selected
 					if ((roi==null||!roi.isArea())) {
-						IJ.error("Area selection required");
+						IJ.error(errorMsg);
 						return;
 					}
 					
 					//Check if the correct image has been selected
 					if(title.compareTo("FalseRGB") != 0) {
-						IJ.error("Please area select using FalseRGB image");
+						IJ.error(errorMsg);
 						return;
 					}
 					

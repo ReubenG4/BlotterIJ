@@ -19,13 +19,14 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 	private int noOfPixels;
 	private int noOfWavelengths;
 	//Hardcoded for now
-	private double calibrationRatio = 1;
+	private double calibRatio = 1;
 	
 	//Declare datastructures
 	private Array2DRowRealMatrix data;
 	private Array2DRowRealMatrix normalisationData;
 	private Rectangle selection;
 	
+	/* Constructor for SpectraData without normalisation Data */
 	public SpectraData(PxlData2<T> input){
 		
 		//Find out number of pixels in a single dataset
@@ -58,9 +59,11 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 		this(new PxlData2(imgData,selection));
 	}
 	
-	public SpectraData(ArrayList<ImgWrapper<T>> imgData, Rectangle selection, Array2DRowRealMatrix normalisationData){
+	/* Constructor for SpectraData containing normalisation data */
+	public SpectraData(ArrayList<ImgWrapper<T>> imgData, Rectangle selection, Array2DRowRealMatrix normalisationData, double calibRatio){
 		this(new PxlData2(imgData,selection));
 		this.normalisationData = normalisationData;
+		this.calibRatio = calibRatio;
 	}
 	
 	
@@ -102,7 +105,7 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 		IJ.showStatus("Spectra calculation done...");
 	}
 	
-	//Return value after calibration
+	/* Return normalised data */
 	public Array2DRowRealMatrix getNormalisedData() {
 		
 		//declare variables
@@ -110,7 +113,6 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 		double normalisationVal;
 		double finalVal;
 	
-		
 		Array2DRowRealMatrix returnMatrix = new Array2DRowRealMatrix(noOfWavelengths,2);
 		
 		//iterate through data
@@ -123,7 +125,7 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 			normalisationVal = normalisationData.getRow(rowIndex)[1];
 			
 			normalData[0] = data.getRow(rowIndex)[0];
-			normalData[1] = (dataVal / normalisationVal) * calibrationRatio;
+			normalData[1] = (dataVal / normalisationVal) * calibRatio;
 			
 			returnMatrix.setRow(rowIndex, normalData);
 		}
@@ -146,7 +148,6 @@ public class SpectraData<T extends RealType<T> & NativeType<T>> implements Seria
 	public int getNoOfPixels() {
 		return this.noOfPixels;
 	}
-	
 	
 	public Rectangle getSelection() {
 		return selection;
