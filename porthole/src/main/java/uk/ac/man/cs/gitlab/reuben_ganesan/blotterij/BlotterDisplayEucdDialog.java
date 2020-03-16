@@ -1,10 +1,12 @@
 package uk.ac.man.cs.gitlab.reuben_ganesan.blotterij;
 
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,7 +22,9 @@ public class BlotterDisplayEucdDialog extends BlotterDialog{
 	 * Declare JComponents
 	 */		
 	JTable eucdTable;
-	JPanel infoPanel;
+	JPanel tablePanel;
+	JPanel buttonPanel;
+	JButton printButton;
 	JScrollPane tableScroller;
 	EucdTableModel eucdTableModel;
 	
@@ -31,18 +35,24 @@ public class BlotterDisplayEucdDialog extends BlotterDialog{
 		setName("BlotterShowEucd");
 		setSize(500, 450);
 		setLocationRelativeTo(null);
-		getContentPane().setLayout(new FlowLayout());
+		getContentPane().setLayout(new BorderLayout());
 		
 		eucdTableModel = new EucdTableModel(rowColNames,data);
 		eucdTable = new JTable(eucdTableModel);
-		infoPanel = new JPanel();
+		printButton = new JButton("Print");
+		tablePanel = new JPanel();
+		buttonPanel = new JPanel();
 		
-		getContentPane().add(infoPanel);
+		getContentPane().add(tablePanel, BorderLayout.CENTER);
 		{			
 		    eucdTable.setCellSelectionEnabled(true);
 			tableScroller = new JScrollPane(eucdTable);
 			eucdTable.setFillsViewportHeight(true);
-			infoPanel.add(tableScroller);
+			tablePanel.add(tableScroller);
+		}
+		
+		getContentPane().add(buttonPanel, BorderLayout.PAGE_END);{
+			buttonPanel.add(printButton);
 		}
 		
 		resizeColumnWidth();
