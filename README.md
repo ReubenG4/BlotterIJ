@@ -2,7 +2,7 @@
 
 A plugin for ImageJ-Fiji.  
 
-Multispectral analysis of grayscale .tif images. Designed to aid with the use of the John Rylands' Library multipsectral imaging setup.
+Multispectral analysis of grayscale .tif images. Designed to aid with the use of the John Rylands' Library multispectral imaging setup.
 
 Features:   
 - Supports the import of a multispectral image as multiple grayscale .tif files, each file representing an individual wavelength  
