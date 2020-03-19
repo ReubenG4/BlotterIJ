@@ -13,6 +13,6 @@ Features:
 
 Third year project for the University Of Manchester.
 
-Reuben Ganesan
+Reuben Ganesan  
 reubenganesan@gmail.com
 
