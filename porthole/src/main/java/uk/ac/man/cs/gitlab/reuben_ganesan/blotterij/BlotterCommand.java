@@ -30,6 +30,7 @@ import org.scijava.ui.UIService;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.WindowManager;
 import io.scif.services.DatasetIOService;
 import io.scif.services.FormatService;
 import net.imagej.DatasetService;
@@ -79,6 +80,7 @@ public class BlotterCommand implements Command{
 	private static BlotterSelectFeatureDialog selectFeatureDialog = null;
 	private static BlotterSelectSpectraDialog selectSpectraDialog = null;
 	private static BlotterDisplayEucdDialog displayEucdDialog = null;
+	public static BlotterImageWindow falseRgbWindow = null;
 		
 	/* Declare class variables */
 	private Hashtable<String,Service> services;
@@ -282,7 +284,6 @@ public class BlotterCommand implements Command{
 				rgbImg = ImageJFunctions.wrap(imgData.get(0).getImg(),"FalseRGB");
 				rgbImg.setTitle("FalseRGB");
 			}
-		 
 			
 			ui.show("FalseRGB",rgbImg);
 			return null;
