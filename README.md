@@ -17,5 +17,5 @@ Screencast Video:
 https://youtu.be/T3P3Mg_dyiI
 
 Reuben Ganesan  
-reubenganesan@gmail.com
+reuben.ganesan@gmail.com
 
